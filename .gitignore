@@ -1,3 +1,10 @@
+### Custom ###
+static/
+templates/
+application.yml
+application.properties
+
+### Auto ###
 HELP.md
 .gradle
 build/
@@ -32,13 +39,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### Example user template template
-### Example user template
-
-# IntelliJ project files
-.idea
-*.iml
-out
-gen
-
