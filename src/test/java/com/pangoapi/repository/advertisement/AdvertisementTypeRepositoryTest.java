@@ -25,7 +25,7 @@ class AdvertisementTypeRepositoryTest {
     private Long advertisementTypeHeight = 300L;
 
     @Test
-    public void whenFindByType_thenReturnAdvertisementType(){
+    public void When_call_FindByType_Then_return_AdvertisementType(){
         // Given
         AdvertisementType saveAdvertisementType = new AdvertisementType(advertisementTypeId, advertisementTypeType, advertisementTypeWidth, advertisementTypeHeight);
         entityManager.persist(saveAdvertisementType);
