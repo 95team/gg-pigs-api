@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 
 /**
  * [References]
@@ -23,6 +24,19 @@ public class CommonExceptionHandler {
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
         );
+    }
+
+    /**
+     * handleIOException(IOException.class)
+     * 목적 : I/O 와 관련된 에러가 발생했을 경우 (파일 업로드 실패했을 경우, ...)
+     * 예시 : image.transferTo(file);
+     * */
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**

@@ -66,13 +66,19 @@ public class Advertisement {
 
     public void changeIsActivatedToDeactivated() { this.isActivated = false; }
 
+    /**
+     * @name changeAdvertisement
+     * @description
+     * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
+     * ReviewStatus, Reviewer 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자와 관련 필드입니다.
+     * */
     public void changeAdvertisement(UpdateDtoAdvertisement updateDtoAdvertisement) {
-        changeTitle(updateDtoAdvertisement.getTitle());
-        changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
-        changeImagePath(updateDtoAdvertisement.getImagePath());
-        changeStieUrl(updateDtoAdvertisement.getSiteUrl());
-        changeRowPosition(updateDtoAdvertisement.getRowPosition());
-        changeColumnPosition(updateDtoAdvertisement.getColumnPosition());
+        if(updateDtoAdvertisement.getTitle() != null) changeTitle(updateDtoAdvertisement.getTitle());
+        if(updateDtoAdvertisement.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
+        if(updateDtoAdvertisement.getImagePath() != null) changeImagePath(updateDtoAdvertisement.getImagePath());
+        if(updateDtoAdvertisement.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisement.getSiteUrl());
+        if(updateDtoAdvertisement.getRowPosition() != null) changeRowPosition(updateDtoAdvertisement.getRowPosition());
+        if(updateDtoAdvertisement.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisement.getColumnPosition());
     }
 
     public static Advertisement createAdvertisement(CreateDtoAdvertisement createDtoAdvertisement, User user, AdvertisementType advertisementType) {

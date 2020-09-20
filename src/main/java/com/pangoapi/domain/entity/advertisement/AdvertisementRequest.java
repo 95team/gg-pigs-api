@@ -50,6 +50,7 @@ public class AdvertisementRequest {
     private String siteUrl;
     private Long rowPosition;
     private Long columnPosition;
+    private String reviewer;
 
     public void changeTitle(String title) {
         this.title = title;
@@ -75,13 +76,21 @@ public class AdvertisementRequest {
 
     public void changeReviewStatusToNonApproval() { this.reviewStatus = AdvertisementReviewStatus.NON_APPROVAL; }
 
+    public void changeReviewer(String reviewer) { this.reviewer = reviewer; }
+
+    /**
+     * @name changeAdvertisementRequest
+     * @description
+     * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
+     * ReviewStatus, Reviewer 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자와 관련 필드입니다.
+     * */
     public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
-        changeTitle(updateDtoAdvertisementRequest.getTitle());
-        changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
-        changeImagePath(updateDtoAdvertisementRequest.getImagePath());
-        changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
-        changeRowPosition(updateDtoAdvertisementRequest.getRowPosition());
-        changeColumnPosition(updateDtoAdvertisementRequest.getColumnPosition());
+        if(updateDtoAdvertisementRequest.getTitle() != null) changeTitle(updateDtoAdvertisementRequest.getTitle());
+        if(updateDtoAdvertisementRequest.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
+        if(updateDtoAdvertisementRequest.getImagePath() != null) changeImagePath(updateDtoAdvertisementRequest.getImagePath());
+        if(updateDtoAdvertisementRequest.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
+        if(updateDtoAdvertisementRequest.getRowPosition() != null) changeRowPosition(updateDtoAdvertisementRequest.getRowPosition());
+        if(updateDtoAdvertisementRequest.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisementRequest.getColumnPosition());
     }
 
     public static AdvertisementRequest createAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest, User user, AdvertisementType advertisementType) {
@@ -96,6 +105,7 @@ public class AdvertisementRequest {
                 .siteUrl(createDtoAdvertisementRequest.getSiteUrl())
                 .rowPosition(createDtoAdvertisementRequest.getRowPosition())
                 .columnPosition(createDtoAdvertisementRequest.getColumnPosition())
+                .reviewer(null)
                 .build();
     }
 }
