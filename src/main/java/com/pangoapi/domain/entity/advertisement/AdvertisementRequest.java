@@ -45,7 +45,6 @@ public class AdvertisementRequest {
     private AdvertisementReviewStatus reviewStatus;
 
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
@@ -54,10 +53,6 @@ public class AdvertisementRequest {
 
     public void changeTitle(String title) {
         this.title = title;
-    }
-
-    public void changeBriefDescription(String briefDescription) {
-        this.briefDescription = briefDescription;
     }
 
     public void changeDetailDescription(String detailDescription) {
@@ -82,7 +77,6 @@ public class AdvertisementRequest {
 
     public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
         changeTitle(updateDtoAdvertisementRequest.getTitle());
-        changeBriefDescription(updateDtoAdvertisementRequest.getBriefDescription());
         changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
         changeImagePath(updateDtoAdvertisementRequest.getImagePath());
         changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
@@ -97,7 +91,6 @@ public class AdvertisementRequest {
                 .advertisementType(advertisementType)
                 .reviewStatus(AdvertisementReviewStatus.NON_APPROVAL)
                 .title(createDtoAdvertisementRequest.getTitle())
-                .briefDescription(createDtoAdvertisementRequest.getBriefDescription())
                 .detailDescription(createDtoAdvertisementRequest.getDetailDescription())
                 .imagePath(createDtoAdvertisementRequest.getImagePath())
                 .siteUrl(createDtoAdvertisementRequest.getSiteUrl())

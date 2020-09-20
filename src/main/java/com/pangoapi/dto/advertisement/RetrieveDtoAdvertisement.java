@@ -1,13 +1,12 @@
 package com.pangoapi.dto.advertisement;
 
 import com.pangoapi.domain.entity.advertisement.Advertisement;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 
+@AllArgsConstructor
 @Builder
 @Getter
 public class RetrieveDtoAdvertisement {
@@ -15,7 +14,6 @@ public class RetrieveDtoAdvertisement {
     private Long id;
     private String userEmail;
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String advertisementType;
     private Long advertisementWidth;
@@ -31,7 +29,6 @@ public class RetrieveDtoAdvertisement {
                 .id(advertisement.getId())
                 .userEmail(advertisement.getUser() != null ? advertisement.getUser().getEmail() : "")
                 .title(advertisement.getTitle())
-                .briefDescription(advertisement.getBriefDescription())
                 .detailDescription(advertisement.getDetailDescription())
                 .advertisementType(advertisement.getAdvertisementType().getType())
                 .advertisementWidth(advertisement.getAdvertisementType().getWidth())

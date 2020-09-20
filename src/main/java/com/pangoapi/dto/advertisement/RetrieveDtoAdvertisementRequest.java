@@ -12,7 +12,6 @@ public class RetrieveDtoAdvertisementRequest {
     private Long id;
     private String userEmail;
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String advertisementType;
     private Long advertisementWidth;
@@ -28,7 +27,6 @@ public class RetrieveDtoAdvertisementRequest {
                 .id(advertisementRequest.getId())
                 .userEmail(advertisementRequest.getUser() != null ? advertisementRequest.getUser().getEmail() : "")
                 .title(advertisementRequest.getTitle())
-                .briefDescription(advertisementRequest.getBriefDescription())
                 .detailDescription(advertisementRequest.getDetailDescription())
                 .advertisementType(advertisementRequest.getAdvertisementType().getType())
                 .advertisementWidth(advertisementRequest.getAdvertisementType().getWidth())

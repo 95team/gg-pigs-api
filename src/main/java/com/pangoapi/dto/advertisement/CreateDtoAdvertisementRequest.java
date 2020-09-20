@@ -7,7 +7,6 @@ public class CreateDtoAdvertisementRequest {
 
     private String title;
     private String userEmail;
-    private String briefDescription;
     private String detailDescription;
     private String advertisementType;
     private String imagePath;

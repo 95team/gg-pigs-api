@@ -20,7 +20,7 @@ class AdvertisementTypeRepositoryTest {
     @Autowired AdvertisementTypeRepository advertisementTypeRepository;
 
     private Long advertisementTypeId = null;
-    private String advertisementTypeType = "1";
+    private String advertisementTypeType = "R1";
     private Long advertisementTypeWidth = 300L;
     private Long advertisementTypeHeight = 300L;
 

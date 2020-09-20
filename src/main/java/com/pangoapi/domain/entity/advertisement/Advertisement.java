@@ -37,7 +37,6 @@ public class Advertisement {
     private AdvertisementType advertisementType;
 
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
@@ -47,10 +46,6 @@ public class Advertisement {
 
     public void changeTitle(String title) {
         this.title = title;
-    }
-
-    public void changeBriefDescription(String briefDescription) {
-        this.briefDescription = briefDescription;
     }
 
     public void changeDetailDescription(String detailDescription) {
@@ -73,7 +68,6 @@ public class Advertisement {
 
     public void changeAdvertisement(UpdateDtoAdvertisement updateDtoAdvertisement) {
         changeTitle(updateDtoAdvertisement.getTitle());
-        changeBriefDescription(updateDtoAdvertisement.getBriefDescription());
         changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
         changeImagePath(updateDtoAdvertisement.getImagePath());
         changeStieUrl(updateDtoAdvertisement.getSiteUrl());
@@ -87,7 +81,6 @@ public class Advertisement {
                 .user(user)
                 .advertisementType(advertisementType)
                 .title(createDtoAdvertisement.getTitle())
-                .briefDescription(createDtoAdvertisement.getBriefDescription())
                 .detailDescription(createDtoAdvertisement.getDetailDescription())
                 .imagePath(createDtoAdvertisement.getImagePath())
                 .siteUrl(createDtoAdvertisement.getSiteUrl())
