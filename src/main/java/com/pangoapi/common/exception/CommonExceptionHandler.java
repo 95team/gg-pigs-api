@@ -4,10 +4,12 @@ import com.pangoapi.dto.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 
 /**
  * [References]
@@ -23,6 +25,33 @@ public class CommonExceptionHandler {
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
         );
+    }
+
+    /**
+     * handleMissingServletRequestParameterException(MissingServletRequestParameterException.class)
+     * 목적 : @RequestParam 필수 값인 경우 체크한다.
+     * 예시 : @RequestParam("image") FileDto fileDto
+     * */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ApiResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+    /**
+     * handleIOException(IOException.class)
+     * 목적 : I/O 와 관련된 에러가 발생했을 경우 (파일 업로드 실패했을 경우, ...)
+     * 예시 : image.transferTo(file);
+     * */
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**

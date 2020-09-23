@@ -21,12 +21,12 @@ public class PangoApiApplicationDbInitializerForDev {
 
     @PostConstruct
     public void init() {
-        AdvertisementType advertisementType1 = new AdvertisementType(null, "1", 300L, 250L);
-        AdvertisementType advertisementType2 = new AdvertisementType(null, "2", 300L, 516L);
-        AdvertisementType advertisementType3 = new AdvertisementType(null, "3", 300L, 782L);
-        AdvertisementType advertisementType4 = new AdvertisementType(null, "4", 300L, 1048L);
-        AdvertisementType advertisementType5 = new AdvertisementType(null, "5", 300L, 1314L);
-        AdvertisementType advertisementType6 = new AdvertisementType(null, "6", 300L, 1580L);
+        AdvertisementType advertisementType1 = new AdvertisementType(null, "R1", 300L, 250L);
+        AdvertisementType advertisementType2 = new AdvertisementType(null, "R2", 300L, 516L);
+        AdvertisementType advertisementType3 = new AdvertisementType(null, "R3", 300L, 782L);
+        AdvertisementType advertisementType4 = new AdvertisementType(null, "R4", 300L, 1048L);
+        AdvertisementType advertisementType5 = new AdvertisementType(null, "R5", 300L, 1314L);
+        AdvertisementType advertisementType6 = new AdvertisementType(null, "R6", 300L, 1580L);
 
         advertisementTypeRepository.save(advertisementType1);
         advertisementTypeRepository.save(advertisementType2);

@@ -2,7 +2,6 @@ package com.pangoapi.domain.entity.advertisement;
 
 import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.domain.enums.AdvertisementReviewStatus;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
 import com.pangoapi.dto.advertisement.CreateDtoAdvertisementRequest;
 import com.pangoapi.dto.advertisement.UpdateDtoAdvertisementRequest;
 import lombok.AccessLevel;
@@ -45,19 +44,15 @@ public class AdvertisementRequest {
     private AdvertisementReviewStatus reviewStatus;
 
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
     private Long rowPosition;
     private Long columnPosition;
+    private String reviewer;
 
     public void changeTitle(String title) {
         this.title = title;
-    }
-
-    public void changeBriefDescription(String briefDescription) {
-        this.briefDescription = briefDescription;
     }
 
     public void changeDetailDescription(String detailDescription) {
@@ -80,14 +75,20 @@ public class AdvertisementRequest {
 
     public void changeReviewStatusToNonApproval() { this.reviewStatus = AdvertisementReviewStatus.NON_APPROVAL; }
 
+    public void changeReviewer(String reviewer) { this.reviewer = reviewer; }
+
+    /**
+     * @description
+     * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
+     * 해당 메소드에 포함되지 않은 ReviewStatus, Reviewer 등의 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자 관련 필드입니다.
+     * */
     public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
-        changeTitle(updateDtoAdvertisementRequest.getTitle());
-        changeBriefDescription(updateDtoAdvertisementRequest.getBriefDescription());
-        changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
-        changeImagePath(updateDtoAdvertisementRequest.getImagePath());
-        changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
-        changeRowPosition(updateDtoAdvertisementRequest.getRowPosition());
-        changeColumnPosition(updateDtoAdvertisementRequest.getColumnPosition());
+        if(updateDtoAdvertisementRequest.getTitle() != null) changeTitle(updateDtoAdvertisementRequest.getTitle());
+        if(updateDtoAdvertisementRequest.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
+        if(updateDtoAdvertisementRequest.getImagePath() != null) changeImagePath(updateDtoAdvertisementRequest.getImagePath());
+        if(updateDtoAdvertisementRequest.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
+        if(updateDtoAdvertisementRequest.getRowPosition() != null) changeRowPosition(updateDtoAdvertisementRequest.getRowPosition());
+        if(updateDtoAdvertisementRequest.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisementRequest.getColumnPosition());
     }
 
     public static AdvertisementRequest createAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest, User user, AdvertisementType advertisementType) {
@@ -97,12 +98,12 @@ public class AdvertisementRequest {
                 .advertisementType(advertisementType)
                 .reviewStatus(AdvertisementReviewStatus.NON_APPROVAL)
                 .title(createDtoAdvertisementRequest.getTitle())
-                .briefDescription(createDtoAdvertisementRequest.getBriefDescription())
                 .detailDescription(createDtoAdvertisementRequest.getDetailDescription())
                 .imagePath(createDtoAdvertisementRequest.getImagePath())
                 .siteUrl(createDtoAdvertisementRequest.getSiteUrl())
                 .rowPosition(createDtoAdvertisementRequest.getRowPosition())
                 .columnPosition(createDtoAdvertisementRequest.getColumnPosition())
+                .reviewer(null)
                 .build();
     }
 }

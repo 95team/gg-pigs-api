@@ -1,14 +1,17 @@
 package com.pangoapi.dto.advertisement;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class UpdateDtoAdvertisement {
 
     private Long id;
     private String userEmail;
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String advertisementType;
     private String imagePath;

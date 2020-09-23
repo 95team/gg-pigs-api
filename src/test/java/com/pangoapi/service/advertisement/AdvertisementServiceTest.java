@@ -51,7 +51,7 @@ class AdvertisementServiceTest {
     @Mock Advertisement savedAdvertisement;
 
     private Long advertisementId = 1L;
-    private String advertisementType = "1";
+    private String advertisementType = "R1";
 
     @BeforeEach
     void setUp() {

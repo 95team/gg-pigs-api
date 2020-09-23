@@ -46,9 +46,9 @@ class AdvertisementApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        createDtoAdvertisement = new CreateDtoAdvertisement("title", "userEmail", "briefDescription", "detailDescription", "1", "imagePath", "siteUrl", 1L, 1L);
-        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(1L, "user@email.com", "title", "briefDescription", "detailDescription", "1", 300L, 250L, "imagePath", "siteUrl", 1L, 1L, true);
-        updateDtoAdvertisement = new UpdateDtoAdvertisement(1L, "user@email.com", "title", "briefDescription", "detailDescription", "1", "imagePath", "siteUrl",1L, 1L, true);
+        createDtoAdvertisement = new CreateDtoAdvertisement("title", "userEmail", "detailDescription", "R1", "imagePath", "siteUrl", 1L, 1L);
+        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(1L, "user@email.com", "title", "detailDescription", "R1", 300L, 250L, "imagePath", "siteUrl", 1L, 1L, true);
+        updateDtoAdvertisement = new UpdateDtoAdvertisement(1L, "user@email.com", "title", "detailDescription", "R1", "imagePath", "siteUrl",1L, 1L, true);
 
         Mockito.when(advertisementService.createOneAdvertisement(any(CreateDtoAdvertisement.class))).thenReturn(1L);
         Mockito.when(advertisementService.retrieveOneAdvertisement(any(Long.class))).thenReturn(retrieveDtoAdvertisement);

@@ -37,7 +37,6 @@ public class Advertisement {
     private AdvertisementType advertisementType;
 
     private String title;
-    private String briefDescription;
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
@@ -47,10 +46,6 @@ public class Advertisement {
 
     public void changeTitle(String title) {
         this.title = title;
-    }
-
-    public void changeBriefDescription(String briefDescription) {
-        this.briefDescription = briefDescription;
     }
 
     public void changeDetailDescription(String detailDescription) {
@@ -71,14 +66,18 @@ public class Advertisement {
 
     public void changeIsActivatedToDeactivated() { this.isActivated = false; }
 
+    /**
+     * @description
+     * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
+     * 해당 메소드에 포함되지 않은 ReviewStatus, Reviewer 등의 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자 관련 필드입니다.
+     * */
     public void changeAdvertisement(UpdateDtoAdvertisement updateDtoAdvertisement) {
-        changeTitle(updateDtoAdvertisement.getTitle());
-        changeBriefDescription(updateDtoAdvertisement.getBriefDescription());
-        changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
-        changeImagePath(updateDtoAdvertisement.getImagePath());
-        changeStieUrl(updateDtoAdvertisement.getSiteUrl());
-        changeRowPosition(updateDtoAdvertisement.getRowPosition());
-        changeColumnPosition(updateDtoAdvertisement.getColumnPosition());
+        if(updateDtoAdvertisement.getTitle() != null) changeTitle(updateDtoAdvertisement.getTitle());
+        if(updateDtoAdvertisement.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
+        if(updateDtoAdvertisement.getImagePath() != null) changeImagePath(updateDtoAdvertisement.getImagePath());
+        if(updateDtoAdvertisement.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisement.getSiteUrl());
+        if(updateDtoAdvertisement.getRowPosition() != null) changeRowPosition(updateDtoAdvertisement.getRowPosition());
+        if(updateDtoAdvertisement.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisement.getColumnPosition());
     }
 
     public static Advertisement createAdvertisement(CreateDtoAdvertisement createDtoAdvertisement, User user, AdvertisementType advertisementType) {
@@ -87,7 +86,6 @@ public class Advertisement {
                 .user(user)
                 .advertisementType(advertisementType)
                 .title(createDtoAdvertisement.getTitle())
-                .briefDescription(createDtoAdvertisement.getBriefDescription())
                 .detailDescription(createDtoAdvertisement.getDetailDescription())
                 .imagePath(createDtoAdvertisement.getImagePath())
                 .siteUrl(createDtoAdvertisement.getSiteUrl())
