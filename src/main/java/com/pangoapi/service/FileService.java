@@ -1,5 +1,6 @@
 package com.pangoapi.service;
 
+import com.pangoapi.common.CommonDefinition;
 import com.pangoapi.dto.FileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ public class FileService {
     @Autowired private Environment environment;
 
     public String uploadOneImage(FileDto fileDto) throws IOException {
-        if(!fileDto.checkFileExtension()) throw new IllegalArgumentException("데이터를 업로드할 수 없습니다. (Check the file extension or fileType)");
+        if(!fileDto.checkFileSize()) throw new IllegalArgumentException("데이터를 업로드할 수 없습니다. (Check the file size. File size is allowed up to " + CommonDefinition.ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_STRING + ".)");
+        if(!fileDto.checkFileExtension()) throw new IllegalArgumentException("데이터를 업로드할 수 없습니다. (Check the file extension or fileType.)");
 
         final String uploadServerHost = environment.getProperty("application.server.host");
         final String uploadDirectory = environment.getProperty("application.upload.image-directory");

@@ -1,5 +1,6 @@
 package com.pangoapi.dto;
 
+import com.pangoapi.common.CommonDefinition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,12 +21,24 @@ public class FileDto {
     private String fileType;
     private String serviceType;
 
+    public boolean checkFileSize() {
+        boolean result = false;
+
+        if(fileType.equalsIgnoreCase("image")) {
+            if(getFileSize() >= getAllowableMinimumFileSize() && getFileSize() <= getAllowableMaximumFileSize()) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     public boolean checkFileExtension() {
         boolean result = false;
 
         if(fileType.equalsIgnoreCase("image")) {
             result = true;
-            Pattern pattern = Pattern.compile("(?i)^(.+).(jpg|jpeg|gif|tif|bmp|png)$");
+            Pattern pattern = CommonDefinition.ALLOWABLE_IMAGE_FILE_EXTENSION_PATTERN;
             Matcher matcher = pattern.matcher(file.getOriginalFilename());
 
             if(matcher.find()) {
@@ -37,11 +50,37 @@ public class FileDto {
         return result;
     }
 
+    public long getFileSize() {
+        return file.getSize();
+    }
+
+    public long getAllowableMaximumFileSize() {
+        // 파일 사이즈 단위는 KiB, MiB, GiB, TiB 단위로 처리합니다.
+        long allowableMaximumFileSize = -1;
+
+        if(fileType.equalsIgnoreCase("image")) {
+            allowableMaximumFileSize = CommonDefinition.ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_LONG;
+        }
+
+        return allowableMaximumFileSize;
+    }
+
+    public long getAllowableMinimumFileSize() {
+        // 파일 사이즈 단위는 KiB, MiB, GiB, TiB 단위로 처리합니다.
+        long allowableMinimumFileSize = -1;
+
+        if(fileType.equalsIgnoreCase("image")) {
+            allowableMinimumFileSize = 0;
+        }
+
+        return allowableMinimumFileSize;
+    }
+
     public String getFileName() {
         String fileName = null;
 
         if(fileType.equalsIgnoreCase("image")) {
-            Pattern pattern = Pattern.compile("(?i)^(.+).(jpg|jpeg|gif|tif|bmp|png)$");
+            Pattern pattern = CommonDefinition.ALLOWABLE_IMAGE_FILE_EXTENSION_PATTERN;
             Matcher matcher = pattern.matcher(file.getOriginalFilename());
 
             if(matcher.find()) fileName = matcher.group(1);
@@ -54,7 +93,7 @@ public class FileDto {
         String fileExtension = null;
 
         if(fileType.equalsIgnoreCase("image")) {
-            Pattern pattern = Pattern.compile("(?i)^(.+).(jpg|jpeg|gif|tif|bmp|png)$");
+            Pattern pattern = CommonDefinition.ALLOWABLE_IMAGE_FILE_EXTENSION_PATTERN;
             Matcher matcher = pattern.matcher(file.getOriginalFilename());
 
             if(matcher.find()) fileExtension = matcher.group(2);
@@ -70,7 +109,7 @@ public class FileDto {
         if(fileType.equalsIgnoreCase("image")) {
             randomFileName = getFileName().trim().replace(' ', '_')
                     + "_"
-                    + (System.currentTimeMillis() % 1000000)
+                    + (System.currentTimeMillis() % 1000000)    // 파일명이 길어지는 것을 방지하기 위해, milliseconds 값의 뒤의 6자리만 사용합니다.
                     + "_"
                     + (int)(Math.random() * randomNumberRange)
                     + "."
