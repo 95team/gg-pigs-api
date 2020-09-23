@@ -2,7 +2,6 @@ package com.pangoapi.domain.entity.advertisement;
 
 import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.domain.enums.AdvertisementReviewStatus;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
 import com.pangoapi.dto.advertisement.CreateDtoAdvertisementRequest;
 import com.pangoapi.dto.advertisement.UpdateDtoAdvertisementRequest;
 import lombok.AccessLevel;
@@ -79,10 +78,9 @@ public class AdvertisementRequest {
     public void changeReviewer(String reviewer) { this.reviewer = reviewer; }
 
     /**
-     * @name changeAdvertisementRequest
      * @description
      * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
-     * ReviewStatus, Reviewer 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자와 관련 필드입니다.
+     * 해당 메소드에 포함되지 않은 ReviewStatus, Reviewer 등의 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자 관련 필드입니다.
      * */
     public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
         if(updateDtoAdvertisementRequest.getTitle() != null) changeTitle(updateDtoAdvertisementRequest.getTitle());

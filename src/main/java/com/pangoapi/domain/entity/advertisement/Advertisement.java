@@ -67,10 +67,9 @@ public class Advertisement {
     public void changeIsActivatedToDeactivated() { this.isActivated = false; }
 
     /**
-     * @name changeAdvertisement
      * @description
      * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
-     * ReviewStatus, Reviewer 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자와 관련 필드입니다.
+     * 해당 메소드에 포함되지 않은 ReviewStatus, Reviewer 등의 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자 관련 필드입니다.
      * */
     public void changeAdvertisement(UpdateDtoAdvertisement updateDtoAdvertisement) {
         if(updateDtoAdvertisement.getTitle() != null) changeTitle(updateDtoAdvertisement.getTitle());
