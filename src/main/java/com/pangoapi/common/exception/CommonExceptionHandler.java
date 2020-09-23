@@ -50,8 +50,8 @@ public class CommonExceptionHandler {
     protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
         printCommonExceptionHandlerMessage(e);
 
-        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
