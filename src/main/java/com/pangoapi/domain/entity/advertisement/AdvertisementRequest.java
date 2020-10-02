@@ -16,6 +16,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +28,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class AdvertisementRequest {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ADVERTISEMENT_REQUEST_ID")
     private Long id;
 
@@ -47,8 +48,8 @@ public class AdvertisementRequest {
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
+    private String rowPosition;
+    private String columnPosition;
     private String reviewer;
 
     public void changeTitle(String title) {
@@ -65,9 +66,9 @@ public class AdvertisementRequest {
 
     public void changeStieUrl(String siteUrl) { this.siteUrl = siteUrl; }
 
-    public void changeRowPosition(Long rowPosition) { this.rowPosition = rowPosition; }
+    public void changeRowPosition(String rowPosition) { this.rowPosition = rowPosition; }
 
-    public void changeColumnPosition(Long columnPosition) { this.columnPosition = columnPosition; }
+    public void changeColumnPosition(String columnPosition) { this.columnPosition = columnPosition; }
 
     public void changeReviewStatusToApproval() { this.reviewStatus = AdvertisementReviewStatus.APPROVAL; }
 

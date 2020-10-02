@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Advertisement {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ADVERTISEMENT_ID")
     private Long id;
 
@@ -40,9 +41,9 @@ public class Advertisement {
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
-    private Boolean isActivated;
+    private String rowPosition;
+    private String columnPosition;
+    private char isActivated;
 
     public void changeTitle(String title) {
         this.title = title;
@@ -58,13 +59,13 @@ public class Advertisement {
 
     public void changeStieUrl(String siteUrl) { this.siteUrl = siteUrl; }
 
-    public void changeRowPosition(Long rowPosition) { this.rowPosition = rowPosition; }
+    public void changeRowPosition(String rowPosition) { this.rowPosition = rowPosition; }
 
-    public void changeColumnPosition(Long columnPosition) { this.columnPosition = columnPosition; }
+    public void changeColumnPosition(String columnPosition) { this.columnPosition = columnPosition; }
 
-    public void changeIsActivatedToActivated() { this.isActivated = true; }
+    public void changeIsActivatedToActivated() { this.isActivated = 'Y'; }
 
-    public void changeIsActivatedToDeactivated() { this.isActivated = false; }
+    public void changeIsActivatedToDeactivated() { this.isActivated = 'N'; }
 
     /**
      * @description
@@ -91,7 +92,7 @@ public class Advertisement {
                 .siteUrl(createDtoAdvertisement.getSiteUrl())
                 .rowPosition(createDtoAdvertisement.getRowPosition())
                 .columnPosition(createDtoAdvertisement.getColumnPosition())
-                .isActivated(false)
+                .isActivated('N')
                 .build();
     }
 }

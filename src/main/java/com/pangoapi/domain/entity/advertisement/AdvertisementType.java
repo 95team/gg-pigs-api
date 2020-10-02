@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @AllArgsConstructor
@@ -15,11 +16,11 @@ import javax.persistence.Id;
 @Getter
 @Entity
 public class AdvertisementType {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ADVERTISEMENT_TYPE_ID")
     private Long id;
 
     private String type;
-    private Long width;
-    private Long height;
+    private String width;
+    private String height;
 }

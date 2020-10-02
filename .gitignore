@@ -1,8 +1,10 @@
 ### Custom ###
 static/
 templates/
+resources/
 application.yml
 application.properties
+PangoApiApplicationDbInitializerForDev.java
 
 ### Auto ###
 HELP.md

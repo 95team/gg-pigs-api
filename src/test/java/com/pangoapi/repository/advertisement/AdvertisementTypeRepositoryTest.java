@@ -21,8 +21,8 @@ class AdvertisementTypeRepositoryTest {
 
     private Long advertisementTypeId = null;
     private String advertisementTypeType = "R1";
-    private Long advertisementTypeWidth = 300L;
-    private Long advertisementTypeHeight = 300L;
+    private String advertisementTypeWidth = "300";
+    private String advertisementTypeHeight = "300";
 
     @Test
     public void When_call_FindByType_Then_return_AdvertisementType(){
