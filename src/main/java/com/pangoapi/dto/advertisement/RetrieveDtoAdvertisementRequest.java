@@ -14,12 +14,12 @@ public class RetrieveDtoAdvertisementRequest {
     private String title;
     private String detailDescription;
     private String advertisementType;
-    private Long advertisementWidth;
-    private Long advertisementHeight;
+    private String advertisementWidth;
+    private String advertisementHeight;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
+    private String rowPosition;
+    private String columnPosition;
     private AdvertisementReviewStatus reviewStatus;
 
     public static RetrieveDtoAdvertisementRequest createRetrieveDtoAdvertisementRequest(AdvertisementRequest advertisementRequest) {

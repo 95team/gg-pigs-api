@@ -16,7 +16,7 @@ public class UpdateDtoAdvertisement {
     private String advertisementType;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
-    private Boolean isActivated;
+    private String rowPosition;
+    private String columnPosition;
+    private char isActivated;
 }

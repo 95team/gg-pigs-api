@@ -16,13 +16,13 @@ public class RetrieveDtoAdvertisement {
     private String title;
     private String detailDescription;
     private String advertisementType;
-    private Long advertisementWidth;
-    private Long advertisementHeight;
+    private String advertisementWidth;
+    private String advertisementHeight;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
-    private Boolean isActivated;
+    private String rowPosition;
+    private String columnPosition;
+    private char isActivated;
 
     public static RetrieveDtoAdvertisement createRetrieveDtoAdvertisement(Advertisement advertisement) {
         return RetrieveDtoAdvertisement.builder()

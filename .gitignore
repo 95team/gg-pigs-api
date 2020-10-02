@@ -3,6 +3,7 @@ static/
 templates/
 application.yml
 application.properties
+PangoApiApplicationDbInitializerForDev.java
 
 ### Auto ###
 HELP.md

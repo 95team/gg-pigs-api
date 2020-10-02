@@ -11,6 +11,6 @@ public class CreateDtoAdvertisementRequest {
     private String advertisementType;
     private String imagePath;
     private String siteUrl;
-    private Long rowPosition;
-    private Long columnPosition;
+    private String rowPosition;
+    private String columnPosition;
 }
