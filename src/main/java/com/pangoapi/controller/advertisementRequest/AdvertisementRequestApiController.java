@@ -21,7 +21,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class CRUDApiController {
+public class AdvertisementRequestApiController {
 
     private final AdvertisementRequestService advertisementRequestService;
 
