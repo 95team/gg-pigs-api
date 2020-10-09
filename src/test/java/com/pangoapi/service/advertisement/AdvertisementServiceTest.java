@@ -1,13 +1,13 @@
 package com.pangoapi.service.advertisement;
 
 import com.pangoapi.domain.entity.advertisement.Advertisement;
-import com.pangoapi.domain.entity.advertisement.AdvertisementType;
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
 import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisement;
 import com.pangoapi.dto.advertisement.UpdateDtoAdvertisement;
 import com.pangoapi.repository.advertisement.AdvertisementRepository;
-import com.pangoapi.repository.advertisement.AdvertisementTypeRepository;
+import com.pangoapi.repository.advertisementType.AdvertisementTypeRepository;
 import com.pangoapi.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

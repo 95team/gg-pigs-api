@@ -20,7 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class AdvertisementApiController {
+public class CRUDApiController {
 
     private final AdvertisementService advertisementService;
 

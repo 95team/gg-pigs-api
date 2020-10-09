@@ -1,6 +1,6 @@
-package com.pangoapi.dto.advertisement;
+package com.pangoapi.dto.advertisementRequest;
 
-import com.pangoapi.domain.entity.advertisement.AdvertisementRequest;
+import com.pangoapi.domain.entity.advertisementRequest.AdvertisementRequest;
 import com.pangoapi.domain.enums.AdvertisementReviewStatus;
 import lombok.Builder;
 import lombok.Getter;

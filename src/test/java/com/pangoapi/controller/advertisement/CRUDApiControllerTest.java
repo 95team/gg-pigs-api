@@ -32,8 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 1. https://www.baeldung.com/spring-boot-testing
  * */
 
-@WebMvcTest(value = AdvertisementApiController.class)
-class AdvertisementApiControllerTest {
+@WebMvcTest(value = CRUDApiController.class)
+class CRUDApiControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;

@@ -1,5 +1,6 @@
 package com.pangoapi.domain.entity.advertisement;
 
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
 import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.dto.advertisement.UpdateDtoAdvertisement;
