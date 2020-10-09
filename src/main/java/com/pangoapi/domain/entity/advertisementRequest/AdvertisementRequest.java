@@ -1,9 +1,10 @@
-package com.pangoapi.domain.entity.advertisement;
+package com.pangoapi.domain.entity.advertisementRequest;
 
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.domain.enums.AdvertisementReviewStatus;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisementRequest;
-import com.pangoapi.dto.advertisement.UpdateDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.CreateDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.UpdateDtoAdvertisementRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

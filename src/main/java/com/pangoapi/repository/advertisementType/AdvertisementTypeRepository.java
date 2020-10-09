@@ -1,6 +1,6 @@
-package com.pangoapi.repository.advertisement;
+package com.pangoapi.repository.advertisementType;
 
-import com.pangoapi.domain.entity.advertisement.AdvertisementType;
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

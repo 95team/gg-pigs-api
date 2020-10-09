@@ -1,4 +1,4 @@
-package com.pangoapi.domain.entity.advertisement;
+package com.pangoapi.domain.entity.advertisementType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

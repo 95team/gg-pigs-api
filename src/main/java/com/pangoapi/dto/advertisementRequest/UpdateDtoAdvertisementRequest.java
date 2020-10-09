@@ -1,16 +1,18 @@
-package com.pangoapi.dto.advertisement;
+package com.pangoapi.dto.advertisementRequest;
 
 import lombok.Getter;
 
 @Getter
-public class CreateDtoAdvertisementRequest {
+public class UpdateDtoAdvertisementRequest {
 
-    private String title;
+    private Long id;
     private String userEmail;
+    private String title;
     private String detailDescription;
     private String advertisementType;
     private String imagePath;
     private String siteUrl;
     private String rowPosition;
     private String columnPosition;
+    private Boolean reviewStatus;
 }

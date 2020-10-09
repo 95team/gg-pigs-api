@@ -1,6 +1,6 @@
-package com.pangoapi.repository.advertisement;
+package com.pangoapi.repository.advertisementType;
 
-import com.pangoapi.domain.entity.advertisement.AdvertisementType;
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

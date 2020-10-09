@@ -1,11 +1,11 @@
-package com.pangoapi.controller.advertisement;
+package com.pangoapi.controller.advertisementRequest;
 
 import com.pangoapi.dto.ApiResponse;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.CreateDtoAdvertisementRequest;
 import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisement;
-import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisementRequest;
-import com.pangoapi.dto.advertisement.UpdateDtoAdvertisementRequest;
-import com.pangoapi.service.advertisement.AdvertisementRequestService;
+import com.pangoapi.dto.advertisementRequest.RetrieveDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.UpdateDtoAdvertisementRequest;
+import com.pangoapi.service.advertisementRequest.AdvertisementRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

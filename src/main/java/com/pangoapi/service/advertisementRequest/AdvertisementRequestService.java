@@ -1,13 +1,13 @@
-package com.pangoapi.service.advertisement;
+package com.pangoapi.service.advertisementRequest;
 
-import com.pangoapi.domain.entity.advertisement.AdvertisementRequest;
-import com.pangoapi.repository.advertisement.AdvertisementRequestRepository;
-import com.pangoapi.domain.entity.advertisement.AdvertisementType;
+import com.pangoapi.domain.entity.advertisementRequest.AdvertisementRequest;
+import com.pangoapi.repository.advertisementRequest.AdvertisementRequestRepository;
+import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
 import com.pangoapi.domain.entity.user.User;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisementRequest;
-import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisementRequest;
-import com.pangoapi.dto.advertisement.UpdateDtoAdvertisementRequest;
-import com.pangoapi.repository.advertisement.AdvertisementTypeRepository;
+import com.pangoapi.dto.advertisementRequest.CreateDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.RetrieveDtoAdvertisementRequest;
+import com.pangoapi.dto.advertisementRequest.UpdateDtoAdvertisementRequest;
+import com.pangoapi.repository.advertisementType.AdvertisementTypeRepository;
 import com.pangoapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
