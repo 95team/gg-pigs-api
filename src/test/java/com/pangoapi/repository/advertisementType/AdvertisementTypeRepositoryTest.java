@@ -17,8 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AdvertisementTypeRepositoryTest {
 
     @Autowired TestEntityManager entityManager;
-    @Autowired
-    AdvertisementTypeRepository advertisementTypeRepository;
+    @Autowired AdvertisementTypeRepository advertisementTypeRepository;
 
     private Long advertisementTypeId = null;
     private String advertisementTypeType = "R1";
