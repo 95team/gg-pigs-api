@@ -15,4 +15,6 @@ public class UpdateDtoAdvertisementRequest {
     private String rowPosition;
     private String columnPosition;
     private Boolean reviewStatus;
+    private String startedDate;
+    private String finishedDate;
 }

@@ -18,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,6 +47,8 @@ public class Advertisement {
     private String rowPosition;
     private String columnPosition;
     private char isActivated;
+    private LocalDate startedDate;
+    private LocalDate finishedDate;
 
     public void changeTitle(String title) {
         this.title = title;
@@ -68,6 +72,10 @@ public class Advertisement {
 
     public void changeIsActivatedToDeactivated() { this.isActivated = 'N'; }
 
+    public void changeStartedDate(LocalDate startedDate) { this.startedDate = startedDate; }
+
+    public void changeFinishedDate(LocalDate finishedDate) { this.finishedDate = finishedDate; }
+
     /**
      * @description
      * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
@@ -80,9 +88,27 @@ public class Advertisement {
         if(updateDtoAdvertisement.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisement.getSiteUrl());
         if(updateDtoAdvertisement.getRowPosition() != null) changeRowPosition(updateDtoAdvertisement.getRowPosition());
         if(updateDtoAdvertisement.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisement.getColumnPosition());
+        if(updateDtoAdvertisement.getStartedDate() != null) {
+            try {
+                changeStartedDate(LocalDate.parse(updateDtoAdvertisement.getStartedDate()));
+            } catch (NullPointerException | DateTimeParseException e) { }
+        }
+        if(updateDtoAdvertisement.getFinishedDate() != null) {
+            try {
+                changeFinishedDate(LocalDate.parse(updateDtoAdvertisement.getFinishedDate()));
+            } catch (NullPointerException | DateTimeParseException e) { }
+        }
     }
 
     public static Advertisement createAdvertisement(CreateDtoAdvertisement createDtoAdvertisement, User user, AdvertisementType advertisementType) {
+        LocalDate startedDate = LocalDate.now(), finishedDate = LocalDate.now().plusMonths(1);
+        try {
+            startedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
+        } catch (NullPointerException | DateTimeParseException e) { }
+        try {
+            finishedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
+        } catch (NullPointerException | DateTimeParseException e) { }
+
         return Advertisement.builder()
                 .id(null)
                 .user(user)
@@ -94,6 +120,8 @@ public class Advertisement {
                 .rowPosition(createDtoAdvertisement.getRowPosition())
                 .columnPosition(createDtoAdvertisement.getColumnPosition())
                 .isActivated('N')
+                .startedDate(startedDate)
+                .finishedDate(finishedDate)
                 .build();
     }
 }

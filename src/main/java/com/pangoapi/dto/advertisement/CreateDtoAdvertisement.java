@@ -17,4 +17,6 @@ public class CreateDtoAdvertisement {
     private String siteUrl;
     private String rowPosition;
     private String columnPosition;
+    private String startedDate;
+    private String finishedDate;
 }

@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +60,8 @@ class AdvertisementServiceTest {
         // Configuration of advertisement
         Mockito.when(savedAdvertisement.getId()).thenReturn(advertisementId);
         Mockito.when(savedAdvertisement.getAdvertisementType()).thenReturn(savedAdvertisementType);
+        Mockito.when(savedAdvertisement.getStartedDate()).thenReturn(LocalDate.now());
+        Mockito.when(savedAdvertisement.getFinishedDate()).thenReturn(LocalDate.now().plusMonths(1));
 
         // Configuration of userRepository
         Mockito.when(userRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(savedUser));
@@ -99,8 +103,7 @@ class AdvertisementServiceTest {
 
     @Test
     public void When_call_retrieveAllAdvertisement_Then_return_list() {
-        // Given
-        // When
+        // Given // When
         List<Advertisement> advertisementList = advertisementService.retrieveAllAdvertisement();
 
         // Then
@@ -125,8 +128,7 @@ class AdvertisementServiceTest {
 
     @Test
     public void When_call_deleteOneAdvertisement_Then_return_void() {
-        // Given
-        // When
+        // Given // When
         advertisementService.deleteOneAdvertisement(savedAdvertisement.getId());
 
         // Then

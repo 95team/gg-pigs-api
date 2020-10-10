@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -46,14 +48,25 @@ class AdvertisementApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        createDtoAdvertisement = new CreateDtoAdvertisement("title", "userEmail", "detailDescription", "R1", "imagePath", "siteUrl", "1", "1");
-        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(1L, "user@email.com", "title", "detailDescription", "R1", "300", "250", "imagePath", "siteUrl", "1", "1", 'Y');
-        updateDtoAdvertisement = new UpdateDtoAdvertisement(1L, "user@email.com", "title", "detailDescription", "R1", "imagePath", "siteUrl","1", "1", 'Y');
+        Long mockId = 1L;
+        String mockTitle = "title";
+        String mockUserEmail = "user@email.com";
+        String mockDetailDescription = "This is a detail description.";
+        String mockAdvertisemenType = "R1";
+        String mockImagePath = "/src/image/exmaple.jpg";
+        String mockSiteUrl = "siteUrl";
+        String mockRowPosition = "1";
+        String mockColumnPosition = "1";
+        String mockStartedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        createDtoAdvertisement = new CreateDtoAdvertisement(mockTitle, mockUserEmail, mockDetailDescription, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
+        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockAdvertisemenType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+        updateDtoAdvertisement = new UpdateDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
 
-        Mockito.when(advertisementService.createOneAdvertisement(any(CreateDtoAdvertisement.class))).thenReturn(1L);
+        Mockito.when(advertisementService.createOneAdvertisement(any(CreateDtoAdvertisement.class))).thenReturn(mockId);
         Mockito.when(advertisementService.retrieveOneAdvertisement(any(Long.class))).thenReturn(retrieveDtoAdvertisement);
         Mockito.when(advertisementService.retrieveAllAdvertisement()).thenReturn(new ArrayList<>(Arrays.asList(retrieveDtoAdvertisement)));
-        Mockito.when(advertisementService.updateOneAdvertisement(any(Long.class), any(UpdateDtoAdvertisement.class))).thenReturn(1L);
+        Mockito.when(advertisementService.updateOneAdvertisement(any(Long.class), any(UpdateDtoAdvertisement.class))).thenReturn(mockId);
     }
 
     @Test

@@ -5,6 +5,8 @@ import com.pangoapi.domain.enums.AdvertisementReviewStatus;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 @Builder
 @Getter
 public class RetrieveDtoAdvertisementRequest {
@@ -21,6 +23,8 @@ public class RetrieveDtoAdvertisementRequest {
     private String rowPosition;
     private String columnPosition;
     private AdvertisementReviewStatus reviewStatus;
+    private String startedDate;
+    private String finishedDate;
 
     public static RetrieveDtoAdvertisementRequest createRetrieveDtoAdvertisementRequest(AdvertisementRequest advertisementRequest) {
         return RetrieveDtoAdvertisementRequest.builder()
@@ -36,6 +40,8 @@ public class RetrieveDtoAdvertisementRequest {
                 .rowPosition(advertisementRequest.getRowPosition())
                 .columnPosition(advertisementRequest.getColumnPosition())
                 .reviewStatus(advertisementRequest.getReviewStatus())
+                .startedDate(advertisementRequest.getStartedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .finishedDate(advertisementRequest.getFinishedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
     }
 }

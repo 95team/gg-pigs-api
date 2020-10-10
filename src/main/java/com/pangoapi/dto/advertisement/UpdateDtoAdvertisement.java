@@ -19,4 +19,6 @@ public class UpdateDtoAdvertisement {
     private String rowPosition;
     private String columnPosition;
     private char isActivated;
+    private String startedDate;
+    private String finishedDate;
 }
