@@ -91,12 +91,16 @@ public class Advertisement {
         if(updateDtoAdvertisement.getStartedDate() != null) {
             try {
                 changeStartedDate(LocalDate.parse(updateDtoAdvertisement.getStartedDate()));
-            } catch (NullPointerException | DateTimeParseException e) { }
+            } catch (NullPointerException | DateTimeParseException exception) {
+                throw new IllegalArgumentException("적절하지 않은 날짜형식 입니다. (Please check the data 'startedDate')");
+            }
         }
         if(updateDtoAdvertisement.getFinishedDate() != null) {
             try {
                 changeFinishedDate(LocalDate.parse(updateDtoAdvertisement.getFinishedDate()));
-            } catch (NullPointerException | DateTimeParseException e) { }
+            } catch (NullPointerException | DateTimeParseException exception) {
+                throw new IllegalArgumentException("적절하지 않은 날짜형식 입니다. (Please check the data 'finishedDate')");
+            }
         }
     }
 
@@ -104,10 +108,10 @@ public class Advertisement {
         LocalDate startedDate = LocalDate.now(), finishedDate = LocalDate.now().plusMonths(1);
         try {
             startedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
-        } catch (NullPointerException | DateTimeParseException e) { }
+        } catch (NullPointerException | DateTimeParseException exception) { }
         try {
             finishedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
-        } catch (NullPointerException | DateTimeParseException e) { }
+        } catch (NullPointerException | DateTimeParseException exception) { }
 
         return Advertisement.builder()
                 .id(null)
