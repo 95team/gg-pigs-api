@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 
 @AllArgsConstructor
 @Builder
@@ -23,6 +25,8 @@ public class RetrieveDtoAdvertisement {
     private String rowPosition;
     private String columnPosition;
     private char isActivated;
+    private String startedDate;
+    private String finishedDate;
 
     public static RetrieveDtoAdvertisement createRetrieveDtoAdvertisement(Advertisement advertisement) {
         return RetrieveDtoAdvertisement.builder()
@@ -38,6 +42,8 @@ public class RetrieveDtoAdvertisement {
                 .rowPosition(advertisement.getRowPosition())
                 .columnPosition(advertisement.getColumnPosition())
                 .isActivated(advertisement.getIsActivated())
+                .startedDate(advertisement.getStartedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .finishedDate(advertisement.getFinishedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
     }
 }

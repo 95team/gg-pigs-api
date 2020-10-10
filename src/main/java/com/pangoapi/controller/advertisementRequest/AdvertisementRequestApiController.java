@@ -47,7 +47,7 @@ public class AdvertisementRequestApiController {
 
     @GetMapping("/api/v1/advertisement-requests")
     public ApiResponse retrieveAllAdvertisementRequest() {
-        List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest();
+        List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest();
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisementRequests);
     }
