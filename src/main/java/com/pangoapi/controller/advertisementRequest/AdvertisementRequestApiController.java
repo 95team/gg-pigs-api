@@ -2,7 +2,6 @@ package com.pangoapi.controller.advertisementRequest;
 
 import com.pangoapi.dto.ApiResponse;
 import com.pangoapi.dto.advertisementRequest.CreateDtoAdvertisementRequest;
-import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisement;
 import com.pangoapi.dto.advertisementRequest.RetrieveDtoAdvertisementRequest;
 import com.pangoapi.dto.advertisementRequest.UpdateDtoAdvertisementRequest;
 import com.pangoapi.service.advertisementRequest.AdvertisementRequestService;
@@ -14,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -50,6 +51,18 @@ public class AdvertisementRequestApiController {
         List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest();
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisementRequests);
+    }
+
+    @GetMapping("/api/v1/advertisement-requests/seats")
+    public ApiResponse retrieveAllPossibleSeats(@RequestParam("page") String page, @RequestParam("startedDate") String startedDate, @RequestParam("startedDate") String finishedDate) throws Exception{
+        List<String[]> allPossibleSeats = advertisementRequestService.retrieveAllPossibleSeats(
+                new HashMap<String, String>() {{
+                    put("page", page);
+                    put("startedDate", startedDate);
+                    put("finishedDate", finishedDate);
+                }});
+
+        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allPossibleSeats);
     }
 
     /**
