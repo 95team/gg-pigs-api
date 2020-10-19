@@ -122,11 +122,11 @@ public class FileDto {
     public String uploadFile(String uploadDirectory) {
         String uploadFileName = makeRandomFileName();
 
-        if(serviceType.equalsIgnoreCase("advertisement")) uploadDirectory += "advertisements/";
-
         File uploadFile = new File(uploadDirectory + uploadFileName);
 
-        if(uploadFile.exists()) return null;
+        if(uploadFile.exists()) {
+            return null;
+        }
 
         try {
             file.transferTo(uploadFile);
