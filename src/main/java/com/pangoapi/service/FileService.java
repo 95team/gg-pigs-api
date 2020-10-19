@@ -35,9 +35,6 @@ public class FileService {
         }
         if(tryCount >= tryThreshold) throw new IOException("데이터를 업로드할 수 없습니다. (Check the server status)");
 
-        if(fileDto.getServiceType().equalsIgnoreCase("advertisement")) {
-            uploadImageUrl += "advertisements/";
-        }
         uploadImageUrl += uploadImageFileName;
 
         return uploadImageUrl;
