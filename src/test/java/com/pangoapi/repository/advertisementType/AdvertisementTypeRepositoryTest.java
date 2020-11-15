@@ -1,6 +1,7 @@
 package com.pangoapi.repository.advertisementType;
 
-import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
+import com.pangoapi.advertisementType.repository.AdvertisementTypeRepository;
+import com.pangoapi.advertisementType.entity.AdvertisementType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,7 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AdvertisementTypeRepositoryTest {
 
     @Autowired TestEntityManager entityManager;
-    @Autowired AdvertisementTypeRepository advertisementTypeRepository;
+    @Autowired
+    AdvertisementTypeRepository advertisementTypeRepository;
 
     private Long advertisementTypeId = null;
     private String advertisementTypeType = "R1";

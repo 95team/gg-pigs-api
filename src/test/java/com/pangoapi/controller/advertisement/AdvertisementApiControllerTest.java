@@ -1,10 +1,11 @@
 package com.pangoapi.controller.advertisement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
-import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisement;
-import com.pangoapi.dto.advertisement.UpdateDtoAdvertisement;
-import com.pangoapi.service.advertisement.AdvertisementService;
+import com.pangoapi.advertisement.controller.AdvertisementApiController;
+import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
+import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
+import com.pangoapi.advertisement.dto.UpdateDtoAdvertisement;
+import com.pangoapi.advertisement.service.AdvertisementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

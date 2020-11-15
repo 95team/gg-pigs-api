@@ -1,14 +1,15 @@
 package com.pangoapi.service.advertisement;
 
-import com.pangoapi.domain.entity.advertisement.Advertisement;
-import com.pangoapi.domain.entity.advertisementType.AdvertisementType;
-import com.pangoapi.domain.entity.user.User;
-import com.pangoapi.dto.advertisement.CreateDtoAdvertisement;
-import com.pangoapi.dto.advertisement.RetrieveDtoAdvertisement;
-import com.pangoapi.dto.advertisement.UpdateDtoAdvertisement;
-import com.pangoapi.repository.advertisement.AdvertisementRepository;
-import com.pangoapi.repository.advertisementType.AdvertisementTypeRepository;
-import com.pangoapi.repository.user.UserRepository;
+import com.pangoapi.advertisement.entity.Advertisement;
+import com.pangoapi.advertisement.service.AdvertisementService;
+import com.pangoapi.advertisementType.entity.AdvertisementType;
+import com.pangoapi.user.entity.User;
+import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
+import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
+import com.pangoapi.advertisement.dto.UpdateDtoAdvertisement;
+import com.pangoapi.advertisement.repository.AdvertisementRepository;
+import com.pangoapi.advertisementType.repository.AdvertisementTypeRepository;
+import com.pangoapi.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
