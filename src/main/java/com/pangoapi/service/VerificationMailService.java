@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.LimitExceededException;
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class VerificationMailService {
      * CREATE
      * */
     @Transactional
-    public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws LimitExceededException, IOException {
+    public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws Exception {
         if(!VerificationMail.checkEmailFormat(requestDtoVerificationMail.getReceiver())) {
             throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
@@ -60,8 +59,9 @@ public class VerificationMailService {
             sentVerificationMail.changeStatusToSuccess();
             responseDtoVerificationMail.changeToSuccess(fromEmail, toEmail, verificationCode);
         } catch (Exception exception) {
-            sentVerificationMail.changeStatusToFailure();
             System.out.println(exception);
+            sentVerificationMail.changeStatusToFailure();
+            throw new Exception("인증메일 전송을 실패하였습니다.");
         }
 
         return responseDtoVerificationMail;
