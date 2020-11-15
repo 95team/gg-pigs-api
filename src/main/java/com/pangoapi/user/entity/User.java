@@ -1,7 +1,7 @@
 package com.pangoapi.user.entity;
 
-import com.pangoapi.dto.user.CreateDtoUser;
-import com.pangoapi.dto.user.UpdateDtoUser;
+import com.pangoapi.user.dto.CreateDtoUser;
+import com.pangoapi.user.dto.UpdateDtoUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

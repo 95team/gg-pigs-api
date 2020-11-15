@@ -1,9 +1,9 @@
-package com.pangoapi.controller.user;
+package com.pangoapi.user.controller;
 
-import com.pangoapi.dto.ApiResponse;
-import com.pangoapi.dto.user.CreateDtoUser;
-import com.pangoapi.dto.user.RetrieveDtoUser;
-import com.pangoapi.dto.user.UpdateDtoUser;
+import com.pangoapi._common.dto.ApiResponse;
+import com.pangoapi.user.dto.CreateDtoUser;
+import com.pangoapi.user.dto.RetrieveDtoUser;
+import com.pangoapi.user.dto.UpdateDtoUser;
 import com.pangoapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
