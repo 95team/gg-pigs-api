@@ -6,16 +6,14 @@ import com.pangoapi.dto.verificationMail.RequestDtoVerificationMail;
 import com.pangoapi.dto.verificationMail.ResponseDtoVerificationMail;
 import com.pangoapi.repository.verificationMail.VerificationMailRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import javax.naming.LimitExceededException;
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -23,8 +21,8 @@ import java.time.LocalDate;
 @Service
 public class VerificationMailService {
 
-    @Autowired private Environment environment;
-    @Autowired private JavaMailSender javaMailSender;
+    private final Environment environment;
+    private final JavaMailSender javaMailSender;
     private final VerificationMailRepository verificationMailRepository;
     private Long maximumNumberOfRequests = 5L;
 
@@ -32,7 +30,7 @@ public class VerificationMailService {
      * CREATE
      * */
     @Transactional
-    public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws MessagingException, LimitExceededException {
+    public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws LimitExceededException, IOException {
         if(!VerificationMail.checkEmailFormat(requestDtoVerificationMail.getReceiver())) {
             throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
@@ -40,27 +38,29 @@ public class VerificationMailService {
             throw new LimitExceededException("일일 API 요청 횟수를 초과했습니다. (Exceeded 5 API requests)");
         }
 
-        ResponseDtoVerificationMail responseDtoVerificationMail = new ResponseDtoVerificationMail();
-
         String toEmail = requestDtoVerificationMail.getReceiver();
         String fromEmail = environment.getProperty("application.mail.from");
         String verificationCode = VerificationMail.makeVerificationCode();
         String subject = VerificationMail.makeSubject();
         String content = VerificationMail.makeContent(verificationCode);
-        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(toEmail, fromEmail, subject, content)).getId();
 
-        MailHandler mailHandler = new MailHandler(javaMailSender);
-        mailHandler.setFrom(fromEmail);
-        mailHandler.setTo(toEmail);
-        mailHandler.setSubject(subject);
-        mailHandler.setText(content, true);
+        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(toEmail, fromEmail, subject, content, verificationCode)).getId();
+        VerificationMail sentVerificationMail = verificationMailRepository.findById(verificationMailId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+
+        ResponseDtoVerificationMail responseDtoVerificationMail = new ResponseDtoVerificationMail();
+
         try {
+            MailHandler mailHandler = new MailHandler(javaMailSender);
+            mailHandler.setFrom(fromEmail);
+            mailHandler.setTo(toEmail);
+            mailHandler.setSubject(subject);
+            mailHandler.setText(content, true);
             mailHandler.send();
 
-            VerificationMail sentVerificationMail = verificationMailRepository.findById(verificationMailId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
             sentVerificationMail.changeStatusToSuccess();
             responseDtoVerificationMail.changeToSuccess(fromEmail, toEmail, verificationCode);
-        } catch (MailException exception) {
+        } catch (Exception exception) {
+            sentVerificationMail.changeStatusToFailure();
             System.out.println(exception);
         }
 

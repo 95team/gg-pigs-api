@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.MessagingException;
 import javax.naming.LimitExceededException;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,7 +20,7 @@ public class MailApiController {
     private final VerificationMailService verificationMailService;
 
     @PostMapping("/api/v1/verification-mails")
-    public ApiResponse sendVerificationEmail(@RequestBody RequestDtoVerificationMail requestDtoVerificationMail) throws MessagingException, LimitExceededException {
+    public ApiResponse sendVerificationEmail(@RequestBody RequestDtoVerificationMail requestDtoVerificationMail) throws LimitExceededException, IOException {
         ResponseDtoVerificationMail responseDtoVerificationMail = verificationMailService.sendVerificationEmail(requestDtoVerificationMail);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), responseDtoVerificationMail);
