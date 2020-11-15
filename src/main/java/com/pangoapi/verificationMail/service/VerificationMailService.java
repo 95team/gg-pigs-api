@@ -7,7 +7,6 @@ import com.pangoapi.verificationMail.dto.ResponseDtoVerificationMail;
 import com.pangoapi.verificationMail.repository.VerificationMailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +20,14 @@ import java.time.LocalDate;
 public class VerificationMailService {
 
     private final Environment environment;
-    private final JavaMailSender javaMailSender;
     private final VerificationMailRepository verificationMailRepository;
-    private Long maximumNumberOfRequests = 100L;
+    private Long maximumNumberOfRequests = 5L;
 
     /**
      * CREATE
      * */
     @Transactional
-    public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws Exception {
+    public ResponseDtoVerificationMail sendVerificationEmail(MailHandler mailHandler, ResponseDtoVerificationMail responseDtoVerificationMail, RequestDtoVerificationMail requestDtoVerificationMail) throws Exception {
         if(!VerificationMail.checkEmailFormat(requestDtoVerificationMail.getReceiver())) {
             throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
@@ -43,23 +41,16 @@ public class VerificationMailService {
         String subject = VerificationMail.makeSubject();
         String content = VerificationMail.makeContent(verificationCode);
 
-        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(toEmail, fromEmail, subject, content, verificationCode)).getId();
+        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(fromEmail, toEmail, subject, content, verificationCode)).getId();
         VerificationMail sentVerificationMail = verificationMailRepository.findById(verificationMailId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
-
-        ResponseDtoVerificationMail responseDtoVerificationMail = new ResponseDtoVerificationMail();
-
         try {
-            MailHandler mailHandler = new MailHandler(javaMailSender);
-            mailHandler.setFrom(fromEmail);
-            mailHandler.setTo(toEmail);
-            mailHandler.setSubject(subject);
-            mailHandler.setText(content, true);
+            mailHandler.setMailHandler(fromEmail, toEmail, subject, content);
             mailHandler.send();
 
             sentVerificationMail.changeStatusToSuccess();
             responseDtoVerificationMail.changeToSuccess(fromEmail, toEmail, verificationCode);
         } catch (Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
             sentVerificationMail.changeStatusToFailure();
             throw new Exception("인증메일 전송을 실패하였습니다.");
         }

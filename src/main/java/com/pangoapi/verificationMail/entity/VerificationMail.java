@@ -87,7 +87,7 @@ public class VerificationMail {
         return verificationCode;
     }
 
-    public static VerificationMail createVerificationMail(String toEmail, String fromEmail, String subject, String content, String verificationCode) {
+    public static VerificationMail createVerificationMail(String fromEmail, String toEmail, String subject, String content, String verificationCode) {
         String status = "WAITING";
         LocalDate sentDate = LocalDate.now();
 

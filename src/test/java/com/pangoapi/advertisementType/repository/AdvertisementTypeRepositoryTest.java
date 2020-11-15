@@ -1,6 +1,5 @@
 package com.pangoapi.advertisementType.repository;
 
-import com.pangoapi.advertisementType.repository.AdvertisementTypeRepository;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AdvertisementTypeRepositoryTest {
 
     @Autowired TestEntityManager entityManager;
-    @Autowired
-    AdvertisementTypeRepository advertisementTypeRepository;
+    @Autowired AdvertisementTypeRepository advertisementTypeRepository;
 
     private Long advertisementTypeId = null;
     private String advertisementTypeType = "R1";
