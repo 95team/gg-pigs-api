@@ -8,6 +8,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.LimitExceededException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 
@@ -25,6 +26,18 @@ public class CommonExceptionHandler {
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
         );
+    }
+
+    /**
+     * handleLimitExceededException(LimitExceededException.class)
+     * 목적 : API 요청 횟수를 제한한다.
+     * */
+    @ExceptionHandler(LimitExceededException.class)
+    protected ResponseEntity<ApiResponse> handleLimitExceededException(LimitExceededException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**

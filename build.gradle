@@ -24,7 +24,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'	// Spring Boot DataSource Decorator, https://github.com/gavlyukovskiy/spring-boot-data-source-decorator#spring-boot-datasource-decorator
+	implementation 'org.springframework.boot:spring-boot-starter-mail'          // Srping Boot SMTP, https://victorydntmd.tistory.com/342
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'   // Spring Boot DataSource Decorator, https://github.com/gavlyukovskiy/spring-boot-data-source-decorator#spring-boot-datasource-decorator
+	implementation 'org.jsoup:jsoup:1.13.1'                                     // Spring Boot Jsoup(Html parser), https://jsoup.org/download
 
 	compileOnly 'org.projectlombok:lombok'
 
