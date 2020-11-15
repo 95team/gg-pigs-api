@@ -1,4 +1,4 @@
-package com.pangoapi.repository.advertisementType;
+package com.pangoapi.advertisementType.repository;
 
 import com.pangoapi.advertisementType.repository.AdvertisementTypeRepository;
 import com.pangoapi.advertisementType.entity.AdvertisementType;

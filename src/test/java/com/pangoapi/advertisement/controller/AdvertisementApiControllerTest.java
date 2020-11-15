@@ -1,4 +1,4 @@
-package com.pangoapi.controller.advertisement;
+package com.pangoapi.advertisement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pangoapi.advertisement.controller.AdvertisementApiController;

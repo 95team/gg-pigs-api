@@ -1,4 +1,4 @@
-package com.pangoapi.service.advertisement;
+package com.pangoapi.advertisement.service;
 
 import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisement.service.AdvertisementService;

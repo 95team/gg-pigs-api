@@ -23,7 +23,7 @@ public class VerificationMailService {
     private final Environment environment;
     private final JavaMailSender javaMailSender;
     private final VerificationMailRepository verificationMailRepository;
-    private Long maximumNumberOfRequests = 5L;
+    private Long maximumNumberOfRequests = 100L;
 
     /**
      * CREATE
