@@ -34,6 +34,6 @@ class VerificationMailRepositoryTest {
         Long numberOfSentMails = verificationMailRepository.countByToEmailAndSentDate(receiver, LocalDate.now());
 
         // Then
-        assertThat(numberOfSentMails).isEqualTo(numberOfRequests + 1);
+        assertThat(numberOfSentMails).isEqualTo(numberOfRequests);
     }
 }
