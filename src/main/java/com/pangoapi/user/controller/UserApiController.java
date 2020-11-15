@@ -4,7 +4,7 @@ import com.pangoapi._common.dto.ApiResponse;
 import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
-import com.pangoapi.service.user.UserService;
+import com.pangoapi.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

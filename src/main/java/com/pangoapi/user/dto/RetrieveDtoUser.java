@@ -1,6 +1,6 @@
 package com.pangoapi.user.dto;
 
-import com.pangoapi.domain.entity.user.User;
+import com.pangoapi.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

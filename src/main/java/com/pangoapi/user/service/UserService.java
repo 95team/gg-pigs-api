@@ -1,10 +1,10 @@
-package com.pangoapi.service.user;
+package com.pangoapi.user.service;
 
-import com.pangoapi.domain.entity.user.User;
 import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
-import com.pangoapi.repository.user.UserRepository;
+import com.pangoapi.user.entity.User;
+import com.pangoapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
