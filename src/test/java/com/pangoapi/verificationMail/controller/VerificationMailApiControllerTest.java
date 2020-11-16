@@ -1,7 +1,6 @@
 package com.pangoapi.verificationMail.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pangoapi._common.utility.MailHandler;
 import com.pangoapi.verificationMail.dto.RequestDtoVerificationMail;
 import com.pangoapi.verificationMail.dto.ResponseDtoVerificationMail;
 import com.pangoapi.verificationMail.service.VerificationMailService;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +26,7 @@ class VerificationMailApiControllerTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockBean VerificationMailService verificationMailService;
+    @MockBean JavaMailSender javaMailSender;
 
     private RequestDtoVerificationMail requestDtoVerificationMail;
     private ResponseDtoVerificationMail responseDtoVerificationMail;
@@ -40,7 +41,7 @@ class VerificationMailApiControllerTest {
         responseDtoVerificationMail = new ResponseDtoVerificationMail();
         responseDtoVerificationMail.changeToSuccess(sender, receiver, verificationCode);
 
-        Mockito.when(verificationMailService.sendVerificationEmail(any(MailHandler.class), any(ResponseDtoVerificationMail.class), any(RequestDtoVerificationMail.class))).thenReturn(responseDtoVerificationMail);
+        Mockito.when(verificationMailService.sendVerificationEmail(any(RequestDtoVerificationMail.class))).thenReturn(responseDtoVerificationMail);
     }
 
     @Test
