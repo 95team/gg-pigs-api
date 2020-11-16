@@ -21,9 +21,17 @@ import java.time.LocalDate;
 public class VerificationMailService {
 
     private final Environment environment;
-    private final JavaMailSender javaMailSender;
     private final VerificationMailRepository verificationMailRepository;
-    private Long maximumNumberOfRequests = 100L;
+    private final JavaMailSender javaMailSender;
+    private Long maximumNumberOfRequests = 5L;
+
+    protected ResponseDtoVerificationMail makeResponseDtoVerificationMail() {
+        return new ResponseDtoVerificationMail();
+    }
+
+    protected MailHandler makeMailHandler(JavaMailSender javaMailSender) throws Exception {
+        return new MailHandler(javaMailSender);
+    }
 
     /**
      * CREATE
@@ -37,29 +45,25 @@ public class VerificationMailService {
             throw new LimitExceededException("일일 API 요청 횟수를 초과했습니다. (Exceeded 5 API requests)");
         }
 
+        ResponseDtoVerificationMail responseDtoVerificationMail = this.makeResponseDtoVerificationMail();
+        MailHandler mailHandler = this.makeMailHandler(javaMailSender);
+
         String toEmail = requestDtoVerificationMail.getReceiver();
         String fromEmail = environment.getProperty("application.mail.from");
         String verificationCode = VerificationMail.makeVerificationCode();
         String subject = VerificationMail.makeSubject();
         String content = VerificationMail.makeContent(verificationCode);
 
-        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(toEmail, fromEmail, subject, content, verificationCode)).getId();
+        Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(fromEmail, toEmail, subject, content, verificationCode)).getId();
         VerificationMail sentVerificationMail = verificationMailRepository.findById(verificationMailId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
-
-        ResponseDtoVerificationMail responseDtoVerificationMail = new ResponseDtoVerificationMail();
-
         try {
-            MailHandler mailHandler = new MailHandler(javaMailSender);
-            mailHandler.setFrom(fromEmail);
-            mailHandler.setTo(toEmail);
-            mailHandler.setSubject(subject);
-            mailHandler.setText(content, true);
+            mailHandler.setMailHandler(fromEmail, toEmail, subject, content);
             mailHandler.send();
 
             sentVerificationMail.changeStatusToSuccess();
             responseDtoVerificationMail.changeToSuccess(fromEmail, toEmail, verificationCode);
         } catch (Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
             sentVerificationMail.changeStatusToFailure();
             throw new Exception("인증메일 전송을 실패하였습니다.");
         }

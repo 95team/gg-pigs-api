@@ -36,8 +36,19 @@ public class MailHandler {
         mimeMessageHelper.setSubject(subject);
     }
 
+    public void setText(String text) throws MessagingException {
+        mimeMessageHelper.setText(text, true);
+    }
+
     public void setText(String text, boolean useHtml) throws MessagingException {
         mimeMessageHelper.setText(text, useHtml);
+    }
+
+    public void setMailHandler(String from, String to, String subject, String text) throws MessagingException {
+        this.setFrom(from);
+        this.setTo(to);
+        this.setSubject(subject);
+        this.setText(text);
     }
 
     public void send() {
