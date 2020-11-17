@@ -40,7 +40,7 @@ public class AdvertisementRequestService {
      */
     @Transactional
     public Long createOneAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest) {
-        User user = userRepository.findByEmail(createDtoAdvertisementRequest.getUserEmail()).orElse(null);
+        User user = userRepository.findUserByEmail(createDtoAdvertisementRequest.getUserEmail()).orElse(null);
         AdvertisementType advertisementType = advertisementTypeRepository.findByType(createDtoAdvertisementRequest.getAdvertisementType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         Long advertisementRequestId = advertisementRequestRepository.save(AdvertisementRequest.createAdvertisementRequest(createDtoAdvertisementRequest, user, advertisementType)).getId();
