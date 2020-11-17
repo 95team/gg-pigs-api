@@ -35,12 +35,12 @@ class UserApiControllerTest {
     private RetrieveDtoUser retrieveDtoUser = new RetrieveDtoUser();
     private UpdateDtoUser updateDtoUser = new UpdateDtoUser();
 
-    private String userEmail = "pigs95team@gmail.com";
-
     @Test
     public void user_한건_생성() throws Exception {
+        // Given
         String content = objectMapper.writeValueAsString(createDtoUser);
 
+        // When // Then
         mockMvc.perform(post("/api/v1/users").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(content))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -48,8 +48,10 @@ class UserApiControllerTest {
 
     @Test
     public void user_한건_조회() throws Exception {
+        // Given
         Mockito.when(userService.retrieveOneUser(anyLong())).thenReturn(retrieveDtoUser);
 
+        // When // Then
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
@@ -61,8 +63,10 @@ class UserApiControllerTest {
 
     @Test
     public void user_전체_조회() throws Exception {
+        // Given
         Mockito.when(userService.retrieveOneUser(anyLong())).thenReturn(retrieveDtoUser);
 
+        // When // Then
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -74,8 +78,10 @@ class UserApiControllerTest {
 
     @Test
     public void user_한건_업데이트() throws Exception {
+        // Given
         String content = objectMapper.writeValueAsString(updateDtoUser);
 
+        // When // Then
         mockMvc.perform(put("/api/v1/users/1").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(content))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -83,6 +89,7 @@ class UserApiControllerTest {
 
     @Test
     public void user_한건_삭제() throws Exception {
+        //Given // When // Then
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/users/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
