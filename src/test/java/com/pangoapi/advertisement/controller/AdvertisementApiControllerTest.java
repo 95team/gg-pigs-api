@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -48,7 +49,7 @@ class AdvertisementApiControllerTest {
     private UpdateDtoAdvertisement updateDtoAdvertisement;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         Long mockId = 1L;
         String mockTitle = "title";
         String mockUserEmail = "user@email.com";
@@ -66,7 +67,7 @@ class AdvertisementApiControllerTest {
 
         Mockito.when(advertisementService.createOneAdvertisement(any(CreateDtoAdvertisement.class))).thenReturn(mockId);
         Mockito.when(advertisementService.retrieveOneAdvertisement(any(Long.class))).thenReturn(retrieveDtoAdvertisement);
-        Mockito.when(advertisementService.retrieveAllAdvertisement()).thenReturn(new ArrayList<>(Arrays.asList(retrieveDtoAdvertisement)));
+        Mockito.when(advertisementService.retrieveAllAdvertisement(any(HashMap.class))).thenReturn(new ArrayList<>(Arrays.asList(retrieveDtoAdvertisement)));
         Mockito.when(advertisementService.updateOneAdvertisement(any(Long.class), any(UpdateDtoAdvertisement.class))).thenReturn(mockId);
     }
 

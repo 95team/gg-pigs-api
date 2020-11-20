@@ -1,4 +1,4 @@
-package com.pangoapi.advertisementType.service;
+package com.pangoapi.advertisementRequest.service;
 
 import com.pangoapi.advertisementRequest.entity.AdvertisementRequest;
 import com.pangoapi.advertisement.repository.AdvertisementRepository;
@@ -39,7 +39,7 @@ public class AdvertisementRequestService {
      * CREATE
      */
     @Transactional
-    public Long createOneAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest) {
+    public Long createOneAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest) throws Exception {
         User user = userRepository.findUserByEmail(createDtoAdvertisementRequest.getUserEmail()).orElse(null);
         AdvertisementType advertisementType = advertisementTypeRepository.findByType(createDtoAdvertisementRequest.getAdvertisementType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
@@ -66,12 +66,12 @@ public class AdvertisementRequestService {
     public List<String[]> retrieveAllPossibleSeats(HashMap<String, String> wantedDate) throws Exception {
         int[][] allSeats = new int[ADVERTISEMENT_LAYOUT_SIZE + 1][ADVERTISEMENT_LAYOUT_SIZE + 1];
 
-        String startIndexOfPage, lastIndexOfPage;
+        Long startIndexOfPage, lastIndexOfPage;
         LocalDate startedDate, finishedDate;
 
         try {
-            startIndexOfPage = Integer.toString((Integer.parseInt(wantedDate.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1);
-            lastIndexOfPage = Integer.toString(Integer.parseInt(wantedDate.get("page")) * ADVERTISEMENT_LAYOUT_SIZE);
+            startIndexOfPage = (Long.parseLong(wantedDate.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1;
+            lastIndexOfPage = Long.parseLong(wantedDate.get("page")) * ADVERTISEMENT_LAYOUT_SIZE;
             startedDate = LocalDate.parse(wantedDate.get("startedDate"));
             finishedDate = LocalDate.parse(wantedDate.get("finishedDate"));
         } catch (NullPointerException | DateTimeParseException | NumberFormatException exception) {
@@ -95,7 +95,7 @@ public class AdvertisementRequestService {
      * UPDATE
      */
     @Transactional
-    public Long updateOneAdvertisementRequest(Long _advertisementRequestId, UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
+    public Long updateOneAdvertisementRequest(Long _advertisementRequestId, UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) throws Exception {
         AdvertisementRequest advertisementRequest = advertisementRequestRepository.findById(_advertisementRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         advertisementRequest.changeAdvertisementRequest(updateDtoAdvertisementRequest);
@@ -125,8 +125,8 @@ public class AdvertisementRequestService {
         try {
             for (Map<String, String> impossibleSeat : impossibleSeats) {
                 String advertisementType = impossibleSeat.get("advertisementType");
-                int rowIndex = Integer.parseInt(impossibleSeat.get("rowPosition"));
-                int columnIndex = Integer.parseInt(impossibleSeat.get("columnPosition"));
+                int rowIndex = Integer.parseInt(String.valueOf(impossibleSeat.get("rowPosition")));
+                int columnIndex = Integer.parseInt(String.valueOf(impossibleSeat.get("columnPosition")));
                 int rangeOfIndex = advertisementType.charAt(1) - '0';
 
                 rowIndex = (rowIndex % ADVERTISEMENT_LAYOUT_SIZE);

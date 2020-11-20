@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +31,7 @@ public class AdvertisementApiController {
      * CREATE
      * */
     @PostMapping("/api/v1/advertisements")
-    public ApiResponse createOneAdvertisement(@RequestBody CreateDtoAdvertisement createDtoAdvertisement) {
+    public ApiResponse createOneAdvertisement(@RequestBody CreateDtoAdvertisement createDtoAdvertisement) throws Exception {
         Long advertisementId = advertisementService.createOneAdvertisement(createDtoAdvertisement);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), advertisementId);
@@ -45,8 +48,17 @@ public class AdvertisementApiController {
     }
 
     @GetMapping("/api/v1/advertisements")
-    public ApiResponse retrieveAllAdvertisement() {
-        List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisements = advertisementService.retrieveAllAdvertisement();
+    public ApiResponse retrieveAllAdvertisement(@RequestParam("page") Optional<String> page) {
+        HashMap<String, String> retrieveOptions = new HashMap<String, String>();
+        if(page.isPresent()) {
+            if (page.get().equalsIgnoreCase("0")) {
+                retrieveOptions.put("page", "1");
+            } else {
+                retrieveOptions.put("page", page.get());
+            }
+        }
+
+        List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisements = advertisementService.retrieveAllAdvertisement(retrieveOptions);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisements);
     }
@@ -55,7 +67,7 @@ public class AdvertisementApiController {
      * UPDATE
      * */
     @PutMapping("/api/v1/advertisements/{advertisementId}")
-    public ApiResponse updateOneAdvertisement(@PathVariable("advertisementId") Long _advertisementId, @RequestBody UpdateDtoAdvertisement updateDtoAdvertisement) {
+    public ApiResponse updateOneAdvertisement(@PathVariable("advertisementId") Long _advertisementId, @RequestBody UpdateDtoAdvertisement updateDtoAdvertisement) throws Exception {
         Long advertisementId = advertisementService.updateOneAdvertisement(_advertisementId, updateDtoAdvertisement);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), advertisementId);

@@ -4,7 +4,7 @@ import com.pangoapi._common.dto.ApiResponse;
 import com.pangoapi.advertisementRequest.dto.CreateDtoAdvertisementRequest;
 import com.pangoapi.advertisementRequest.dto.RetrieveDtoAdvertisementRequest;
 import com.pangoapi.advertisementRequest.dto.UpdateDtoAdvertisementRequest;
-import com.pangoapi.advertisementType.service.AdvertisementRequestService;
+import com.pangoapi.advertisementRequest.service.AdvertisementRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +30,7 @@ public class AdvertisementRequestApiController {
      * CREATE
      * */
     @PostMapping("/api/v1/advertisement-requests")
-    public ApiResponse createOneAdvertisementRequest(@RequestBody CreateDtoAdvertisementRequest createDtoAdvertisementRequest) {
+    public ApiResponse createOneAdvertisementRequest(@RequestBody CreateDtoAdvertisementRequest createDtoAdvertisementRequest) throws Exception {
         Long advertisementRequestId = advertisementRequestService.createOneAdvertisementRequest(createDtoAdvertisementRequest);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), advertisementRequestId);
@@ -69,7 +69,7 @@ public class AdvertisementRequestApiController {
      * UPDATE
      * */
     @PutMapping("/api/v1/advertisement-requests/{advertisementRequestId}")
-    public ApiResponse updateOneAdvertisementRequest(@PathVariable("advertisementRequestId") Long _advertisementRequestId, @RequestBody UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
+    public ApiResponse updateOneAdvertisementRequest(@PathVariable("advertisementRequestId") Long _advertisementRequestId, @RequestBody UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) throws Exception {
         Long advertisementRequestId = advertisementRequestService.updateOneAdvertisementRequest(_advertisementRequestId, updateDtoAdvertisementRequest);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), advertisementRequestId);
