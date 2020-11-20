@@ -14,8 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.pangoapi._common.CommonDefinition.ADVERTISEMENT_LAYOUT_SIZE;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,7 +34,7 @@ public class AdvertisementService {
      * CREATE
      */
     @Transactional
-    public Long createOneAdvertisement(CreateDtoAdvertisement createDtoAdvertisement) {
+    public Long createOneAdvertisement(CreateDtoAdvertisement createDtoAdvertisement) throws Exception {
         User user = userRepository.findByEmail(createDtoAdvertisement.getUserEmail()).orElse(null);
         AdvertisementType advertisementType = advertisementTypeRepository.findByType(createDtoAdvertisement.getAdvertisementType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
@@ -48,8 +52,33 @@ public class AdvertisementService {
         return RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement);
     }
 
-    public List retrieveAllAdvertisement() {
-        List<Advertisement> advertisements = advertisementRepository.findAll();
+    public List retrieveAllAdvertisement(HashMap<String, String> retrieveOptions) {
+        Long startIndexOfPage = 1L, lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+        boolean isUnlimited = false;
+
+        try {
+            if(retrieveOptions.containsKey("page")) {
+                System.out.println("HIHIHIH");
+                System.out.println(retrieveOptions.get("page").getClass());
+                if(retrieveOptions.get("page").equalsIgnoreCase("-1")) {
+                    isUnlimited = true;
+                }
+                else {
+                    startIndexOfPage = (Long.parseLong(retrieveOptions.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1;
+                    lastIndexOfPage = Long.parseLong(retrieveOptions.get("page")) * ADVERTISEMENT_LAYOUT_SIZE;
+                }
+            }
+        } catch (Exception exception) {
+            throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the parameters)");
+        }
+
+        List<Advertisement> advertisements;
+        if(isUnlimited == true) {
+            advertisements = advertisementRepository.findAll();
+        }
+        else {
+            advertisements = advertisementRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
+        }
 
         return advertisements.stream().map(advertisement -> RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement)).collect(Collectors.toList());
     }
@@ -58,7 +87,7 @@ public class AdvertisementService {
      * UPDATE
      */
     @Transactional
-    public Long updateOneAdvertisement(Long _advertisementId, UpdateDtoAdvertisement updateDtoAdvertisement) {
+    public Long updateOneAdvertisement(Long _advertisementId, UpdateDtoAdvertisement updateDtoAdvertisement) throws Exception {
         Advertisement advertisement = advertisementRepository.findById(_advertisementId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         advertisement.changeAdvertisement(updateDtoAdvertisement);

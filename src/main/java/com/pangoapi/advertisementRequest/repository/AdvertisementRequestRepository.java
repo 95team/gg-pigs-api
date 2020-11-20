@@ -12,7 +12,7 @@ import java.util.Map;
 public interface AdvertisementRequestRepository extends JpaRepository<AdvertisementRequest, Long> {
     @Query(value =
             "SELECT new Map(adt.type as advertisementType, adr.rowPosition as rowPosition, adr.columnPosition as columnPosition) " +
-            "FROM AdvertisementRequest adr join adr.advertisementType adt " +
+            "FROM AdvertisementRequest adr left join adr.advertisementType adt " +
             "WHERE :startedDate <= adr.finishedDate AND :finishedDate >= adr.startedDate AND adr.rowPosition >= :startIndexOfPage AND adr.rowPosition <= :lastIndexOfPage")
     List<Map<String, String>> findAllImpossibleSeats(
             @Param("startIndexOfPage") Long startIndexOfPage,

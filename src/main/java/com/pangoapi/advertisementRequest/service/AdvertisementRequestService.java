@@ -125,8 +125,8 @@ public class AdvertisementRequestService {
         try {
             for (Map<String, String> impossibleSeat : impossibleSeats) {
                 String advertisementType = impossibleSeat.get("advertisementType");
-                int rowIndex = Integer.parseInt(impossibleSeat.get("rowPosition"));
-                int columnIndex = Integer.parseInt(impossibleSeat.get("columnPosition"));
+                int rowIndex = Integer.parseInt(String.valueOf(impossibleSeat.get("rowPosition")));
+                int columnIndex = Integer.parseInt(String.valueOf(impossibleSeat.get("columnPosition")));
                 int rangeOfIndex = advertisementType.charAt(1) - '0';
 
                 rowIndex = (rowIndex % ADVERTISEMENT_LAYOUT_SIZE);
