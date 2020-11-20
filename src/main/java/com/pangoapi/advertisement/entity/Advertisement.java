@@ -124,7 +124,7 @@ public class Advertisement {
             columnPosition = Long.parseLong(createDtoAdvertisement.getColumnPosition());
 
             startedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
-            finishedDate = LocalDate.parse(createDtoAdvertisement.getStartedDate());
+            finishedDate = LocalDate.parse(createDtoAdvertisement.getFinishedDate());
         } catch (Exception exception) {
             throw new Exception("적절하지 않은 요청입니다. (Please check the parameters)");
         }
