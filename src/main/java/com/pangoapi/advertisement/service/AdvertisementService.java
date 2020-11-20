@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,15 +54,31 @@ public class AdvertisementService {
 
     public List retrieveAllAdvertisement(HashMap<String, String> retrieveOptions) {
         Long startIndexOfPage = 1L, lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+        boolean isUnlimited = false;
+
         try {
             if(retrieveOptions.containsKey("page")) {
-                startIndexOfPage = (Long.parseLong(retrieveOptions.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1;
-                lastIndexOfPage = Long.parseLong(retrieveOptions.get("page")) * ADVERTISEMENT_LAYOUT_SIZE;
+                System.out.println("HIHIHIH");
+                System.out.println(retrieveOptions.get("page").getClass());
+                if(retrieveOptions.get("page").equalsIgnoreCase("-1")) {
+                    isUnlimited = true;
+                }
+                else {
+                    startIndexOfPage = (Long.parseLong(retrieveOptions.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1;
+                    lastIndexOfPage = Long.parseLong(retrieveOptions.get("page")) * ADVERTISEMENT_LAYOUT_SIZE;
+                }
             }
         } catch (Exception exception) {
             throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the parameters)");
         }
-        List<Advertisement> advertisements = advertisementRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
+
+        List<Advertisement> advertisements;
+        if(isUnlimited == true) {
+            advertisements = advertisementRepository.findAll();
+        }
+        else {
+            advertisements = advertisementRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
+        }
 
         return advertisements.stream().map(advertisement -> RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement)).collect(Collectors.toList());
     }

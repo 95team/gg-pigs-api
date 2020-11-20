@@ -51,7 +51,11 @@ public class AdvertisementApiController {
     public ApiResponse retrieveAllAdvertisement(@RequestParam("page") Optional<String> page) {
         HashMap<String, String> retrieveOptions = new HashMap<String, String>();
         if(page.isPresent()) {
-            retrieveOptions.put("page", page.get());
+            if (page.get().equalsIgnoreCase("0")) {
+                retrieveOptions.put("page", "1");
+            } else {
+                retrieveOptions.put("page", page.get());
+            }
         }
 
         List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisements = advertisementService.retrieveAllAdvertisement(retrieveOptions);
