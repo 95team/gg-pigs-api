@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +54,8 @@ class AdvertisementServiceTest {
     @Mock Advertisement savedAdvertisement;
 
     private Long advertisementId = 1L;
+    private Long rowPosition = 1L;
+    private Long columnPosition = 1L;
     private String advertisementType = "R1";
 
     @BeforeEach
@@ -75,10 +78,14 @@ class AdvertisementServiceTest {
     }
 
     @Test
-    public void When_call_createOneAdvertisement_Then_return_savedAdvertisementId() {
+    public void When_call_createOneAdvertisement_Then_return_savedAdvertisementId() throws Exception {
         // Given
         CreateDtoAdvertisement createDtoAdvertisement = Mockito.mock(CreateDtoAdvertisement.class);
         Mockito.when(createDtoAdvertisement.getAdvertisementType()).thenReturn(advertisementType);
+        Mockito.when(createDtoAdvertisement.getRowPosition()).thenReturn(String.valueOf(rowPosition));
+        Mockito.when(createDtoAdvertisement.getColumnPosition()).thenReturn(String.valueOf(columnPosition));
+        Mockito.when(createDtoAdvertisement.getStartedDate()).thenReturn(String.valueOf(LocalDate.now()));
+        Mockito.when(createDtoAdvertisement.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
 
         // When
         Long savedAdvertisementId = advertisementService.createOneAdvertisement(createDtoAdvertisement);
@@ -104,15 +111,16 @@ class AdvertisementServiceTest {
     @Test
     public void When_call_retrieveAllAdvertisement_Then_return_list() {
         // Given // When
-        List<Advertisement> advertisementList = advertisementService.retrieveAllAdvertisement();
+        HashMap<String, String> retrieveOptions = new HashMap<String, String>();
+        List<Advertisement> advertisementList = advertisementService.retrieveAllAdvertisement(retrieveOptions);
 
         // Then
         assertThat(advertisementList.getClass()).isEqualTo(ArrayList.class);                   // 1. retrieveAllAdvertisement 함수의 반환 클래스는 ArrayList 클래스다.
-        Mockito.verify(advertisementRepository, times(1)).findAll();    // 2. AdvertisementRepository 의 findAll 함수가 1회 호출된다.
+        Mockito.verify(advertisementRepository, times(1)).findAllByPage(anyLong(), anyLong());    // 2. AdvertisementRepository 의 findAll 함수가 1회 호출된다.
     }
 
     @Test
-    public void When_call_updateOneAdvertisement_Then_return_updatedAdvertisementId() {
+    public void When_call_updateOneAdvertisement_Then_return_updatedAdvertisementId() throws Exception {
         // Given
         UpdateDtoAdvertisement updateDtoAdvertisement = Mockito.mock(UpdateDtoAdvertisement.class);
         Mockito.when(updateDtoAdvertisement.getId()).thenReturn(advertisementId);

@@ -51,8 +51,8 @@ public class AdvertisementRequest {
     private String detailDescription;
     private String imagePath;
     private String siteUrl;
-    private String rowPosition;
-    private String columnPosition;
+    private Long rowPosition;
+    private Long columnPosition;
     private String reviewer;
     private LocalDate startedDate;
     private LocalDate finishedDate;
@@ -71,9 +71,9 @@ public class AdvertisementRequest {
 
     public void changeStieUrl(String siteUrl) { this.siteUrl = siteUrl; }
 
-    public void changeRowPosition(String rowPosition) { this.rowPosition = rowPosition; }
+    public void changeRowPosition(Long rowPosition) { this.rowPosition = rowPosition; }
 
-    public void changeColumnPosition(String columnPosition) { this.columnPosition = columnPosition; }
+    public void changeColumnPosition(Long columnPosition) { this.columnPosition = columnPosition; }
 
     public void changeReviewStatusToApproval() { this.reviewStatus = AdvertisementReviewStatus.APPROVAL; }
 
@@ -92,13 +92,25 @@ public class AdvertisementRequest {
      * 사용자가 업데이트 요청할 수 있는 필드/메소드 입니다.
      * 해당 메소드에 포함되지 않은 ReviewStatus, Reviewer 등의 필드는 관리자가 업데이트 요청할 수 있는 필드입니다. 즉, 관리자 관련 필드입니다.
      * */
-    public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) {
+    public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) throws Exception {
         if(updateDtoAdvertisementRequest.getTitle() != null) changeTitle(updateDtoAdvertisementRequest.getTitle());
         if(updateDtoAdvertisementRequest.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
         if(updateDtoAdvertisementRequest.getImagePath() != null) changeImagePath(updateDtoAdvertisementRequest.getImagePath());
         if(updateDtoAdvertisementRequest.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
-        if(updateDtoAdvertisementRequest.getRowPosition() != null) changeRowPosition(updateDtoAdvertisementRequest.getRowPosition());
-        if(updateDtoAdvertisementRequest.getColumnPosition() != null) changeColumnPosition(updateDtoAdvertisementRequest.getColumnPosition());
+        if(updateDtoAdvertisementRequest.getRowPosition() != null) {
+            try {
+                changeRowPosition(Long.parseLong(updateDtoAdvertisementRequest.getRowPosition()));
+            } catch (Exception exception) {
+                throw new Exception("적절하지 않은 요청입니다. (Please check the parameters)");
+            }
+        }
+        if(updateDtoAdvertisementRequest.getColumnPosition() != null) {
+            try {
+                changeColumnPosition(Long.parseLong(updateDtoAdvertisementRequest.getColumnPosition()));
+            } catch (Exception exception) {
+                throw new Exception("적절하지 않은 요청입니다. (Please check the parameters)");
+            }
+        }
         if(updateDtoAdvertisementRequest.getStartedDate() != null) {
             try {
                 changeStartedDate(LocalDate.parse(updateDtoAdvertisementRequest.getStartedDate()));
@@ -115,15 +127,18 @@ public class AdvertisementRequest {
         }
     }
 
-    public static AdvertisementRequest createAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest, User user, AdvertisementType advertisementType) {
-        LocalDate startedDate = LocalDate.now();
-        LocalDate finishedDate = LocalDate.now().plusMonths(1);
+    public static AdvertisementRequest createAdvertisementRequest(CreateDtoAdvertisementRequest createDtoAdvertisementRequest, User user, AdvertisementType advertisementType) throws Exception {
+        LocalDate startedDate = LocalDate.now(); LocalDate finishedDate = LocalDate.now().plusMonths(1);
+        Long rowPosition, columnPosition;
         try {
+            rowPosition = Long.parseLong(createDtoAdvertisementRequest.getRowPosition());
+            columnPosition = Long.parseLong(createDtoAdvertisementRequest.getColumnPosition());
+
             startedDate = LocalDate.parse(createDtoAdvertisementRequest.getStartedDate());
-        } catch (NullPointerException | DateTimeParseException exception) { }
-        try {
             finishedDate = LocalDate.parse(createDtoAdvertisementRequest.getStartedDate());
-        } catch (NullPointerException | DateTimeParseException exception) { }
+        } catch (Exception exception) {
+            throw new Exception("적절하지 않은 요청입니다. (Please check the parameters)");
+        }
 
         return AdvertisementRequest.builder()
                 .id(null)
@@ -134,8 +149,8 @@ public class AdvertisementRequest {
                 .detailDescription(createDtoAdvertisementRequest.getDetailDescription())
                 .imagePath(createDtoAdvertisementRequest.getImagePath())
                 .siteUrl(createDtoAdvertisementRequest.getSiteUrl())
-                .rowPosition(createDtoAdvertisementRequest.getRowPosition())
-                .columnPosition(createDtoAdvertisementRequest.getColumnPosition())
+                .rowPosition(rowPosition)
+                .columnPosition(columnPosition)
                 .reviewer(null)
                 .startedDate(startedDate)
                 .finishedDate(finishedDate)
