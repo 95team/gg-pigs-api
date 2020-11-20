@@ -1,5 +1,6 @@
 package com.pangoapi.advertisementRequest.service;
 
+import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisementRequest.entity.AdvertisementRequest;
 import com.pangoapi.advertisement.repository.AdvertisementRepository;
 import com.pangoapi.advertisementRequest.repository.AdvertisementRequestRepository;
@@ -57,8 +58,31 @@ public class AdvertisementRequestService {
         return RetrieveDtoAdvertisementRequest.createRetrieveDtoAdvertisementRequest(advertisementRequest);
     }
 
-    public List retrieveAllAdvertisementRequest() {
-        List<AdvertisementRequest> advertisementRequests = advertisementRequestRepository.findAll();
+    public List retrieveAllAdvertisementRequest(HashMap<String, String> retrieveOptions) {
+        Long startIndexOfPage = 1L, lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+        boolean isUnlimited = false;
+
+        try {
+            if(retrieveOptions.containsKey("page")) {
+                if(retrieveOptions.get("page").equalsIgnoreCase("-1")) {
+                    isUnlimited = true;
+                }
+                else {
+                    startIndexOfPage = (Long.parseLong(retrieveOptions.get("page")) - 1) * ADVERTISEMENT_LAYOUT_SIZE + 1;
+                    lastIndexOfPage = Long.parseLong(retrieveOptions.get("page")) * ADVERTISEMENT_LAYOUT_SIZE;
+                }
+            }
+        } catch (Exception exception) {
+            throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the parameters)");
+        }
+
+        List<AdvertisementRequest> advertisementRequests;
+        if(isUnlimited == true) {
+            advertisementRequests = advertisementRequestRepository.findAll();
+        }
+        else {
+            advertisementRequests = advertisementRequestRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
+        }
 
         return advertisementRequests.stream().map(advertisementRequest -> RetrieveDtoAdvertisementRequest.createRetrieveDtoAdvertisementRequest(advertisementRequest)).collect(Collectors.toList());
     }
