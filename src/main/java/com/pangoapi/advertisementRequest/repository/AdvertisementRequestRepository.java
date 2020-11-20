@@ -20,4 +20,10 @@ public interface AdvertisementRequestRepository extends JpaRepository<Advertisem
             @Param("startedDate") LocalDate startedDate,
             @Param("finishedDate") LocalDate finishedDate
     );
+
+    @Query(value =
+            "SELECT adr " +
+            "FROM AdvertisementRequest adr left join fetch adr.user " +
+            "WHERE adr.columnPosition >= :startIndexOfPage AND adr.columnPosition <= :lastIndexOfPage AND adr.startedDate <= DATE(NOW()) AND adr.finishedDate >= DATE(NOW())")
+    List<AdvertisementRequest> findAllByPage(@Param("startIndexOfPage") Long startIndexOfPage, @Param("lastIndexOfPage") Long lastIndexOfPage);
 }

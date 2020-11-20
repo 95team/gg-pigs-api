@@ -57,8 +57,6 @@ public class AdvertisementService {
 
         try {
             if(retrieveOptions.containsKey("page")) {
-                System.out.println("HIHIHIH");
-                System.out.println(retrieveOptions.get("page").getClass());
                 if(retrieveOptions.get("page").equalsIgnoreCase("-1")) {
                     isUnlimited = true;
                 }

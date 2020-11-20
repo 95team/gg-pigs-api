@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,8 +48,17 @@ public class AdvertisementRequestApiController {
     }
 
     @GetMapping("/api/v1/advertisement-requests")
-    public ApiResponse retrieveAllAdvertisementRequest() {
-        List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest();
+    public ApiResponse retrieveAllAdvertisementRequest(@RequestParam("page") Optional<String> page) {
+        HashMap<String, String> retrieveOptions = new HashMap<>();
+        if(page.isPresent()) {
+            if (page.get().equalsIgnoreCase("0")) {
+                retrieveOptions.put("page", "1");
+            } else {
+                retrieveOptions.put("page", page.get());
+            }
+        }
+
+        List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest(retrieveOptions);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisementRequests);
     }
