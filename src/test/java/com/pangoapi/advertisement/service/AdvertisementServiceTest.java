@@ -1,7 +1,6 @@
 package com.pangoapi.advertisement.service;
 
 import com.pangoapi.advertisement.entity.Advertisement;
-import com.pangoapi.advertisement.service.AdvertisementService;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
 import com.pangoapi.user.entity.User;
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
@@ -67,7 +66,7 @@ class AdvertisementServiceTest {
         Mockito.when(savedAdvertisement.getFinishedDate()).thenReturn(LocalDate.now().plusMonths(1));
 
         // Configuration of userRepository
-        Mockito.when(userRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(savedUser));
+        Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.ofNullable(savedUser));
 
         // Configuration of advertisementRepository
         Mockito.when(advertisementRepository.save(any(Advertisement.class))).thenReturn(savedAdvertisement);

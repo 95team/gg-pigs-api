@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class AdvertisementService {
      */
     @Transactional
     public Long createOneAdvertisement(CreateDtoAdvertisement createDtoAdvertisement) throws Exception {
-        User user = userRepository.findByEmail(createDtoAdvertisement.getUserEmail()).orElse(null);
+        User user = userRepository.findUserByEmail(createDtoAdvertisement.getUserEmail()).orElse(null);
         AdvertisementType advertisementType = advertisementTypeRepository.findByType(createDtoAdvertisement.getAdvertisementType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         Long advertisementId = advertisementRepository.save(Advertisement.createAdvertisement(createDtoAdvertisement, user, advertisementType)).getId();
