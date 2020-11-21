@@ -1,12 +1,14 @@
 package com.pangoapi.verificationMail.service;
 
 import com.pangoapi._common.utility.MailHandler;
+import com.pangoapi.user.repository.UserRepository;
 import com.pangoapi.verificationMail.entity.VerificationMail;
 import com.pangoapi.verificationMail.dto.RequestDtoVerificationMail;
 import com.pangoapi.verificationMail.dto.ResponseDtoVerificationMail;
 import com.pangoapi.verificationMail.repository.VerificationMailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,10 @@ import java.time.LocalDate;
 public class VerificationMailService {
 
     private final Environment environment;
-    private final VerificationMailRepository verificationMailRepository;
     private final JavaMailSender javaMailSender;
+    private final UserRepository userRepository;
+    private final VerificationMailRepository verificationMailRepository;
+
     private Long maximumNumberOfRequests = 5L;
 
     protected ResponseDtoVerificationMail makeResponseDtoVerificationMail() {
@@ -43,6 +47,9 @@ public class VerificationMailService {
         }
         if(verificationMailRepository.countByToEmailAndSentDate(requestDtoVerificationMail.getReceiver(), LocalDate.now()) >= maximumNumberOfRequests) {
             throw new LimitExceededException("일일 API 요청 횟수를 초과했습니다. (Exceeded 5 API requests)");
+        }
+        if(userRepository.countByEmail(requestDtoVerificationMail.getReceiver()) >= 1) {
+            throw new DataIntegrityViolationException("이미 사용 중인 이메일입니다. (Please check the email.)");
         }
 
         ResponseDtoVerificationMail responseDtoVerificationMail = this.makeResponseDtoVerificationMail();

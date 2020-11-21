@@ -1,6 +1,7 @@
 package com.pangoapi.verificationMail.service;
 
 import com.pangoapi._common.utility.MailHandler;
+import com.pangoapi.user.repository.UserRepository;
 import com.pangoapi.verificationMail.dto.RequestDtoVerificationMail;
 import com.pangoapi.verificationMail.dto.ResponseDtoVerificationMail;
 import com.pangoapi.verificationMail.entity.VerificationMail;
@@ -34,6 +35,7 @@ class VerificationMailServiceTest {
 
     @MockBean MailHandler mailHandler;
     @MockBean JavaMailSender javaMailSender;
+    @MockBean UserRepository userRepository;
     @MockBean VerificationMailRepository verificationMailRepository;
 
     @Mock VerificationMail sentVerificationMail;
@@ -45,7 +47,7 @@ class VerificationMailServiceTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        verificationMailService = Mockito.spy(new VerificationMailService(environment, verificationMailRepository, javaMailSender));
+        verificationMailService = Mockito.spy(new VerificationMailService(environment, javaMailSender, userRepository, verificationMailRepository));
 
         // Configuration of verificationMailService
         Mockito.doReturn(mailHandler).when(verificationMailService).makeMailHandler(any(JavaMailSender.class));
@@ -65,6 +67,7 @@ class VerificationMailServiceTest {
         responseDtoVerificationMail = verificationMailService.sendVerificationEmail(requestDtoVerificationMail);
 
         // Then
+        Mockito.verify(userRepository, Mockito.times(1)).countByEmail(anyString());
         Mockito.verify(verificationMailRepository, times(1)).save(any(VerificationMail.class));
         Mockito.verify(verificationMailRepository, times(1)).findById(anyLong());
         Mockito.verify(sentVerificationMail, times(1)).changeStatusToSuccess();
