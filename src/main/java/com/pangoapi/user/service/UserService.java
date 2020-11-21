@@ -5,7 +5,9 @@ import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
 import com.pangoapi.user.entity.User;
 import com.pangoapi.user.repository.UserRepository;
+import com.pangoapi.verificationMail.entity.VerificationMail;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +27,19 @@ public class UserService {
      */
     @Transactional
     public Long createOneUser(CreateDtoUser createDtoUser) {
-        Long userId = userRepository.save(User.createUser(createDtoUser)).getId();
+        if(!User.checkEmailFormat(createDtoUser.getEmail())) {
+            throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
+        }
+        if(userRepository.countByEmail(createDtoUser.getEmail()) >= 1) {
+            throw new DataIntegrityViolationException("이미 사용 중인 이메일입니다. (Please check the email.)");
+        }
+
+        Long userId = null;
+        try {
+            userId = userRepository.save(User.createUser(createDtoUser)).getId();
+        } catch (DataIntegrityViolationException exception) {
+            throw new DataIntegrityViolationException("적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)");
+        }
 
         return userId;
     }

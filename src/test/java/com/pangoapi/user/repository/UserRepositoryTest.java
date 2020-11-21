@@ -38,4 +38,18 @@ class UserRepositoryTest {
         // Then
         assertThat(findUser.getId()).isEqualTo(savedUser.getId());
     }
+
+    @Test
+    public void When_call_countByEmail_Then_return_count() {
+        // Given
+        User savedUser = new User(defaultId, defaultName, defaultEmail, defaultPhone, defaultRole, defaultOauthType, defaultIsActivated, defaultIsAuthenticated);
+        entityManager.persist(savedUser);
+        entityManager.flush();;
+
+        // When
+        Long numberOfEmailsInUse = userRepository.countByEmail(defaultEmail);
+
+        // Then
+        assertThat(numberOfEmailsInUse).isEqualTo(1L);
+    }
 }
