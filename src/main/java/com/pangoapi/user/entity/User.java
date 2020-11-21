@@ -1,5 +1,6 @@
 package com.pangoapi.user.entity;
 
+import com.pangoapi._common.CommonDefinition;
 import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
 import lombok.AccessLevel;
@@ -14,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,6 +46,17 @@ public class User {
 
     private Character isActivated;
     private Character isAuthenticated;
+
+    public static Boolean checkEmailFormat(String email) {
+        boolean result = false;
+
+        Pattern pattern = CommonDefinition.ALLOWABLE_EMAIL_FORMAT_PATTERN;
+        Matcher matcher = pattern.matcher(email);
+
+        if(matcher.find()) { result = true; }
+
+        return result;
+    }
 
     public void changeName(String name) {
         this.name = name;
