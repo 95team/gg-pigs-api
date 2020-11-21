@@ -20,7 +20,12 @@ public class AdvertisementType {
     @Column(name = "ADVERTISEMENT_TYPE_ID")
     private Long id;
 
+    @Column(length = 8)
     private String type;
+
+    @Column(length = 8)
     private String width;
+
+    @Column(length = 8)
     private String height;
 }

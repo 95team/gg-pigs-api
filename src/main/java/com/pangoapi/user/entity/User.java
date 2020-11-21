@@ -26,11 +26,21 @@ public class User {
     @Column(name = "USER_ID")
     private Long id;
 
+    @Column(length = 32)
     private String name;
+
+    @Column(length = 64)
     private String email;
+
+    @Column(length = 16)
     private String phone;
+
+    @Column(length = 32)
     private String role;
+
+    @Column(length = 32)
     private String oauthType;
+
     private Character isActivated;
     private Character isAuthenticated;
 

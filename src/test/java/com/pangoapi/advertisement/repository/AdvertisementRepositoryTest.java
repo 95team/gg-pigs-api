@@ -4,11 +4,14 @@ import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
 import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
 import com.pangoapi.user.entity.User;
+import org.hibernate.exception.DataException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -46,6 +49,9 @@ class AdvertisementRepositoryTest {
         /**
          * Advertisement 삽입: [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7]
          */
+
+        advertisementType = entityManager.find(AdvertisementType.class, 1L);
+
         for (Long columnPosition = 1L; columnPosition <= ADVERTISEMENT_LAYOUT_SIZE; columnPosition++) {
             entityManager.persist(Advertisement.createAdvertisement(
                     new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
@@ -57,7 +63,25 @@ class AdvertisementRepositoryTest {
                 new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
                 user,
                 advertisementType));
+
         entityManager.flush();
+    }
+
+    @Test
+    void When_call_save_with_DataIntegrityViolationException_Then_throw_exception() throws Exception {
+        // Given
+        String wrongLengthOfTitle = "It can be up to 32 characters. It can be up to 32 characters.";
+
+        // When // Then
+        try {
+            advertisementRepository.save(Advertisement.createAdvertisement(
+                    new CreateDtoAdvertisement(wrongLengthOfTitle, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
+                    user,
+                    advertisementType));
+        } catch (DataIntegrityViolationException exception) {
+            return;
+        }
+        Assertions.fail("TEST FAILED: When_call_save_with_DataIntegrityViolationException_Then_throw_exception");
     }
 
     @Test

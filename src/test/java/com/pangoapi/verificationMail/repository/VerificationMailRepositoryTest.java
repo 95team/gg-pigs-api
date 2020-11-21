@@ -20,7 +20,7 @@ class VerificationMailRepositoryTest {
     private String receiver = "pigs95team@gmail.com";
     private String subject = "This is a subject.";
     private String content = "This is a content.";
-    private String verificationCode = "This is a verification-code.";
+    private String verificationCode = "123456";
 
     @Test
     public void When_call_countByToEmailAndSentDate_Then_return_count() {
