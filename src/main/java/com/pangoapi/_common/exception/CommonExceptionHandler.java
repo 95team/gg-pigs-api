@@ -95,7 +95,7 @@ public class CommonExceptionHandler {
     /**
      *  handleDataIntegrityViolationException(DataIntegrityViolationException.class)
      *  목적 : Hibernate 관련 Exception, ConstraintViolationException, PropertyValueException, DataException(잘못된 sql, data) 포함
-     *  예시 : Repository.save() 등 (Request DTO 의 누락된 데이터, Null 값 캐치 등)
+     *  예시 : Repository.save() 등 (Request DTO 의 누락된 데이터, Null 값 캐치, SQL 제약 조건 위반(varchar 길이 over) 등)
      * */
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<ApiResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {

@@ -40,10 +40,18 @@ public class Advertisement {
     @JoinColumn(name = "ADVERTISEMENT_TYPE_ID")
     private AdvertisementType advertisementType;
 
+    @Column(length = 32)
     private String title;
+
+    @Column(length = 128)
     private String detailDescription;
+
+    @Column(length = 128)
     private String imagePath;
+
+    @Column(length = 255)
     private String siteUrl;
+
     private Long rowPosition;
     private Long columnPosition;
     private char isActivated;

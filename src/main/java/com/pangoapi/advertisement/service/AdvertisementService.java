@@ -10,6 +10,7 @@ import com.pangoapi.advertisement.repository.AdvertisementRepository;
 import com.pangoapi.advertisementType.repository.AdvertisementTypeRepository;
 import com.pangoapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,12 @@ public class AdvertisementService {
         User user = userRepository.findUserByEmail(createDtoAdvertisement.getUserEmail()).orElse(null);
         AdvertisementType advertisementType = advertisementTypeRepository.findByType(createDtoAdvertisement.getAdvertisementType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        Long advertisementId = advertisementRepository.save(Advertisement.createAdvertisement(createDtoAdvertisement, user, advertisementType)).getId();
+        Long advertisementId = null;
+        try {
+            advertisementId = advertisementRepository.save(Advertisement.createAdvertisement(createDtoAdvertisement, user, advertisementType)).getId();
+        } catch (DataIntegrityViolationException exception) {
+            throw new DataIntegrityViolationException("적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)");
+        }
 
         return advertisementId;
     }

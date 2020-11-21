@@ -44,16 +44,26 @@ public class AdvertisementRequest {
     private AdvertisementType advertisementType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "REVIEW_STATUS")
+    @Column(name = "REVIEW_STATUS", length = 32)
     private AdvertisementReviewStatus reviewStatus;
 
+    @Column(length = 32)
     private String title;
+
+    @Column(length = 128)
     private String detailDescription;
+
+    @Column(length = 128)
     private String imagePath;
+
+    @Column(length = 255)
     private String siteUrl;
+
+    @Column(length = 32)
+    private String reviewer;
+
     private Long rowPosition;
     private Long columnPosition;
-    private String reviewer;
     private LocalDate startedDate;
     private LocalDate finishedDate;
 

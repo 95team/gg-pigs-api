@@ -30,12 +30,24 @@ public class VerificationMail {
     @Column(name = "verification_mail_id")
     private Long id;
 
+    @Column(length = 32)
     private String toEmail;
+
+    @Column(length = 32)
     private String fromEmail;
+
+    @Column(length = 16)
     private String verificationCode;
+
+    @Column(length = 16)
     private String status;
+
+    @Column(length = 32)
     private String subject;
+
+    @Column(length = 2048)
     private String content;
+
     private LocalDate sentDate;
 
     public void changeStatusToSuccess() {
