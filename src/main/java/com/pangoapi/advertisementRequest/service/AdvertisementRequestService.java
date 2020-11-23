@@ -115,7 +115,7 @@ public class AdvertisementRequestService {
         if (calculatePossibleSeats(allSeats, impossibleSeats) == false)
             throw new Exception("신청 가능한 자리를 조회할 수 없습니다.");
 
-        List<String[]> allPossibleSeats = getPossibleSeatsToList(allSeats);
+        List<String[]> allPossibleSeats = getPossibleSeatsAsList(allSeats);
 
         return allPossibleSeats;
     }
@@ -184,7 +184,39 @@ public class AdvertisementRequestService {
         }
     }
 
-    public List<String[]> getPossibleSeatsToList(int[][] allSeats) {
+    public static boolean isPossibleSeat(List<String[]> allPossibleSeats, Long rowPosition, Long columnPosition, String stringTypeOfadvertisementType) {
+        boolean isPossible = true;
+
+        int[][] allSeats = new int[ADVERTISEMENT_LAYOUT_SIZE + 1][ADVERTISEMENT_LAYOUT_SIZE + 1];
+        int rangeOfIndex = stringTypeOfadvertisementType.charAt(1) - '0';
+        int POSSIBLE_STATUS = 1;
+
+
+        for (String[] allPossibleSeat: allPossibleSeats) {
+            allSeats[Integer.parseInt(allPossibleSeat[0])][Integer.parseInt(allPossibleSeat[1])] = POSSIBLE_STATUS;
+        }
+
+        if (stringTypeOfadvertisementType.charAt(0) == 'R') {
+            for (int i = 0; i < rangeOfIndex; i++) {
+                if(allSeats[Math.toIntExact(rowPosition + i)][Math.toIntExact(columnPosition)] != POSSIBLE_STATUS) {
+                    isPossible = false;
+                    break;
+                }
+            }
+        }
+        else if (stringTypeOfadvertisementType.charAt(0) == 'C') {
+            for (int i = 0; i < rangeOfIndex; i++) {
+                if(allSeats[Math.toIntExact(rowPosition)][Math.toIntExact(columnPosition + i)] != POSSIBLE_STATUS) {
+                    isPossible = false;
+                    break;
+                }
+            }
+        }
+
+        return isPossible;
+    }
+
+    public List<String[]> getPossibleSeatsAsList(int[][] allSeats) {
         List<String[]> allPossibleSeats = new ArrayList<>();
 
         for(int i = 1; i < allSeats.length; i++) {
