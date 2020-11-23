@@ -3,4 +3,4 @@
 
 <br>
 
-Closes #(issue)
+Closes #
