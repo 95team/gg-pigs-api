@@ -178,7 +178,13 @@ public class AdvertisementRequestService {
             return true;
         } catch (Exception exception) {
             System.out.println(exception);
-            allSeats = allSeatsCopy;
+
+            // allSeats 배열을 초기화 합니다.
+            for(int i = 0; i < allSeats.length; i++) {
+                for(int j = 0; j < allSeats[0].length; j++) {
+                    allSeats[i][j] = allSeatsCopy[i][j];
+                }
+            }
 
             return false;
         }
