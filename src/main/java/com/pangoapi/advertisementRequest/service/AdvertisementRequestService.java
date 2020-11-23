@@ -36,6 +36,9 @@ public class AdvertisementRequestService {
     private final AdvertisementTypeRepository advertisementTypeRepository;
     private final AdvertisementRequestRepository advertisementRequestRepository;
 
+    private static final int POSSIBLE_SEAT = 1;
+    private static final int IMPOSSIBLE_SEAT = -1;
+
     /**
      * CREATE
      */
@@ -165,12 +168,12 @@ public class AdvertisementRequestService {
 
                 if (advertisementType.charAt(0) == 'R') {
                     for (int i = 0; i < rangeOfIndex; i++) {
-                        allSeats[rowIndex + i][columnIndex] = -1;
+                        allSeats[rowIndex + i][columnIndex] = IMPOSSIBLE_SEAT;
                     }
                 }
                 else if (advertisementType.charAt(0) == 'C') {
                     for (int i = 0; i < rangeOfIndex; i++) {
-                        allSeats[rowIndex][columnIndex + i] = -1;
+                        allSeats[rowIndex][columnIndex + i] = IMPOSSIBLE_SEAT;
                     }
                 }
             }
@@ -195,19 +198,18 @@ public class AdvertisementRequestService {
 
         int[][] allSeats = new int[ADVERTISEMENT_LAYOUT_SIZE + 1][ADVERTISEMENT_LAYOUT_SIZE + 1];
         int rangeOfIndex = stringTypeOfAdvertisementType.charAt(1) - '0';
-        int POSSIBLE_STATUS = 1;
         int rowIndex = Math.toIntExact(rowPosition);
         int columnIndex = Math.toIntExact(columnPosition);
 
 
         for (String[] allPossibleSeat: allPossibleSeats) {
-            allSeats[Integer.parseInt(allPossibleSeat[0])][Integer.parseInt(allPossibleSeat[1])] = POSSIBLE_STATUS;
+            allSeats[Integer.parseInt(allPossibleSeat[0])][Integer.parseInt(allPossibleSeat[1])] = POSSIBLE_SEAT;
         }
 
         if (stringTypeOfAdvertisementType.charAt(0) == 'R') {
             for (int i = 0; i < rangeOfIndex; i++) {
-                if((rowIndex + i >= ADVERTISEMENT_LAYOUT_SIZE + 1) ||
-                        (allSeats[rowIndex + i][columnIndex] != POSSIBLE_STATUS)) {
+                if((rowIndex + i > ADVERTISEMENT_LAYOUT_SIZE) ||
+                        (allSeats[rowIndex + i][columnIndex] != POSSIBLE_SEAT)) {
                     isPossible = false;
                     break;
                 }
@@ -215,8 +217,8 @@ public class AdvertisementRequestService {
         }
         else if (stringTypeOfAdvertisementType.charAt(0) == 'C') {
             for (int i = 0; i < rangeOfIndex; i++) {
-                if((columnIndex + i >= ADVERTISEMENT_LAYOUT_SIZE + 1) ||
-                        (allSeats[rowIndex][columnIndex + i] != POSSIBLE_STATUS)) {
+                if((columnIndex + i > ADVERTISEMENT_LAYOUT_SIZE) ||
+                        (allSeats[rowIndex][columnIndex + i] != POSSIBLE_SEAT)) {
                     isPossible = false;
                     break;
                 }
@@ -231,7 +233,7 @@ public class AdvertisementRequestService {
 
         for(int i = 1; i < allSeats.length; i++) {
             for(int j = 1; j < allSeats[0].length; j++) {
-                if(allSeats[i][j] != -1) {
+                if(allSeats[i][j] != IMPOSSIBLE_SEAT) {
                     allPossibleSeats.add(new String[]{Integer.toString(i), Integer.toString(j)});
                 }
             }

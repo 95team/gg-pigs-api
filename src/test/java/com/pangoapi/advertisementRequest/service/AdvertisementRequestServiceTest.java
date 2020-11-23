@@ -45,7 +45,7 @@ class AdvertisementRequestServiceTest {
     @Mock AdvertisementRequest advertisementRequest;
     @Mock AdvertisementType advertisementType;
 
-    final int POSSIBLE_SEAT = 0;
+    final int POSSIBLE_SEAT = 1;
     final int IMPOSSIBLE_SEAT = -1;
 
     @BeforeEach
