@@ -184,29 +184,33 @@ public class AdvertisementRequestService {
         }
     }
 
-    public static boolean isPossibleSeat(List<String[]> allPossibleSeats, Long rowPosition, Long columnPosition, String stringTypeOfadvertisementType) {
+    public static boolean isPossibleSeat(List<String[]> allPossibleSeats, Long rowPosition, Long columnPosition, String stringTypeOfAdvertisementType) {
         boolean isPossible = true;
 
         int[][] allSeats = new int[ADVERTISEMENT_LAYOUT_SIZE + 1][ADVERTISEMENT_LAYOUT_SIZE + 1];
-        int rangeOfIndex = stringTypeOfadvertisementType.charAt(1) - '0';
+        int rangeOfIndex = stringTypeOfAdvertisementType.charAt(1) - '0';
         int POSSIBLE_STATUS = 1;
+        int rowIndex = Math.toIntExact(rowPosition);
+        int columnIndex = Math.toIntExact(columnPosition);
 
 
         for (String[] allPossibleSeat: allPossibleSeats) {
             allSeats[Integer.parseInt(allPossibleSeat[0])][Integer.parseInt(allPossibleSeat[1])] = POSSIBLE_STATUS;
         }
 
-        if (stringTypeOfadvertisementType.charAt(0) == 'R') {
+        if (stringTypeOfAdvertisementType.charAt(0) == 'R') {
             for (int i = 0; i < rangeOfIndex; i++) {
-                if(allSeats[Math.toIntExact(rowPosition + i)][Math.toIntExact(columnPosition)] != POSSIBLE_STATUS) {
+                if((rowIndex + i >= ADVERTISEMENT_LAYOUT_SIZE + 1) ||
+                        (allSeats[rowIndex + i][columnIndex] != POSSIBLE_STATUS)) {
                     isPossible = false;
                     break;
                 }
             }
         }
-        else if (stringTypeOfadvertisementType.charAt(0) == 'C') {
+        else if (stringTypeOfAdvertisementType.charAt(0) == 'C') {
             for (int i = 0; i < rangeOfIndex; i++) {
-                if(allSeats[Math.toIntExact(rowPosition)][Math.toIntExact(columnPosition + i)] != POSSIBLE_STATUS) {
+                if((columnIndex + i >= ADVERTISEMENT_LAYOUT_SIZE + 1) ||
+                        (allSeats[rowIndex][columnIndex + i] != POSSIBLE_STATUS)) {
                     isPossible = false;
                     break;
                 }
