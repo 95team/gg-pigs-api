@@ -13,7 +13,7 @@ public interface AdvertisementRequestRepository extends JpaRepository<Advertisem
     @Query(value =
             "SELECT new Map(adt.type as advertisementType, adr.rowPosition as rowPosition, adr.columnPosition as columnPosition) " +
             "FROM AdvertisementRequest adr left join adr.advertisementType adt " +
-            "WHERE :startedDate <= adr.finishedDate AND :finishedDate >= adr.startedDate AND adr.rowPosition >= :startIndexOfPage AND adr.rowPosition <= :lastIndexOfPage")
+            "WHERE :startedDate <= adr.finishedDate AND :finishedDate >= adr.startedDate AND adr.columnPosition >= :startIndexOfPage AND adr.columnPosition <= :lastIndexOfPage")
     List<Map<String, String>> findAllImpossibleSeats(
             @Param("startIndexOfPage") Long startIndexOfPage,
             @Param("lastIndexOfPage") Long lastIndexOfPage,

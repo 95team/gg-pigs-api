@@ -29,6 +29,18 @@ public class CommonExceptionHandler {
     }
 
     /**
+     * handleBadRequestException(BadRequestException.class)
+     * 목적 : 잘못된 API 요청인 경우 (포괄적으로 사용할 수 있는 Exception)
+     * */
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<ApiResponse> handleBadRequestException(BadRequestException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * handleLimitExceededException(LimitExceededException.class)
      * 목적 : API 요청 횟수를 제한한다.
      * */
