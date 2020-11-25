@@ -11,6 +11,7 @@ public class CreateDtoUser {
 
     private String name;
     private String email;
+    private String password;
     private String phone;
     private String role;
     private String oauth_type;
