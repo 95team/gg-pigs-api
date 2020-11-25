@@ -5,6 +5,7 @@ import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
 import com.pangoapi.user.entity.User;
 import com.pangoapi.user.repository.UserRepository;
+import com.pangoapi.userSalt.service.UserSaltService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,6 +31,7 @@ class UserServiceTest {
     @Autowired UserService userService;
 
     @MockBean UserRepository userRepository;
+    @MockBean UserSaltService userSaltService;
 
     @Mock User user;
     @Mock CreateDtoUser createDtoUser;
@@ -37,11 +39,13 @@ class UserServiceTest {
 
     private Long userId = 1L;
     private String userEmail = "pigs95team@gmail.com";
+    private String userPassword = "thisisapassword";
 
     @Test
     public void When_call_createOneUser_Then_call_save_function() {
         // Given
         Mockito.when(createDtoUser.getEmail()).thenReturn(userEmail);
+        Mockito.when(createDtoUser.getPassword()).thenReturn(userPassword);
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
 
         // When
