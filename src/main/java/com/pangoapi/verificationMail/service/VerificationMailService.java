@@ -42,6 +42,9 @@ public class VerificationMailService {
      * */
     @Transactional
     public ResponseDtoVerificationMail sendVerificationEmail(RequestDtoVerificationMail requestDtoVerificationMail) throws Exception {
+        if(requestDtoVerificationMail.getReceiver() == null) {
+            throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the required value)");
+        }
         if(!VerificationMail.checkEmailFormat(requestDtoVerificationMail.getReceiver())) {
             throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
