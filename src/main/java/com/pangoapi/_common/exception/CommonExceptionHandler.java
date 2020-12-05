@@ -1,6 +1,7 @@
 package com.pangoapi._common.exception;
 
 import com.pangoapi._common.dto.ApiResponse;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,18 @@ public class CommonExceptionHandler {
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
         );
+    }
+
+    /**
+     * handleLoginFailureException(LoginFailureException.class)
+     * 목적 : 로그인에 실패했을 경우
+     * */
+    @ExceptionHandler(LoginFailureException.class)
+    protected ResponseEntity<ApiResponse> handleLoginFailureException(LoginFailureException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -115,6 +128,18 @@ public class CommonExceptionHandler {
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * handleInternalException(InternalException.class)
+     * 목적 : 서버 에러가 발생한 경
+     * */
+    @ExceptionHandler(InternalException.class)
+    protected ResponseEntity<ApiResponse> handleInternalException(InternalException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
