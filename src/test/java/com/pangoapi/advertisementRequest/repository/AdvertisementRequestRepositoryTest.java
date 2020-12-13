@@ -22,9 +22,6 @@ public class AdvertisementRequestRepositoryTest {
     @Autowired TestEntityManager entityManager;
     @Autowired AdvertisementRequestRepository advertisementRequestRepository;
 
-    User user;
-    AdvertisementType advertisementType;
-
     @BeforeEach
     void setUp() throws Exception {
         /**
@@ -45,10 +42,11 @@ public class AdvertisementRequestRepositoryTest {
         Long rowPosition = 1L;
         Long columnPosition = 1L;
 
-        entityManager.persist(User.createUser(new CreateDtoUser(null, userEmail, null, null, null, null, null, null)));
+        User user = User.createUser(new CreateDtoUser(null, userEmail, null, null, null, null, null, null));
+        AdvertisementType advertisementType = entityManager.find(AdvertisementType.class, 1L);
 
-        user = entityManager.find(User.class, 1L);
-        advertisementType = entityManager.find(AdvertisementType.class, 1L);
+        entityManager.persist(user);
+
 
         for(int i = 1; i < numberOfDummyData; i++, columnPosition++) {
             entityManager.persist(AdvertisementRequest.createAdvertisementRequest(

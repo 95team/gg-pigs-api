@@ -29,9 +29,6 @@ class AdvertisementRepositoryTest {
     @Autowired TestEntityManager entityManager;
     @Autowired AdvertisementRepository advertisementRepository;
 
-    User user;
-    AdvertisementType advertisementType;
-
     private final String userEmail = "userEmail";
     private final String detailDescription = "detailDescription";
     private final String advertisementR1Type = "R1";
@@ -49,10 +46,11 @@ class AdvertisementRepositoryTest {
         /**
          * (Dummy data) Advertisement 삽입: [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7]
          */
-        entityManager.persist(User.createUser(new CreateDtoUser(null, userEmail, null, null, null, null, null, null)));
 
-        user = entityManager.find(User.class, 1L);
-        advertisementType = entityManager.find(AdvertisementType.class, 1L);
+        User user = User.createUser(new CreateDtoUser(null, userEmail, null, null, null, null, null, null));
+        AdvertisementType advertisementType = entityManager.find(AdvertisementType.class, 1L);
+
+        entityManager.persist(user);
 
         Long columnPosition = 1L;
         String title = "title";
@@ -80,8 +78,8 @@ class AdvertisementRepositoryTest {
         try {
             advertisementRepository.save(Advertisement.createAdvertisement(
                     new CreateDtoAdvertisement(wrongLengthOfTitle, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
-                    user,
-                    advertisementType));
+                    null,
+                    null));
         } catch (DataIntegrityViolationException exception) {
             return;
         }
@@ -124,24 +122,25 @@ class AdvertisementRepositoryTest {
     @Test
     void When_call_findAllByCondition_Then_return_list_by_condition() {
         // Given
-        int targetSizeOfAdvertisements = numberOfDummyData - 1;
-        RetrieveConditionForAdvertisement retrieveConditionForAdvertisement = new RetrieveConditionForAdvertisement();
+        int sizeOfAdvertisements = 1;
+        RetrieveConditionForAdvertisement condition = new RetrieveConditionForAdvertisement();
 
         // 1. Page 정보를 설정합니다.
-        retrieveConditionForAdvertisement.setPage("1");
-        retrieveConditionForAdvertisement.isUnlimitedIsFalse();
+        condition.isUnlimitedIsFalse();
+        condition.setPage("2");
+        condition.calculatePage();
 
         // 2. UserEmail 정보를 설정합니다.
-        retrieveConditionForAdvertisement.hasUserEmailIsTrue();
-        retrieveConditionForAdvertisement.setUserEmail(userEmail);
+        condition.hasUserEmailIsTrue();
+        condition.setUserEmail(userEmail);
 
         // 3. IsFilteredDate 정보를 설정합니다.
-        retrieveConditionForAdvertisement.isFilteredDateIsTrue();
+        condition.isFilteredDateIsTrue();
 
         // When
-        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(retrieveConditionForAdvertisement);
+        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(condition);
 
         // Then
-        assertThat(advertisements.size()).isEqualTo(targetSizeOfAdvertisements);
+        assertThat(advertisements.size()).isEqualTo(sizeOfAdvertisements);
     }
 }
