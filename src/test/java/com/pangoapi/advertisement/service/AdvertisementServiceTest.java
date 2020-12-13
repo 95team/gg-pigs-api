@@ -1,5 +1,6 @@
 package com.pangoapi.advertisement.service;
 
+import com.pangoapi.advertisement.dto.RetrieveConditionForAdvertisement;
 import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
 import com.pangoapi.user.entity.User;
@@ -114,8 +115,24 @@ class AdvertisementServiceTest {
         List<Advertisement> advertisementList = advertisementService.retrieveAllAdvertisement(retrieveOptions);
 
         // Then
-        assertThat(advertisementList.getClass()).isEqualTo(ArrayList.class);                   // 1. retrieveAllAdvertisement 함수의 반환 클래스는 ArrayList 클래스다.
-        Mockito.verify(advertisementRepository, times(1)).findAllByPage(anyLong(), anyLong());    // 2. AdvertisementRepository 의 findAll 함수가 1회 호출된다.
+        assertThat(advertisementList.getClass()).isEqualTo(ArrayList.class);
+        Mockito.verify(advertisementRepository, times(1)).findAllByPage(anyLong(), anyLong());
+    }
+
+    @Test
+    public void When_call_retrieveAllAdvertisement_v2_Then_return_list() {
+        // Given
+        HashMap<String, String> retrieveCondition = new HashMap<>();
+        retrieveCondition.put("page", null);
+        retrieveCondition.put("userEmail", null);
+        retrieveCondition.put("isFilteredDate", null);
+
+        // When
+        List<Advertisement> advertisementList = advertisementService.retrieveAllAdvertisement_v2(retrieveCondition);
+
+        // Then
+        assertThat(advertisementList.getClass()).isEqualTo(ArrayList.class);
+        Mockito.verify(advertisementRepository, times(1)).findAllByCondition(any());
     }
 
     @Test

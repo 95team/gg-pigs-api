@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
+public interface AdvertisementRepository extends JpaRepository<Advertisement, Long>, AdvertisementRepositoryCustom {
     @Query(value =
             "SELECT new Map(adt.type as advertisementType, ad.rowPosition as rowPosition, ad.columnPosition as columnPosition) " +
             "FROM Advertisement ad left join ad.advertisementType adt " +

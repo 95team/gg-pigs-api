@@ -1,6 +1,7 @@
 package com.pangoapi.advertisement.service;
 
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
+import com.pangoapi.advertisement.dto.RetrieveConditionForAdvertisement;
 import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
 import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
@@ -82,6 +84,56 @@ public class AdvertisementService {
         else {
             advertisements = advertisementRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
         }
+
+        return advertisements.stream().map(advertisement -> RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement)).collect(Collectors.toList());
+    }
+
+    public List retrieveAllAdvertisement_v2(HashMap<String, String> retrieveCondition) {
+        RetrieveConditionForAdvertisement retrieveConditionForAdvertisement = new RetrieveConditionForAdvertisement();
+
+        // 1. Page 정보를 가공합니다.
+        if(StringUtils.hasText(retrieveCondition.get("page"))) {
+            if(retrieveCondition.get("page").equalsIgnoreCase("-1")) {
+                retrieveConditionForAdvertisement.isUnlimitedIsTrue();
+            }
+            else if(retrieveCondition.get("page").equalsIgnoreCase("0")) {
+                retrieveConditionForAdvertisement.isUnlimitedIsFalse();
+                retrieveConditionForAdvertisement.pageIsDefault();
+            }
+            else {
+                retrieveConditionForAdvertisement.isUnlimitedIsFalse();
+                retrieveConditionForAdvertisement.setPage(retrieveCondition.get("page"));
+            }
+        }
+        else {
+            retrieveConditionForAdvertisement.isUnlimitedIsFalse();
+            retrieveConditionForAdvertisement.pageIsDefault();
+        }
+
+        // 2. UserEmail 정보를 가공합니다.
+        if(StringUtils.hasText(retrieveCondition.get("userEmail"))) {
+            retrieveConditionForAdvertisement.hasUserEmailIsTrue();
+            retrieveConditionForAdvertisement.setUserEmail(retrieveCondition.get("userEmail"));
+        }
+        else {
+            retrieveConditionForAdvertisement.hasUserEmailIsFalse();
+        }
+
+        // 3. IsFilteredDate 정보를 가공합니다.
+        if(StringUtils.hasText(retrieveCondition.get("isFilteredDate"))) {
+            if(retrieveCondition.get("isFilteredDate").equalsIgnoreCase("true") ||
+                    retrieveCondition.get("isFilteredDate").equalsIgnoreCase("y")) {
+                retrieveConditionForAdvertisement.isFilteredDateIsTrue();
+            }
+            else {
+                retrieveConditionForAdvertisement.isFilteredDateIsFalse();
+            }
+        }
+        else {
+            retrieveConditionForAdvertisement.isFilteredDateIsFalse();
+        }
+
+        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(retrieveConditionForAdvertisement);
 
         return advertisements.stream().map(advertisement -> RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement)).collect(Collectors.toList());
     }
