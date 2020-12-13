@@ -42,7 +42,11 @@ public class RetrieveConditionForAdvertisementRequest {
     public void pageIsDefault() { this.page = "1"; }
 
     public void calculatePage() {
-        startIndexOfPage = ((Long.parseLong(page) - 1) * ADVERTISEMENT_LAYOUT_SIZE) + 1;
-        lastIndexOfPage = (Long.parseLong(page) * ADVERTISEMENT_LAYOUT_SIZE);
+        try {
+            startIndexOfPage = ((Long.parseLong(page) - 1) * ADVERTISEMENT_LAYOUT_SIZE) + 1;
+            lastIndexOfPage = (Long.parseLong(page) * ADVERTISEMENT_LAYOUT_SIZE);
+        } catch (NumberFormatException exception) {
+            throw new NumberFormatException("적절하지 않은 요청입니다. (Please check the page parameter)");
+        }
     }
 }

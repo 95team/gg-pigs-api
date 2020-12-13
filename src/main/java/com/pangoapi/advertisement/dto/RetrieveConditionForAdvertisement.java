@@ -41,4 +41,13 @@ public class RetrieveConditionForAdvertisement {
     public void hasUserEmailIsFalse() { this.hasUserEmail = false; }
 
     public void pageIsDefault() { this.page = "1"; }
+
+    public void calculatePage() {
+        try {
+            startIndexOfPage = ((Long.parseLong(page) - 1) * ADVERTISEMENT_LAYOUT_SIZE) + 1;
+            lastIndexOfPage = (Long.parseLong(page) * ADVERTISEMENT_LAYOUT_SIZE);
+        } catch (NumberFormatException exception) {
+            throw new NumberFormatException("적절하지 않은 요청입니다. (Please check the page parameter)");
+        }
+    }
 }
