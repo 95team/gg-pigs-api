@@ -89,51 +89,52 @@ public class AdvertisementService {
     }
 
     public List retrieveAllAdvertisement_v2(HashMap<String, String> retrieveCondition) {
-        RetrieveConditionForAdvertisement retrieveConditionForAdvertisement = new RetrieveConditionForAdvertisement();
+        RetrieveConditionForAdvertisement condition = new RetrieveConditionForAdvertisement();
 
         // 1. Page 정보를 가공합니다.
         if(StringUtils.hasText(retrieveCondition.get("page"))) {
             if(retrieveCondition.get("page").equalsIgnoreCase("-1")) {
-                retrieveConditionForAdvertisement.isUnlimitedIsTrue();
+                condition.isUnlimitedIsTrue();
             }
             else if(retrieveCondition.get("page").equalsIgnoreCase("0")) {
-                retrieveConditionForAdvertisement.isUnlimitedIsFalse();
-                retrieveConditionForAdvertisement.pageIsDefault();
+                condition.isUnlimitedIsFalse();
+                condition.pageIsDefault();
             }
             else {
-                retrieveConditionForAdvertisement.isUnlimitedIsFalse();
-                retrieveConditionForAdvertisement.setPage(retrieveCondition.get("page"));
+                condition.isUnlimitedIsFalse();
+                condition.setPage(retrieveCondition.get("page"));
+                condition.calculatePage();
             }
         }
         else {
-            retrieveConditionForAdvertisement.isUnlimitedIsFalse();
-            retrieveConditionForAdvertisement.pageIsDefault();
+            condition.isUnlimitedIsFalse();
+            condition.pageIsDefault();
         }
 
         // 2. UserEmail 정보를 가공합니다.
         if(StringUtils.hasText(retrieveCondition.get("userEmail"))) {
-            retrieveConditionForAdvertisement.hasUserEmailIsTrue();
-            retrieveConditionForAdvertisement.setUserEmail(retrieveCondition.get("userEmail"));
+            condition.hasUserEmailIsTrue();
+            condition.setUserEmail(retrieveCondition.get("userEmail"));
         }
         else {
-            retrieveConditionForAdvertisement.hasUserEmailIsFalse();
+            condition.hasUserEmailIsFalse();
         }
 
         // 3. IsFilteredDate 정보를 가공합니다.
         if(StringUtils.hasText(retrieveCondition.get("isFilteredDate"))) {
             if(retrieveCondition.get("isFilteredDate").equalsIgnoreCase("true") ||
                     retrieveCondition.get("isFilteredDate").equalsIgnoreCase("y")) {
-                retrieveConditionForAdvertisement.isFilteredDateIsTrue();
+                condition.isFilteredDateIsTrue();
             }
             else {
-                retrieveConditionForAdvertisement.isFilteredDateIsFalse();
+                condition.isFilteredDateIsFalse();
             }
         }
         else {
-            retrieveConditionForAdvertisement.isFilteredDateIsFalse();
+            condition.isFilteredDateIsFalse();
         }
 
-        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(retrieveConditionForAdvertisement);
+        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(condition);
 
         return advertisements.stream().map(advertisement -> RetrieveDtoAdvertisement.createRetrieveDtoAdvertisement(advertisement)).collect(Collectors.toList());
     }
