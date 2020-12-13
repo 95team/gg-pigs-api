@@ -141,7 +141,7 @@ public class AdvertisementRequestService {
             }
         }
         else {
-            condition.isFilteredDateIsFalse();
+            condition.isFilteredDateIsTrue();
         }
         
         List<AdvertisementRequest> advertisementRequests = advertisementRequestRepository.findAllByCondition(condition);
