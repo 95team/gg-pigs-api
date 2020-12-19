@@ -1,6 +1,7 @@
 package com.pangoapi.login.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pangoapi._common.utility.CookieProvider;
 import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.login.dto.LoginResult;
 import com.pangoapi.login.dto.RequestDtoLogin;
@@ -15,7 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.http.Cookie;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +31,7 @@ class LoginControllerTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockBean JwtProvider jwtProvider;
+    @MockBean CookieProvider cookieProvider;
     @MockBean LoginService loginService;
 
     @Mock LoginResult loginResult;
@@ -49,6 +54,13 @@ class LoginControllerTest {
 
         // Configuration of LoginService
         Mockito.when(loginService.login(any(RequestDtoLogin.class))).thenReturn(loginResult);
+
+        // Configuration of JwtProvider
+        Mockito.when(jwtProvider.generateToken(anyString(), anyString(), anyString())).thenReturn(token);
+
+        // Configuration of CookieProvider
+        Cookie cookie = new Cookie("name", "value");
+        Mockito.when(cookieProvider.generateCookie(anyString(), anyString())).thenReturn(cookie);
     }
 
     @Test

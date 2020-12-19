@@ -1,7 +1,6 @@
 package com.pangoapi.login.service;
 
 import com.pangoapi._common.exception.BadRequestException;
-import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.login.dto.LoginResult;
 import com.pangoapi.login.dto.RequestDtoLogin;
 import com.pangoapi.user.entity.User;
@@ -25,7 +24,6 @@ import javax.persistence.EntityNotFoundException;
 @Service
 public class LoginService {
 
-    private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final UserSaltRepository userSaltRepository;
 
@@ -57,11 +55,6 @@ public class LoginService {
         }
 
         return loginResult;
-    }
-
-    public String generateJwt(String subject, String audience, String role) {
-
-        return jwtProvider.generateToken(subject, audience, role);
     }
 
     public boolean checkPw(String password, String hashed) {
