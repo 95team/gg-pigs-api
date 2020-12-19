@@ -10,13 +10,16 @@ import lombok.NoArgsConstructor;
 public class ResponseDtoLogin {
 
     boolean isLogin = false;
-    String token = null;
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public void setIsLogin(boolean isLogin) {
         this.isLogin = isLogin;
+    }
+
+    public void successLogin() {
+        this.isLogin = true;
+    }
+
+    public void failedLogin() {
+        this.isLogin = false;
     }
 }
