@@ -26,8 +26,6 @@ import javax.persistence.EntityNotFoundException;
 @Service
 public class LoginService {
 
-    private final JwtProvider jwtProvider;
-    private final CookieProvider cookieProvider;
     private final UserRepository userRepository;
     private final UserSaltRepository userSaltRepository;
 
