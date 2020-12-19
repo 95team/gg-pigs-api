@@ -1,5 +1,6 @@
 package com.pangoapi.login.service;
 
+import com.pangoapi._common.utility.CookieProvider;
 import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.login.dto.LoginResult;
 import com.pangoapi.login.dto.RequestDtoLogin;
@@ -23,12 +24,14 @@ import static org.mockito.ArgumentMatchers.anyString;
 @SpringBootTest(
         classes = {
                 JwtProvider.class,
+                CookieProvider.class,
                 LoginService.class
         }
 )
 class LoginServiceTest {
 
     @Autowired JwtProvider jwtProvider;
+    @Autowired CookieProvider cookieProvider;
     @Autowired LoginService loginService;
 
     @MockBean UserRepository userRepository;
@@ -82,25 +85,6 @@ class LoginServiceTest {
         assertThat(wrongLoginResult.isLogin()).isEqualTo(false);
         assertThat(wrongLoginResult.getRole()).isEqualTo(userRole);
         assertThat(wrongLoginResult.getEmail()).isEqualTo(loginEmail);
-    }
-
-    @Test
-    public void When_call_generateJwt_Then_generate_Jwt() {
-        // Given
-        long expirationAge = 60 * 60 * 1000;
-        String subject = "subject";
-        String audience = loginEmail;
-        String role = userRole;
-
-        // When
-        String jwt = loginService.generateJwt(subject, audience, role);
-
-        // Then
-        Claims parsedJwt = jwtProvider.getPayloadFromToken(jwt);
-        assertThat(parsedJwt.get("role")).isEqualTo(role);
-        assertThat(parsedJwt.getSubject()).isEqualTo(subject);
-        assertThat(parsedJwt.getAudience()).isEqualTo(audience);
-        assertThat(parsedJwt.getExpiration().getTime() - parsedJwt.getIssuedAt().getTime()).isEqualTo(expirationAge);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.pangoapi.login.service;
 
 import com.pangoapi._common.exception.BadRequestException;
+import com.pangoapi._common.utility.CookieProvider;
 import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.login.dto.LoginResult;
 import com.pangoapi.login.dto.RequestDtoLogin;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * [References]
@@ -26,6 +29,7 @@ import javax.persistence.EntityNotFoundException;
 public class LoginService {
 
     private final JwtProvider jwtProvider;
+    private final CookieProvider cookieProvider;
     private final UserRepository userRepository;
     private final UserSaltRepository userSaltRepository;
 
@@ -57,11 +61,6 @@ public class LoginService {
         }
 
         return loginResult;
-    }
-
-    public String generateJwt(String subject, String audience, String role) {
-
-        return jwtProvider.generateToken(subject, audience, role);
     }
 
     public boolean checkPw(String password, String hashed) {
