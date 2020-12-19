@@ -1,8 +1,6 @@
 package com.pangoapi.login.service;
 
 import com.pangoapi._common.exception.BadRequestException;
-import com.pangoapi._common.utility.CookieProvider;
-import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.login.dto.LoginResult;
 import com.pangoapi.login.dto.RequestDtoLogin;
 import com.pangoapi.user.entity.User;
