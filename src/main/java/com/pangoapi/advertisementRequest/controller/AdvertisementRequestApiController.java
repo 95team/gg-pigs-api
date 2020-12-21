@@ -2,6 +2,7 @@ package com.pangoapi.advertisementRequest.controller;
 
 import com.pangoapi._common.dto.ApiResponse;
 import com.pangoapi._common.exception.BadRequestException;
+import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
 import com.pangoapi.advertisementRequest.dto.CreateDtoAdvertisementRequest;
 import com.pangoapi.advertisementRequest.dto.RetrieveDtoAdvertisementRequest;
 import com.pangoapi.advertisementRequest.dto.UpdateDtoAdvertisementRequest;
@@ -89,6 +90,26 @@ public class AdvertisementRequestApiController {
         }
 
         List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest(retrieveOptions);
+
+        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisementRequests);
+    }
+
+    @GetMapping("/api/v2/advertisement-requests")
+    public ApiResponse retrieveAllAdvertisementRequest(@RequestParam("page") Optional<String> page,
+                                                       @RequestParam("userEmail") Optional<String> userEmail,
+                                                       @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
+        HashMap<String, String> retrieveCondition = new HashMap<>();
+
+        if(page.isPresent()) retrieveCondition.put("page", page.get());
+        else retrieveCondition.put("page", null);
+
+        if(userEmail.isPresent()) retrieveCondition.put("userEmail", userEmail.get());
+        else retrieveCondition.put("userEmail", null);
+
+        if(isFilteredDate.isPresent()) retrieveCondition.put("isFilteredDate", isFilteredDate.get());
+        else retrieveCondition.put("isFilteredDate", null);
+
+        List<RetrieveDtoAdvertisementRequest> allRetrieveDtoAdvertisementRequests = advertisementRequestService.retrieveAllAdvertisementRequest_v2(retrieveCondition);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisementRequests);
     }

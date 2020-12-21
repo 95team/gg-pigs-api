@@ -1,5 +1,6 @@
 package com.pangoapi.advertisementRequest.service;
 
+import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisement.repository.AdvertisementRepository;
 import com.pangoapi.advertisementRequest.dto.CreateDtoAdvertisementRequest;
 import com.pangoapi.advertisementRequest.entity.AdvertisementRequest;
@@ -60,6 +61,9 @@ class AdvertisementRequestServiceTest {
         Mockito.when(advertisementRequest.getId()).thenReturn(1L);
     }
 
+    /**
+     * Test (case1): createOneAdvertisementRequest()
+     * */
     @Test
     public void When_call_createOneAdvertisementRequest_Then_call_save() throws Exception {
         // Given
@@ -76,6 +80,9 @@ class AdvertisementRequestServiceTest {
         Mockito.verify(advertisementRequestRepository, times(1)).save(any(AdvertisementRequest.class));
     }
 
+    /**
+     * Test (case2): createOneAdvertisementRequest()
+     * */
     @Test
     public void When_call_createOneAdvertisementRequest_Then_check_possibleSeats() throws Exception {
         // Given
@@ -92,6 +99,28 @@ class AdvertisementRequestServiceTest {
         Mockito.verify(advertisementRequestRepository, times(1)).save(any(AdvertisementRequest.class));
     }
 
+    /**
+     * Test: retrieveAllAdvertisementRequest_v2()
+     * */
+    @Test
+    public void When_call_retrieveAllAdvertisementRequest_v2_Then_return_list() {
+        // Given
+        HashMap<String, String> retrieveCondition = new HashMap<>();
+        retrieveCondition.put("page", null);
+        retrieveCondition.put("userEmail", null);
+        retrieveCondition.put("isFilteredDate", null);
+
+        // When
+        List<Advertisement> advertisementList = advertisementRequestService.retrieveAllAdvertisementRequest_v2(retrieveCondition);
+
+        // Then
+        assertThat(advertisementList.getClass()).isEqualTo(ArrayList.class);
+        Mockito.verify(advertisementRequestRepository, times(1)).findAllByCondition(any());
+    }
+
+    /**
+     * Test: getPossibleSeatsAsList()
+     * */
     @Test
     public void When_call_getPossibleSeatsAsList_Then_return_possibleSeatsAsList() throws Exception {
         // Given
@@ -112,6 +141,9 @@ class AdvertisementRequestServiceTest {
         assertThat(allPossibleSeatsAsList.get(0).length).isEqualTo(2);
     }
 
+    /**
+     * Test: isPossibleSeat()
+     * */
     @Test
     public void When_call_isPossibleSeat_Then_check_possible_to_apply() {
         // Given
@@ -138,6 +170,9 @@ class AdvertisementRequestServiceTest {
         assertThat(isImpossible2).isEqualTo(false);
     }
 
+    /**
+     * Test (case1): calculatePossibleSeats()
+     * */
     @Test
     public void When_call_calculatePossibleSeats_Then_calculate_possibleSeats_case1() {
         // Given
@@ -167,6 +202,9 @@ class AdvertisementRequestServiceTest {
         assertThat(resultOfCalculation2).isEqualTo(false);
     }
 
+    /**
+     * Test (case2): calculatePossibleSeats()
+     * */
     @Test
     public void When_call_calculatePossibleSeats_Then_calculate_possibleSeats_case2() {
         // Given

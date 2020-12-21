@@ -1,10 +1,11 @@
 package com.pangoapi.advertisement.repository;
 
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
+import com.pangoapi.advertisement.dto.RetrieveConditionForAdvertisement;
 import com.pangoapi.advertisement.entity.Advertisement;
 import com.pangoapi.advertisementType.entity.AdvertisementType;
+import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.entity.User;
-import org.hibernate.exception.DataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,31 +29,32 @@ class AdvertisementRepositoryTest {
     @Autowired TestEntityManager entityManager;
     @Autowired AdvertisementRepository advertisementRepository;
 
-    User user;
-    AdvertisementType advertisementType;
+    private final String userEmail = "userEmail";
+    private final String detailDescription = "detailDescription";
+    private final String advertisementR1Type = "R1";
+    private final String imagePath = "imagePath";
+    private final String siteUrl = "siteUrl";
+    private final String rowPosition = "1";
+    private final String columnPosition = "1";
+    private final String startedDate = LocalDate.now().toString();
+    private final String finishedDate = LocalDate.now().plusMonths(1).toString();
 
-    private String title = "title";
-    private String userEmail = "userEmail";
-    private String detailDescription = "detailDescription";
-    private String advertisementR1Type = "R1";
-    private String imagePath = "imagePath";
-    private String siteUrl = "siteUrl";
-    private String rowPosition = "1";
-    private String columnPosition = "1";
-    private String startedDate = LocalDate.now().toString();
-    private String finishedDate = LocalDate.now().plusMonths(1).toString();
-    private Long startIndexOfPage = 1L;
-    private Long lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+    private final int numberOfDummyData = 7;
 
     @BeforeEach
     void setUp() throws Exception {
         /**
-         * Advertisement 삽입: [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7]
+         * (Dummy data) Advertisement 삽입: [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7]
          */
 
-        advertisementType = entityManager.find(AdvertisementType.class, 1L);
+        User user = User.createUser(new CreateDtoUser(null, userEmail, null, null, null, null, null, null));
+        AdvertisementType advertisementType = entityManager.find(AdvertisementType.class, 1L);
 
-        for (Long columnPosition = 1L; columnPosition <= ADVERTISEMENT_LAYOUT_SIZE; columnPosition++) {
+        entityManager.persist(user);
+
+        Long columnPosition = 1L;
+        String title = "title";
+        for(int i = 1; i < numberOfDummyData; i++, columnPosition++) {
             entityManager.persist(Advertisement.createAdvertisement(
                     new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
                     user,
@@ -60,7 +62,7 @@ class AdvertisementRepositoryTest {
             );
         }
         entityManager.persist(Advertisement.createAdvertisement(
-                new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
+                new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
                 user,
                 advertisementType));
 
@@ -76,8 +78,8 @@ class AdvertisementRepositoryTest {
         try {
             advertisementRepository.save(Advertisement.createAdvertisement(
                     new CreateDtoAdvertisement(wrongLengthOfTitle, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
-                    user,
-                    advertisementType));
+                    null,
+                    null));
         } catch (DataIntegrityViolationException exception) {
             return;
         }
@@ -85,8 +87,12 @@ class AdvertisementRepositoryTest {
     }
 
     @Test
-    void When_call_findAllImpossibleSeats_Then_return_filled_seats() throws Exception {
-        // Given // When
+    void When_call_findAllImpossibleSeats_Then_return_filled_seats() {
+        // Given
+        Long startIndexOfPage = 1L;
+        Long lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+
+        // When
         List<Map<String, String>> impossibleSeats = advertisementRepository.findAllImpossibleSeats(startIndexOfPage, lastIndexOfPage, LocalDate.now(), LocalDate.now().plusMonths(1));
 
         // Then
@@ -99,13 +105,42 @@ class AdvertisementRepositoryTest {
     }
 
     @Test
-    void When_call_findAllByPage_Then_return_paging_list() throws Exception {
-        // Given // When
+    void When_call_findAllByPage_Then_return_paging_list() {
+        // Given
+        Long startIndexOfPage = 1L;
+        Long lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+
+        // When
         List<Advertisement> allAdvertisements = advertisementRepository.findAll();
         List<Advertisement> pagedAdvertisements = advertisementRepository.findAllByPage(startIndexOfPage, lastIndexOfPage);
 
         // Then
-        assertThat(allAdvertisements.size()).isEqualTo(ADVERTISEMENT_LAYOUT_SIZE + 1);
-        assertThat(pagedAdvertisements.size()).isEqualTo(ADVERTISEMENT_LAYOUT_SIZE);
+        assertThat(allAdvertisements.size()).isEqualTo(numberOfDummyData);
+        assertThat(pagedAdvertisements.size()).isEqualTo(numberOfDummyData - 1);
+    }
+
+    @Test
+    void When_call_findAllByCondition_Then_return_list_by_condition() {
+        // Given
+        int sizeOfAdvertisements = 1;
+        RetrieveConditionForAdvertisement condition = new RetrieveConditionForAdvertisement();
+
+        // 1. Page 정보를 설정합니다.
+        condition.isUnlimitedIsFalse();
+        condition.setPage("2");
+        condition.calculatePage();
+
+        // 2. UserEmail 정보를 설정합니다.
+        condition.hasUserEmailIsTrue();
+        condition.setUserEmail(userEmail);
+
+        // 3. IsFilteredDate 정보를 설정합니다.
+        condition.isFilteredDateIsTrue();
+
+        // When
+        List<Advertisement> advertisements = advertisementRepository.findAllByCondition(condition);
+
+        // Then
+        assertThat(advertisements.size()).isEqualTo(sizeOfAdvertisements);
     }
 }

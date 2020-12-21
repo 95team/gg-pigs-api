@@ -1,12 +1,14 @@
 package com.pangoapi.advertisement.controller;
 
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
+import com.pangoapi.advertisement.dto.RetrieveConditionForAdvertisement;
 import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
 import com.pangoapi._common.dto.ApiResponse;
 import com.pangoapi.advertisement.dto.UpdateDtoAdvertisement;
 import com.pangoapi.advertisement.service.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +61,26 @@ public class AdvertisementApiController {
         }
 
         List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisements = advertisementService.retrieveAllAdvertisement(retrieveOptions);
+
+        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisements);
+    }
+
+    @GetMapping("/api/v2/advertisements")
+    public ApiResponse retrieveAllAdvertisement(@RequestParam("page") Optional<String> page,
+                                                @RequestParam("userEmail") Optional<String> userEmail,
+                                                @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
+        HashMap<String, String> retrieveCondition = new HashMap<>();
+
+        if(page.isPresent()) retrieveCondition.put("page", page.get());
+        else retrieveCondition.put("page", null);
+
+        if(userEmail.isPresent()) retrieveCondition.put("userEmail", userEmail.get());
+        else retrieveCondition.put("userEmail", null);
+
+        if(isFilteredDate.isPresent()) retrieveCondition.put("isFilteredDate", isFilteredDate.get());
+        else retrieveCondition.put("isFilteredDate", null);
+
+        List<RetrieveDtoAdvertisement> allRetrieveDtoAdvertisements = advertisementService.retrieveAllAdvertisement_v2(retrieveCondition);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoAdvertisements);
     }
