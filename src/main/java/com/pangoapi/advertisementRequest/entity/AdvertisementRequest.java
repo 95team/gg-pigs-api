@@ -54,6 +54,9 @@ public class AdvertisementRequest {
     private String detailDescription;
 
     @Column(length = 128)
+    private String keywords;
+
+    @Column(length = 128)
     private String imagePath;
 
     @Column(length = 255)
@@ -73,6 +76,10 @@ public class AdvertisementRequest {
 
     public void changeDetailDescription(String detailDescription) {
         this.detailDescription = detailDescription;
+    }
+
+    public void changeKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     public void changeImagePath(String imagePath) {
@@ -105,6 +112,7 @@ public class AdvertisementRequest {
     public void changeAdvertisementRequest(UpdateDtoAdvertisementRequest updateDtoAdvertisementRequest) throws Exception {
         if(updateDtoAdvertisementRequest.getTitle() != null) changeTitle(updateDtoAdvertisementRequest.getTitle());
         if(updateDtoAdvertisementRequest.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisementRequest.getDetailDescription());
+        if(updateDtoAdvertisementRequest.getKeywords() != null) changeKeywords(updateDtoAdvertisementRequest.getKeywords());
         if(updateDtoAdvertisementRequest.getImagePath() != null) changeImagePath(updateDtoAdvertisementRequest.getImagePath());
         if(updateDtoAdvertisementRequest.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisementRequest.getSiteUrl());
         if(updateDtoAdvertisementRequest.getRowPosition() != null) {
