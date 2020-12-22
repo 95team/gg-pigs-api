@@ -17,6 +17,7 @@ public class RetrieveDtoAdvertisement {
     private String userEmail;
     private String title;
     private String detailDescription;
+    private String keywords;
     private String advertisementType;
     private String advertisementWidth;
     private String advertisementHeight;
@@ -34,6 +35,7 @@ public class RetrieveDtoAdvertisement {
                 .userEmail(advertisement.getUser() != null ? advertisement.getUser().getEmail() : "")
                 .title(advertisement.getTitle())
                 .detailDescription(advertisement.getDetailDescription())
+                .keywords(advertisement.getKeywords())
                 .advertisementType(advertisement.getAdvertisementType().getType())
                 .advertisementWidth(advertisement.getAdvertisementType().getWidth())
                 .advertisementHeight(advertisement.getAdvertisementType().getHeight())

@@ -47,6 +47,9 @@ public class Advertisement {
     private String detailDescription;
 
     @Column(length = 128)
+    private String keywords;
+
+    @Column(length = 128)
     private String imagePath;
 
     @Column(length = 255)
@@ -65,6 +68,8 @@ public class Advertisement {
     public void changeDetailDescription(String detailDescription) {
         this.detailDescription = detailDescription;
     }
+
+    public void changeKeywords(String keywords) { this.keywords = keywords; }
 
     public void changeImagePath(String imagePath) {
         this.imagePath = imagePath;
@@ -92,6 +97,7 @@ public class Advertisement {
     public void changeAdvertisement(UpdateDtoAdvertisement updateDtoAdvertisement) throws Exception {
         if(updateDtoAdvertisement.getTitle() != null) changeTitle(updateDtoAdvertisement.getTitle());
         if(updateDtoAdvertisement.getDetailDescription() != null) changeDetailDescription(updateDtoAdvertisement.getDetailDescription());
+        if(updateDtoAdvertisement.getKeywords() != null) changeKeywords(updateDtoAdvertisement.getKeywords());
         if(updateDtoAdvertisement.getImagePath() != null) changeImagePath(updateDtoAdvertisement.getImagePath());
         if(updateDtoAdvertisement.getSiteUrl() != null) changeStieUrl(updateDtoAdvertisement.getSiteUrl());
         if(updateDtoAdvertisement.getRowPosition() != null) {
@@ -143,6 +149,7 @@ public class Advertisement {
                 .advertisementType(advertisementType)
                 .title(createDtoAdvertisement.getTitle())
                 .detailDescription(createDtoAdvertisement.getDetailDescription())
+                .keywords(createDtoAdvertisement.getKeywords())
                 .imagePath(createDtoAdvertisement.getImagePath())
                 .siteUrl(createDtoAdvertisement.getSiteUrl())
                 .rowPosition(rowPosition)

@@ -54,6 +54,7 @@ class AdvertisementApiControllerTest {
         String mockTitle = "title";
         String mockUserEmail = "user@email.com";
         String mockDetailDescription = "This is a detail description.";
+        String mockKeywords = "This is a keywords.";
         String mockAdvertisemenType = "R1";
         String mockImagePath = "/src/image/exmaple.jpg";
         String mockSiteUrl = "siteUrl";
@@ -61,9 +62,10 @@ class AdvertisementApiControllerTest {
         String mockColumnPosition = "1";
         String mockStartedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
-        createDtoAdvertisement = new CreateDtoAdvertisement(mockTitle, mockUserEmail, mockDetailDescription, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
-        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockAdvertisemenType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
-        updateDtoAdvertisement = new UpdateDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+
+        createDtoAdvertisement = new CreateDtoAdvertisement(mockTitle, mockUserEmail, mockDetailDescription, mockKeywords, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
+        retrieveDtoAdvertisement = new RetrieveDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockKeywords, mockAdvertisemenType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+        updateDtoAdvertisement = new UpdateDtoAdvertisement(mockId, mockUserEmail, mockTitle, mockDetailDescription, mockKeywords, mockAdvertisemenType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
 
         Mockito.when(advertisementService.createOneAdvertisement(any(CreateDtoAdvertisement.class))).thenReturn(mockId);
         Mockito.when(advertisementService.retrieveOneAdvertisement(any(Long.class))).thenReturn(retrieveDtoAdvertisement);

@@ -12,6 +12,7 @@ public class CreateDtoAdvertisementRequest {
     private String title;
     private String userEmail;
     private String detailDescription;
+    private String keywords;
     private String advertisementType;
     private String imagePath;
     private String siteUrl;
