@@ -12,7 +12,20 @@ public class WebConfigurer implements WebMvcConfigurer {
         registry.addMapping("/api/v1/**")
                 .allowedOrigins(
                         "http://localhost:3000",
-                        "http://hj2server.ddns.net:8383")
+                        "http://hj2server.ddns.net:8383",
+                        "http://gg-pigs.com:80",
+                        "http://gg-pigs.com:8383"
+                )
+                .allowedMethods("*")
+                .allowCredentials(true);
+
+        registry.addMapping("/api/v2/**")
+                .allowedOrigins(
+                        "http://localhost:3000",
+                        "http://hj2server.ddns.net:8383",
+                        "http://gg-pigs.com:80",
+                        "http://gg-pigs.com:8383"
+                )
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
