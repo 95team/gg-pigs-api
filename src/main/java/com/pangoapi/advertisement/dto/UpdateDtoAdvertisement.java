@@ -13,6 +13,7 @@ public class UpdateDtoAdvertisement {
     private String userEmail;
     private String title;
     private String detailDescription;
+    private String keywords;
     private String advertisementType;
     private String imagePath;
     private String siteUrl;
