@@ -34,6 +34,7 @@ public class AdvertisementRequestRepositoryTest {
         String userEmail = "userEmail";
         String title = "title";
         String detailDescription = "detailDescription";
+        String keywords = "keywords";
         String advertisementR1Type = "R1";
         String imagePath = "imagePath";
         String siteUrl = "siteUrl";
@@ -50,13 +51,13 @@ public class AdvertisementRequestRepositoryTest {
 
         for(int i = 1; i < numberOfDummyData; i++, columnPosition++) {
             entityManager.persist(AdvertisementRequest.createAdvertisementRequest(
-                    new CreateDtoAdvertisementRequest(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, Long.toString(rowPosition), Long.toString(columnPosition), startedDate, finishedDate),
+                    new CreateDtoAdvertisementRequest(title, userEmail, detailDescription, keywords, advertisementR1Type, imagePath, siteUrl, Long.toString(rowPosition), Long.toString(columnPosition), startedDate, finishedDate),
                     user,
                     advertisementType
             ));
         }
         entityManager.persist(AdvertisementRequest.createAdvertisementRequest(
-                new CreateDtoAdvertisementRequest(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, Long.toString(rowPosition), Long.toString(columnPosition), startedDate, finishedDate),
+                new CreateDtoAdvertisementRequest(title, userEmail, detailDescription, keywords, advertisementR1Type, imagePath, siteUrl, Long.toString(rowPosition), Long.toString(columnPosition), startedDate, finishedDate),
                 user,
                 advertisementType
         ));

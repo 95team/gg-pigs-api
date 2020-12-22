@@ -31,6 +31,7 @@ class AdvertisementRepositoryTest {
 
     private final String userEmail = "userEmail";
     private final String detailDescription = "detailDescription";
+    private final String keywords = "keywords";
     private final String advertisementR1Type = "R1";
     private final String imagePath = "imagePath";
     private final String siteUrl = "siteUrl";
@@ -56,13 +57,13 @@ class AdvertisementRepositoryTest {
         String title = "title";
         for(int i = 1; i < numberOfDummyData; i++, columnPosition++) {
             entityManager.persist(Advertisement.createAdvertisement(
-                    new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
+                    new CreateDtoAdvertisement(title, userEmail, detailDescription, keywords, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
                     user,
                     advertisementType)
             );
         }
         entityManager.persist(Advertisement.createAdvertisement(
-                new CreateDtoAdvertisement(title, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
+                new CreateDtoAdvertisement(title, userEmail, detailDescription, keywords, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
                 user,
                 advertisementType));
 
@@ -77,7 +78,7 @@ class AdvertisementRepositoryTest {
         // When // Then
         try {
             advertisementRepository.save(Advertisement.createAdvertisement(
-                    new CreateDtoAdvertisement(wrongLengthOfTitle, userEmail, detailDescription, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
+                    new CreateDtoAdvertisement(wrongLengthOfTitle, userEmail, detailDescription, keywords, advertisementR1Type, imagePath, siteUrl, rowPosition, Long.toString(ADVERTISEMENT_LAYOUT_SIZE + 1), startedDate, finishedDate),
                     null,
                     null));
         } catch (DataIntegrityViolationException exception) {
