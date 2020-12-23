@@ -42,6 +42,7 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
         // 3. http.csrf().ignoringAntMatchers("path");
 
         http.csrf().ignoringAntMatchers("/api/v1/**");
+        http.csrf().ignoringAntMatchers("/api/v2/**");
 
         http.authorizeRequests()
                 .antMatchers("/admin/**").authenticated()
