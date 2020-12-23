@@ -77,7 +77,7 @@ class AdvertisementApiControllerTest {
     public void advertisement_한건_생성() throws Exception {
         String content = objectMapper.writeValueAsString(createDtoAdvertisement);
 
-        mockMvc.perform(post("/api/v1/advertisements")
+        mockMvc.perform(post("/api/v1/posters")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(content))
@@ -87,7 +87,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_한건_조회() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/advertisements/1"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
                 .andDo(print())
@@ -98,7 +98,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_전체_조회() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/advertisements"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
@@ -111,7 +111,7 @@ class AdvertisementApiControllerTest {
     public void advertisement_한건_업데이트() throws Exception {
         String content = objectMapper.writeValueAsString(updateDtoAdvertisement);
 
-        mockMvc.perform(put("/api/v1/advertisements/1")
+        mockMvc.perform(put("/api/v1/posters/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -121,7 +121,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_한건_삭제() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/advertisements/1"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn().getResponse();

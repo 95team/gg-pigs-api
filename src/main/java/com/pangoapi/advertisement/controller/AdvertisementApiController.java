@@ -157,7 +157,7 @@ public class AdvertisementApiController {
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
     }
     @DeleteMapping("/api/v1/posters/{advertisementId}")
-    public ApiResponse deletePoster(@PathVariable("advert   isementId") Long _advertisementId) {
+    public ApiResponse deletePoster(@PathVariable("advertisementId") Long _advertisementId) {
         advertisementService.deleteOneAdvertisement(_advertisementId);
 
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
