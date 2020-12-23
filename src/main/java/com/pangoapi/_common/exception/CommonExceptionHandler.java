@@ -5,6 +5,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,18 @@ public class CommonExceptionHandler {
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
         );
+    }
+
+    /**
+     * handleMissingRequestCookieException(MissingRequestCookieException.class)
+     * 목적 : API 요청에서 필수로 요구되는 쿠키가 없을 경우
+     * */
+    @ExceptionHandler(MissingRequestCookieException.class)
+    protected ResponseEntity<ApiResponse> handleMissingRequestCookieException(MissingRequestCookieException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, "적절하지 않은 요청입니다. (Please check the cookie '" + e.getCookieName() + "')");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**

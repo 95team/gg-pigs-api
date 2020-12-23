@@ -1,12 +1,16 @@
 package com.pangoapi.user.controller;
 
 import com.pangoapi._common.dto.ApiResponse;
+import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
 import com.pangoapi.user.service.UserService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingRequestCookieException;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,7 @@ import java.util.List;
 @RestController
 public class UserApiController {
 
+    private final JwtProvider jwtProvider;
     private final UserService userService;
 
     /**
@@ -40,6 +45,16 @@ public class UserApiController {
     @GetMapping("/api/v1/users/{userId}")
     public ApiResponse retrieveOneUser(@PathVariable("userId") Long _userId) {
         RetrieveDtoUser retrieveDtoUser = userService.retrieveOneUser(_userId);
+
+        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
+    }
+
+    @GetMapping("/api/v1/login-users")
+    public ApiResponse retrieveOneUserByToken(@CookieValue("jwt") String token) {
+        Claims payload = jwtProvider.getPayloadFromToken(token);
+        String userEmail = payload.getAudience();
+
+        RetrieveDtoUser retrieveDtoUser = userService.retrieveOneUserByEmail(userEmail);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }

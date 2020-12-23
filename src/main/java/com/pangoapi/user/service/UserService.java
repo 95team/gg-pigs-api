@@ -61,6 +61,12 @@ public class UserService {
         return RetrieveDtoUser.createRetrieveDtoUser(user);
     }
 
+    public RetrieveDtoUser retrieveOneUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+
+        return RetrieveDtoUser.createRetrieveDtoUser(user);
+    }
+
     public List<RetrieveDtoUser> retrieveAllUser() {
         List<User> users = userRepository.findAll();
 
