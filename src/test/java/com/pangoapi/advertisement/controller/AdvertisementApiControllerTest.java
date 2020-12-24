@@ -1,7 +1,6 @@
 package com.pangoapi.advertisement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pangoapi.advertisement.controller.AdvertisementApiController;
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
 import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
 import com.pangoapi.advertisement.dto.UpdateDtoAdvertisement;
@@ -77,7 +76,7 @@ class AdvertisementApiControllerTest {
     public void advertisement_한건_생성() throws Exception {
         String content = objectMapper.writeValueAsString(createDtoAdvertisement);
 
-        mockMvc.perform(post("/api/v1/posters")
+        mockMvc.perform(post("/api/v1/advertisements")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(content))
@@ -87,7 +86,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_한건_조회() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters/1"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/advertisements/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
                 .andDo(print())
@@ -98,7 +97,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_전체_조회() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/advertisements"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
@@ -111,7 +110,7 @@ class AdvertisementApiControllerTest {
     public void advertisement_한건_업데이트() throws Exception {
         String content = objectMapper.writeValueAsString(updateDtoAdvertisement);
 
-        mockMvc.perform(put("/api/v1/posters/1")
+        mockMvc.perform(put("/api/v1/advertisements/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -121,7 +120,7 @@ class AdvertisementApiControllerTest {
 
     @Test
     public void advertisement_한건_삭제() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/advertisements/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn().getResponse();
