@@ -1,6 +1,7 @@
 package com.pangoapi.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.user.dto.CreateDtoUser;
 import com.pangoapi.user.dto.RetrieveDtoUser;
 import com.pangoapi.user.dto.UpdateDtoUser;
@@ -29,6 +30,7 @@ class UserApiControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
 
+    @MockBean JwtProvider jwtProvider;
     @MockBean UserService userService;
 
     private CreateDtoUser createDtoUser = new CreateDtoUser();

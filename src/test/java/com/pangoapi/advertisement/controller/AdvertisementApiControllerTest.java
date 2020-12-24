@@ -1,7 +1,6 @@
 package com.pangoapi.advertisement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pangoapi.advertisement.controller.AdvertisementApiController;
 import com.pangoapi.advertisement.dto.CreateDtoAdvertisement;
 import com.pangoapi.advertisement.dto.RetrieveDtoAdvertisement;
 import com.pangoapi.advertisement.dto.UpdateDtoAdvertisement;

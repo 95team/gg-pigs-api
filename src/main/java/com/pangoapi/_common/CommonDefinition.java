@@ -6,6 +6,7 @@ public class CommonDefinition {
 
     /** Advertisement layouts */
     public static final int ADVERTISEMENT_LAYOUT_SIZE = 6;
+    public static final int POSTER_LAYOUT_SIZE = 6;
 
     /** Image files */
     public static final String ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_STRING = "20MiB";
