@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import static com.pangoapi._common.CommonDefinition.ADVERTISEMENT_LAYOUT_SIZE;
+import static com.pangoapi._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 
 
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class RetrieveConditionDtoPoster {
     String userEmail;
 
     long startIndexOfPage = 1L;
-    long lastIndexOfPage = Long.valueOf(ADVERTISEMENT_LAYOUT_SIZE);
+    long lastIndexOfPage = Long.valueOf(POSTER_LAYOUT_SIZE);
 
     LocalDate currentDate = LocalDate.now();
 
@@ -44,8 +44,8 @@ public class RetrieveConditionDtoPoster {
 
     public void calculatePage() {
         try {
-            startIndexOfPage = ((Long.parseLong(page) - 1) * ADVERTISEMENT_LAYOUT_SIZE) + 1;
-            lastIndexOfPage = (Long.parseLong(page) * ADVERTISEMENT_LAYOUT_SIZE);
+            startIndexOfPage = ((Long.parseLong(page) - 1) * POSTER_LAYOUT_SIZE) + 1;
+            lastIndexOfPage = (Long.parseLong(page) * POSTER_LAYOUT_SIZE);
         } catch (NumberFormatException exception) {
             throw new NumberFormatException("적절하지 않은 요청입니다. (Please check the page parameter)");
         }
