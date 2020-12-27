@@ -1,7 +1,12 @@
 package com.pangoapi.posterRequest.dto;
 
+import com.pangoapi._common.enums.PosterReviewStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class UpdateDtoPosterRequest {
 
@@ -15,7 +20,7 @@ public class UpdateDtoPosterRequest {
     private String siteUrl;
     private String rowPosition;
     private String columnPosition;
-    private Boolean reviewStatus;
+    private PosterReviewStatus reviewStatus;
     private String startedDate;
     private String finishedDate;
 }

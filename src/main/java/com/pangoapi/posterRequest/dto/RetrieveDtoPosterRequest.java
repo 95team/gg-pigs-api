@@ -2,11 +2,15 @@ package com.pangoapi.posterRequest.dto;
 
 import com.pangoapi.posterRequest.entity.PosterRequest;
 import com.pangoapi._common.enums.PosterReviewStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 public class RetrieveDtoPosterRequest {
