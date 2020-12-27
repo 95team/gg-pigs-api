@@ -1,6 +1,7 @@
 package com.pangoapi.posterRequest.controller;
 
 import com.pangoapi._common.dto.ApiResponse;
+import com.pangoapi._common.enums.UserRole;
 import com.pangoapi._common.exception.BadRequestException;
 import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
@@ -141,6 +142,11 @@ public class PosterRequestApiController {
 
         Claims payload = jwtProvider.getPayloadFromToken(token);
         String updaterEmail = payload.getAudience();
+        String updaterRole = (String) payload.get("role");
+
+        if(!updaterRole.equalsIgnoreCase(String.valueOf(UserRole.ROLE_ADMIN))) {
+            throw new BadRequestException("적절하지 않은 요청입니다. (Please check the authorization)");
+        }
 
         Long posterRequestId = posterRequestService.updatePosterRequest(work, updaterEmail, _posterRequestId, updateDtoPosterRequest);
 

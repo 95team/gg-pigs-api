@@ -2,6 +2,7 @@ package com.pangoapi.posterRequest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pangoapi._common.enums.PosterReviewStatus;
+import com.pangoapi._common.enums.UserRole;
 import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
 import com.pangoapi.posterRequest.dto.RetrieveDtoPosterRequest;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -133,9 +135,11 @@ class PosterRequestApiControllerTest {
         String content = objectMapper.writeValueAsString(updateDtoPosterRequest);
 
         Cookie cookie = new Cookie("jwt", "cookie");
+        String role = String.valueOf(UserRole.ROLE_ADMIN);
 
         Mockito.when(jwtProvider.getPayloadFromToken(any())).thenReturn(claims);
         Mockito.when(claims.getAudience()).thenReturn(mockUserEmail);
+        Mockito.when(claims.get("role")).thenReturn(role);
 
         // When // Then
         mockMvc.perform(put("/api/v1/poster-requests/1")
