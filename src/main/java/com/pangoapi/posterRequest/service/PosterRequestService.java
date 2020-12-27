@@ -193,14 +193,17 @@ public class PosterRequestService {
             String reviewer = (updater.getName() != null) ? updater.getName() : updaterEmail;
             posterRequest.changeReviewer(reviewer);
 
-            if(updateDtoPosterRequest.getReviewStatus().equals(PosterReviewStatus.APPROVAL)) {
+            if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.APPROVAL))) {
                 posterRequest.changeReviewStatusToApproval();
             }
-            else if(updateDtoPosterRequest.getReviewStatus().equals(PosterReviewStatus.PENDING)) {
+            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.PENDING))) {
+                posterRequest.changeReviewStatusToPending();
+            }
+            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.NON_APPROVAL))) {
                 posterRequest.changeReviewStatusToPending();
             }
             else {
-                posterRequest.changeReviewStatusToNonApproval();
+                throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
             }
         }
 

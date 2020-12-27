@@ -114,7 +114,7 @@ class PosterRequestServiceTest {
         // Given
         String work = "review";
         String updaterEmail = "pigs95team@gmail.com";
-        PosterReviewStatus reviewStatus = PosterReviewStatus.APPROVAL;
+        String reviewStatus = String.valueOf(PosterReviewStatus.APPROVAL);
         UpdateDtoPosterRequest updateDtoPosterRequest = Mockito.mock(UpdateDtoPosterRequest.class);
 
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
@@ -124,9 +124,9 @@ class PosterRequestServiceTest {
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
-        if (reviewStatus.equals(PosterReviewStatus.APPROVAL)) {
+        if (reviewStatus.equals(String.valueOf(PosterReviewStatus.APPROVAL))) {
             Mockito.verify(posterRequest, times(1)).changeReviewStatusToApproval();
-        } else if (reviewStatus.equals(PosterReviewStatus.PENDING)) {
+        } else if (reviewStatus.equals(String.valueOf(PosterReviewStatus.PENDING))) {
             Mockito.verify(posterRequest, times(1)).changeReviewStatusToPending();
         } else {
             Mockito.verify(posterRequest, times(1)).changeReviewStatusToNonApproval();

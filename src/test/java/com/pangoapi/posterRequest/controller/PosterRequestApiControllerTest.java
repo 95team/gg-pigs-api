@@ -129,7 +129,7 @@ class PosterRequestApiControllerTest {
     @Test
     public void posterRequest_한건_업데이트() throws Exception {
         // Given
-        updateDtoPosterRequest = new UpdateDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NON_APPROVAL, mockStartedDate, mockFinishedDate);
+        updateDtoPosterRequest = new UpdateDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, String.valueOf(PosterReviewStatus.NON_APPROVAL), mockStartedDate, mockFinishedDate);
         String content = objectMapper.writeValueAsString(updateDtoPosterRequest);
 
         Cookie cookie = new Cookie("jwt", "cookie");
