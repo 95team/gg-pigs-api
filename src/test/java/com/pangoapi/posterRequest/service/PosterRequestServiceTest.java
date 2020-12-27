@@ -1,12 +1,15 @@
 package com.pangoapi.posterRequest.service;
 
+import com.pangoapi._common.enums.PosterReviewStatus;
 import com.pangoapi.poster.entity.Poster;
 import com.pangoapi.poster.repository.PosterRepository;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
+import com.pangoapi.posterRequest.dto.UpdateDtoPosterRequest;
 import com.pangoapi.posterRequest.entity.PosterRequest;
 import com.pangoapi.posterRequest.repository.PosterRequestRepository;
 import com.pangoapi.posterType.entity.PosterType;
 import com.pangoapi.posterType.repository.PosterTypeRepository;
+import com.pangoapi.user.entity.User;
 import com.pangoapi.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,8 @@ import java.util.Optional;
 import static com.pangoapi._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
 @SpringBootTest(
@@ -45,6 +50,7 @@ class PosterRequestServiceTest {
     @Mock CreateDtoPosterRequest createDtoPosterRequest;
     @Mock PosterRequest posterRequest;
     @Mock PosterType posterType;
+    @Mock User user;
 
     final int POSSIBLE_SEAT = 1;
     final int IMPOSSIBLE_SEAT = -1;
@@ -56,16 +62,20 @@ class PosterRequestServiceTest {
 
         // Configuration of PosterRequestRepository
         Mockito.when(posterRequestRepository.save(any())).thenReturn(posterRequest);
+        Mockito.when(posterRequestRepository.findById(anyLong())).thenReturn(Optional.of(posterRequest));
 
         // Configuration of PosterRequest
         Mockito.when(posterRequest.getId()).thenReturn(1L);
+
+        // Configuration of a UserRepository
+        Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(user));
     }
 
     /**
      * Test (case1): createOnePosterRequest()
      * */
     @Test
-    public void When_call_createOnePosterRequest_Then_call_save() throws Exception {
+    public void When_call_createPosterRequest_Then_call_save() throws Exception {
         // Given
         Mockito.when(createDtoPosterRequest.getPosterType()).thenReturn("R1");
         Mockito.when(createDtoPosterRequest.getRowPosition()).thenReturn("1");
@@ -84,7 +94,7 @@ class PosterRequestServiceTest {
      * Test (case2): createOnePosterRequest()
      * */
     @Test
-    public void When_call_createOnePosterRequest_Then_check_possibleSeats() throws Exception {
+    public void When_call_createPosterRequest_Then_check_possibleSeats() throws Exception {
         // Given
         Mockito.when(createDtoPosterRequest.getPosterType()).thenReturn("R1");
         Mockito.when(createDtoPosterRequest.getRowPosition()).thenReturn("1");
@@ -99,11 +109,35 @@ class PosterRequestServiceTest {
         Mockito.verify(posterRequestRepository, times(1)).save(any(PosterRequest.class));
     }
 
+    @Test
+    public void When_call_updatePosterRequest_review_Then_update_review_and_reviewer() throws Exception {
+        // Given
+        String work = "review";
+        String updaterEmail = "pigs95team@gmail.com";
+        PosterReviewStatus reviewStatus = PosterReviewStatus.APPROVAL;
+        UpdateDtoPosterRequest updateDtoPosterRequest = Mockito.mock(UpdateDtoPosterRequest.class);
+
+        Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
+
+        // When
+        posterRequestService.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+
+        // Then
+        Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
+        if (reviewStatus.equals(PosterReviewStatus.APPROVAL)) {
+            Mockito.verify(posterRequest, times(1)).changeReviewStatusToApproval();
+        } else if (reviewStatus.equals(PosterReviewStatus.PENDING)) {
+            Mockito.verify(posterRequest, times(1)).changeReviewStatusToPending();
+        } else {
+            Mockito.verify(posterRequest, times(1)).changeReviewStatusToNonApproval();
+        }
+    }
+
     /**
      * Test: retrieveAllPosterRequest_v2()
      * */
     @Test
-    public void When_call_retrieveAllPosterRequest_v2_Then_return_list() {
+    public void When_call_retrieveAllPosterRequests_v2_Then_return_list() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", null);
