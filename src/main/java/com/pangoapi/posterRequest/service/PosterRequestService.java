@@ -200,7 +200,7 @@ public class PosterRequestService {
                 posterRequest.changeReviewStatusToPending();
             }
             else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.NON_APPROVAL))) {
-                posterRequest.changeReviewStatusToPending();
+                posterRequest.changeReviewStatusToNonApproval();
             }
             else {
                 throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
