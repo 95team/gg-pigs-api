@@ -1,13 +1,17 @@
 package com.pangoapi.posterRequest.controller;
 
 import com.pangoapi._common.dto.ApiResponse;
+import com.pangoapi._common.enums.UserRole;
 import com.pangoapi._common.exception.BadRequestException;
+import com.pangoapi._common.utility.JwtProvider;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
 import com.pangoapi.posterRequest.dto.RetrieveDtoPosterRequest;
 import com.pangoapi.posterRequest.dto.UpdateDtoPosterRequest;
 import com.pangoapi.posterRequest.service.PosterRequestService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +32,7 @@ import static com.pangoapi._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 @RestController
 public class PosterRequestApiController {
 
+    private final JwtProvider jwtProvider;
     private final PosterRequestService posterRequestService;
 
     /**
@@ -129,8 +134,21 @@ public class PosterRequestApiController {
      * UPDATE
      * */
     @PutMapping("/api/v1/poster-requests/{posterRequestId}")
-    public ApiResponse updatePosterRequest(@PathVariable("posterRequestId") Long _posterRequestId, @RequestBody UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
-        Long posterRequestId = posterRequestService.updatePosterRequest(_posterRequestId, updateDtoPosterRequest);
+    public ApiResponse updatePosterRequest(
+            @CookieValue("jwt") String token,
+            @RequestParam("work") String work,
+            @PathVariable("posterRequestId") Long _posterRequestId,
+            @RequestBody UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
+
+        Claims payload = jwtProvider.getPayloadFromToken(token);
+        String updaterEmail = payload.getAudience();
+        String updaterRole = (String) payload.get("role");
+
+        if(!updaterRole.equalsIgnoreCase(String.valueOf(UserRole.ROLE_ADMIN))) {
+            throw new BadRequestException("적절하지 않은 요청입니다. (Please check the authorization)");
+        }
+
+        Long posterRequestId = posterRequestService.updatePosterRequest(work, updaterEmail, _posterRequestId, updateDtoPosterRequest);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterRequestId);
     }

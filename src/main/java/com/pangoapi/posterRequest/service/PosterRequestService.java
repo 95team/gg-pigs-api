@@ -1,5 +1,7 @@
 package com.pangoapi.posterRequest.service;
 
+import com.pangoapi._common.enums.PosterReviewStatus;
+import com.pangoapi._common.exception.BadRequestException;
 import com.pangoapi.poster.repository.PosterRepository;
 import com.pangoapi.posterType.entity.PosterType;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
@@ -181,10 +183,29 @@ public class PosterRequestService {
      * UPDATE
      */
     @Transactional
-    public Long updatePosterRequest(Long _posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
-        PosterRequest posterRequest = posterRequestRepository.findById(_posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+    public Long updatePosterRequest(String work, String updaterEmail, Long _posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
+        if(!work.equalsIgnoreCase("review")) throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
 
-        posterRequest.changePosterRequest(updateDtoPosterRequest);
+        PosterRequest posterRequest = posterRequestRepository.findById(_posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+        User updater = userRepository.findUserByEmail(updaterEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+
+        if(work.equalsIgnoreCase("review")) {
+            String reviewer = (updater.getName() != null) ? updater.getName() : updaterEmail;
+            posterRequest.changeReviewer(reviewer);
+
+            if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.APPROVAL))) {
+                posterRequest.changeReviewStatusToApproval();
+            }
+            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.PENDING))) {
+                posterRequest.changeReviewStatusToPending();
+            }
+            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.NON_APPROVAL))) {
+                posterRequest.changeReviewStatusToNonApproval();
+            }
+            else {
+                throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
+            }
+        }
 
         return posterRequest.getId();
     }
