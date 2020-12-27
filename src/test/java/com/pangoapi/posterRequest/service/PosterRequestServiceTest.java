@@ -1,6 +1,7 @@
 package com.pangoapi.posterRequest.service;
 
 import com.pangoapi._common.enums.PosterReviewStatus;
+import com.pangoapi.historyLog.service.HistoryLogService;
 import com.pangoapi.poster.entity.Poster;
 import com.pangoapi.poster.repository.PosterRepository;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
@@ -46,6 +47,8 @@ class PosterRequestServiceTest {
     @MockBean PosterRepository posterRepository;
     @MockBean PosterTypeRepository posterTypeRepository;
     @MockBean PosterRequestRepository posterRequestRepository;
+
+    @MockBean HistoryLogService historyLogService;
 
     @Mock CreateDtoPosterRequest createDtoPosterRequest;
     @Mock PosterRequest posterRequest;
@@ -131,6 +134,7 @@ class PosterRequestServiceTest {
         } else {
             Mockito.verify(posterRequest, times(1)).changeReviewStatusToNonApproval();
         }
+        Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), anyString(), anyString(), anyString());
     }
 
     /**

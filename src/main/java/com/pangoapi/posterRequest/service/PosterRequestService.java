@@ -1,7 +1,9 @@
 package com.pangoapi.posterRequest.service;
 
+import com.pangoapi._common.enums.HistoryLogAction;
 import com.pangoapi._common.enums.PosterReviewStatus;
 import com.pangoapi._common.exception.BadRequestException;
+import com.pangoapi.historyLog.service.HistoryLogService;
 import com.pangoapi.poster.repository.PosterRepository;
 import com.pangoapi.posterType.entity.PosterType;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
@@ -39,6 +41,8 @@ public class PosterRequestService {
     private final PosterRepository posterRepository;
     private final PosterTypeRepository posterTypeRepository;
     private final PosterRequestRepository posterRequestRepository;
+
+    private final HistoryLogService historyLogService;
 
     private static final int POSSIBLE_SEAT = 1;
     private static final int IMPOSSIBLE_SEAT = -1;
@@ -183,28 +187,35 @@ public class PosterRequestService {
      * UPDATE
      */
     @Transactional
-    public Long updatePosterRequest(String work, String updaterEmail, Long _posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
+    public Long updatePosterRequest(String work, String updaterEmail, Long _posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) {
         if(!work.equalsIgnoreCase("review")) throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
 
         PosterRequest posterRequest = posterRequestRepository.findById(_posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
         User updater = userRepository.findUserByEmail(updaterEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         if(work.equalsIgnoreCase("review")) {
+            String beforeReviewStatus = String.valueOf(posterRequest.getReviewStatus());
+            String afterReviewStatus = updateDtoPosterRequest.getReviewStatus().toUpperCase();
+
+            if(beforeReviewStatus.equalsIgnoreCase(afterReviewStatus)) {
+                return posterRequest.getId();
+            }
+
             String reviewer = (updater.getName() != null) ? updater.getName() : updaterEmail;
             posterRequest.changeReviewer(reviewer);
 
-            if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.APPROVAL))) {
+            if(afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.APPROVAL.name())) {
                 posterRequest.changeReviewStatusToApproval();
-            }
-            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.PENDING))) {
+            } else if (afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.PENDING.name())) {
                 posterRequest.changeReviewStatusToPending();
-            }
-            else if(updateDtoPosterRequest.getReviewStatus().equalsIgnoreCase(String.valueOf(PosterReviewStatus.NON_APPROVAL))) {
+            } else if (afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.NON_APPROVAL.name())) {
                 posterRequest.changeReviewStatusToNonApproval();
-            }
-            else {
+            } else {
                 throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
             }
+
+            // HistoryLog 에 업데이트 내역을 삽입합니다.
+            this.HLForUpdateReviewStatus(updaterEmail, posterRequest.getId(), beforeReviewStatus, afterReviewStatus);
         }
 
         return posterRequest.getId();
@@ -324,5 +335,13 @@ public class PosterRequestService {
         }
 
         return allPossibleSeats;
+    }
+
+    private void HLForUpdateReviewStatus(String email, Long posterRequestId, String beforeReviewStatus, String afterReviewStatus) {
+        String title = "Update posterRequest reviewStatus field";
+        String content = "PosterRequest: " + posterRequestId + "\n" +
+                "Before Review Status: " + beforeReviewStatus + "\n" +
+                "After Review Status: " + afterReviewStatus;
+        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, email, title, content);
     }
 }
