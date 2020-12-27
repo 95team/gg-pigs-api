@@ -29,11 +29,6 @@ class HistoryLogServiceTest {
     @MockBean HistoryLogRepository historyLogRepository;
     @MockBean HistoryLogTypeRepository historyLogTypeRepository;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     public void When_call_writeHistoryLog_Then_call_save() {
         // Given
