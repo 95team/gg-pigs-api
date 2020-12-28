@@ -11,6 +11,7 @@ import com.pangoapi.posterRequest.service.PosterRequestService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -146,6 +147,9 @@ public class PosterRequestApiController {
 
         if(!updaterRole.equalsIgnoreCase(String.valueOf(UserRole.ROLE_ADMIN))) {
             throw new BadRequestException("적절하지 않은 요청입니다. (Please check the authorization)");
+        }
+        if(!StringUtils.hasText(updaterEmail)) {
+            throw new BadRequestException("적절하지 않은 요청입니다. (Please check the admin's email)");
         }
 
         Long posterRequestId = posterRequestService.updatePosterRequest(work, updaterEmail, _posterRequestId, updateDtoPosterRequest);
