@@ -8,8 +8,16 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface PosterRequestRepository extends JpaRepository<PosterRequest, Long>, PosterRequestRepositoryCustom {
+
+    @Query(value =
+            "SELECT pr " +
+            "FROM PosterRequest pr left join fetch pr.user left join fetch pr.posterType " +
+            "WHERE pr.id = :posterRequestId")
+    Optional<PosterRequest> findByIdWithFetch(@Param("posterRequestId") Long posterRequestId);
+
     @Query(value =
             "SELECT new Map(pt.type as posterType, pr.rowPosition as rowPosition, pr.columnPosition as columnPosition) " +
             "FROM PosterRequest pr left join pr.posterType pt " +

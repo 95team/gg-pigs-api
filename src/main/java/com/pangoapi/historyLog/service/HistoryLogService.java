@@ -21,17 +21,16 @@ public class HistoryLogService {
     private final HistoryLogTypeRepository historyLogTypeRepository;
 
     @Transactional
-    public boolean writeHistoryLog(HistoryLogAction type, String email, String title, String content) {
+    public boolean writeHistoryLog(HistoryLogAction type, User worker, String title, String content) {
         boolean resultOfWritingLog = false;
 
-        User historyLogUser = this.findUserByEmail(email);
         HistoryLogType historyLogType = this.findHistoryLogTypeByType(type.name());
 
         HistoryLog historyLog = HistoryLog
                 .builder()
                 .title(title)
                 .content(content)
-                .user(historyLogUser)
+                .user(worker)
                 .historyLogType(historyLogType)
                 .build();
 
@@ -41,7 +40,7 @@ public class HistoryLogService {
         } catch (Exception exception) {
             this.failedToWriteHistoryLog();
             this.failedToWriteHistoryLog(exception.getMessage());
-            this.failedToWriteHistoryLog(type, email, title, content);
+            this.failedToWriteHistoryLog(type, worker.getEmail(), title, content);
         }
 
         return resultOfWritingLog;

@@ -4,7 +4,9 @@ import com.pangoapi._common.enums.HistoryLogAction;
 import com.pangoapi._common.enums.PosterReviewStatus;
 import com.pangoapi._common.exception.BadRequestException;
 import com.pangoapi.historyLog.service.HistoryLogService;
+import com.pangoapi.poster.dto.CreateDtoPoster;
 import com.pangoapi.poster.repository.PosterRepository;
+import com.pangoapi.poster.service.PosterService;
 import com.pangoapi.posterType.entity.PosterType;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
 import com.pangoapi.posterRequest.dto.RetrieveConditionDtoPosterRequest;
@@ -42,6 +44,7 @@ public class PosterRequestService {
     private final PosterTypeRepository posterTypeRepository;
     private final PosterRequestRepository posterRequestRepository;
 
+    private final PosterService posterService;
     private final HistoryLogService historyLogService;
 
     private static final int POSSIBLE_SEAT = 1;
@@ -187,25 +190,29 @@ public class PosterRequestService {
      * UPDATE
      */
     @Transactional
-    public Long updatePosterRequest(String work, String updaterEmail, Long _posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) {
+    public Long updatePosterRequest(String work, String updaterEmail, Long posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
         if(!work.equalsIgnoreCase("review")) throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
 
-        PosterRequest posterRequest = posterRequestRepository.findById(_posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
-        User updater = userRepository.findUserByEmail(updaterEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+        PosterRequest posterRequest = posterRequestRepository.findByIdWithFetch(posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+        User reviewer = userRepository.findUserByEmail(updaterEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         if(work.equalsIgnoreCase("review")) {
             String beforeReviewStatus = String.valueOf(posterRequest.getReviewStatus());
             String afterReviewStatus = updateDtoPosterRequest.getReviewStatus().toUpperCase();
+            boolean isNotChangedReviewStatus = beforeReviewStatus.equalsIgnoreCase(afterReviewStatus);
 
-            if(beforeReviewStatus.equalsIgnoreCase(afterReviewStatus)) {
-                return posterRequest.getId();
+            if(isNotChangedReviewStatus) {
+                return posterRequestId;
             }
 
-            String reviewer = (updater.getName() != null) ? updater.getName() : updaterEmail;
-            posterRequest.changeReviewer(reviewer);
+            posterRequest.changeReviewer(reviewer.getEmail());
 
+            boolean hasApproval = false;
+            long newPosterId = -1;
             if(afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.APPROVAL.name())) {
+                hasApproval = true;
                 posterRequest.changeReviewStatusToApproval();
+                newPosterId = this.InsertPRIntoPoster(posterRequest);
             } else if (afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.PENDING.name())) {
                 posterRequest.changeReviewStatusToPending();
             } else if (afterReviewStatus.equalsIgnoreCase(PosterReviewStatus.NON_APPROVAL.name())) {
@@ -214,11 +221,14 @@ public class PosterRequestService {
                 throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
             }
 
-            // HistoryLog 에 업데이트 내역을 삽입합니다.
-            this.HLForUpdateReviewStatus(updaterEmail, posterRequest.getId(), beforeReviewStatus, afterReviewStatus);
+            // HistoryLog 에 이력을 삽입합니다.
+            this.HLForUpdateReviewStatus(reviewer, posterRequestId, beforeReviewStatus, afterReviewStatus);
+            if(hasApproval) {
+                this.HLForInsertPRIntoPoster(reviewer, posterRequestId, newPosterId);
+            }
         }
 
-        return posterRequest.getId();
+        return posterRequestId;
     }
 
     /**
@@ -337,11 +347,26 @@ public class PosterRequestService {
         return allPossibleSeats;
     }
 
-    private void HLForUpdateReviewStatus(String email, Long posterRequestId, String beforeReviewStatus, String afterReviewStatus) {
+    private Long InsertPRIntoPoster(PosterRequest posterRequest) throws Exception {
+        return posterService.createPoster(CreateDtoPoster.createByPR(posterRequest));
+    }
+
+    /**
+     * [Note]
+     * 1. HL == HistoryLog
+     * */
+    private void HLForUpdateReviewStatus(User worker, Long posterRequestId, String beforeReviewStatus, String afterReviewStatus) {
         String title = "Update posterRequest reviewStatus field";
         String content = "PosterRequest: " + posterRequestId + "\n" +
                 "Before Review Status: " + beforeReviewStatus + "\n" +
                 "After Review Status: " + afterReviewStatus;
-        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, email, title, content);
+        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, worker, title, content);
+    }
+
+    private void HLForInsertPRIntoPoster(User worker, Long posterRequestId, Long posterId) {
+        String title = "Insert PosterRequest into Poster";
+        String content = "PosterRequest: " + posterRequestId + "\n"
+                + "Poster: " + posterId;
+        historyLogService.writeHistoryLog(HistoryLogAction.CREATE, worker, title, content);
     }
 }

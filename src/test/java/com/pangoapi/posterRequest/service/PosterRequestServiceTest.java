@@ -2,8 +2,10 @@ package com.pangoapi.posterRequest.service;
 
 import com.pangoapi._common.enums.PosterReviewStatus;
 import com.pangoapi.historyLog.service.HistoryLogService;
+import com.pangoapi.poster.dto.CreateDtoPoster;
 import com.pangoapi.poster.entity.Poster;
 import com.pangoapi.poster.repository.PosterRepository;
+import com.pangoapi.poster.service.PosterService;
 import com.pangoapi.posterRequest.dto.CreateDtoPosterRequest;
 import com.pangoapi.posterRequest.dto.UpdateDtoPosterRequest;
 import com.pangoapi.posterRequest.entity.PosterRequest;
@@ -48,6 +50,7 @@ class PosterRequestServiceTest {
     @MockBean PosterTypeRepository posterTypeRepository;
     @MockBean PosterRequestRepository posterRequestRepository;
 
+    @MockBean PosterService posterService;
     @MockBean HistoryLogService historyLogService;
 
     @Mock CreateDtoPosterRequest createDtoPosterRequest;
@@ -66,6 +69,7 @@ class PosterRequestServiceTest {
         // Configuration of PosterRequestRepository
         Mockito.when(posterRequestRepository.save(any())).thenReturn(posterRequest);
         Mockito.when(posterRequestRepository.findById(anyLong())).thenReturn(Optional.of(posterRequest));
+        Mockito.when(posterRequestRepository.findByIdWithFetch(anyLong())).thenReturn(Optional.of(posterRequest));
 
         // Configuration of PosterRequest
         Mockito.when(posterRequest.getId()).thenReturn(1L);
@@ -112,14 +116,19 @@ class PosterRequestServiceTest {
         Mockito.verify(posterRequestRepository, times(1)).save(any(PosterRequest.class));
     }
 
+    /**
+     * Test (case1): updatePosterRequest()
+     *  1. Review-Status 를 승인(APPROVAL) 로 변경했을 경우, PosterRequest -> Poster 삽입이 진행됨을 체크한다.
+     * */
     @Test
-    public void When_call_updatePosterRequest_review_Then_update_review_and_reviewer() throws Exception {
+    public void When_call_updatePosterRequest_review_Then_update_review_and_reviewer_case1() throws Exception {
         // Given
         String work = "review";
         String updaterEmail = "pigs95team@gmail.com";
         String reviewStatus = String.valueOf(PosterReviewStatus.APPROVAL);
         UpdateDtoPosterRequest updateDtoPosterRequest = Mockito.mock(UpdateDtoPosterRequest.class);
 
+        Mockito.when(user.getEmail()).thenReturn(updaterEmail);
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
@@ -127,14 +136,33 @@ class PosterRequestServiceTest {
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
-        if (reviewStatus.equals(String.valueOf(PosterReviewStatus.APPROVAL))) {
-            Mockito.verify(posterRequest, times(1)).changeReviewStatusToApproval();
-        } else if (reviewStatus.equals(String.valueOf(PosterReviewStatus.PENDING))) {
-            Mockito.verify(posterRequest, times(1)).changeReviewStatusToPending();
-        } else {
-            Mockito.verify(posterRequest, times(1)).changeReviewStatusToNonApproval();
-        }
-        Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), anyString(), anyString(), anyString());
+        Mockito.verify(posterRequest, times(1)).changeReviewStatusToApproval();
+        Mockito.verify(posterService, times(1)).createPoster(any(CreateDtoPoster.class));
+        Mockito.verify(historyLogService, times(2)).writeHistoryLog(any(), any(User.class), anyString(), anyString());
+    }
+
+    /**
+     * Test (case2): updatePosterRequest()
+     *  1. Review-Status 를 승인(APPROVAL) 이 아닌 값으로 변경했을 경우, 'review-status 변경', '이력의 삽입' 을 체크한다.
+     * */
+    @Test
+    public void When_call_updatePosterRequest_review_Then_update_review_and_reviewer_case2() throws Exception {
+        // Given
+        String work = "review";
+        String updaterEmail = "pigs95team@gmail.com";
+        String reviewStatus = String.valueOf(PosterReviewStatus.PENDING);
+        UpdateDtoPosterRequest updateDtoPosterRequest = Mockito.mock(UpdateDtoPosterRequest.class);
+
+        Mockito.when(user.getEmail()).thenReturn(updaterEmail);
+        Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
+
+        // When
+        posterRequestService.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+
+        // Then
+        Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
+        Mockito.verify(posterRequest, times(1)).changeReviewStatusToPending();
+        Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), any(User.class), anyString(), anyString());
     }
 
     /**
