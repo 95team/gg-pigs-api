@@ -138,6 +138,9 @@ class PosterRepositoryTest {
         // 3. IsFilteredDate 정보를 설정합니다.
         condition.isFilteredDateIsTrue();
 
+        // 4. IsActivated 정보를 설정합니다.
+        condition.isActivatedIsFalse();
+
         // When
         List<Poster> posters = posterRepository.findAllByCondition(condition);
 
