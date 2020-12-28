@@ -65,8 +65,9 @@ public class PosterApiController {
 
     @GetMapping("/api/v2/posters")
     public ApiResponse retrieveAllPosters(@RequestParam("page") Optional<String> page,
-                                                @RequestParam("userEmail") Optional<String> userEmail,
-                                                @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
+                                          @RequestParam("userEmail") Optional<String> userEmail,
+                                          @RequestParam("isFilteredDate") Optional<String> isFilteredDate,
+                                          @RequestParam("isActivated") Optional<String> isActivated) {
         HashMap<String, String> retrieveCondition = new HashMap<>();
 
         if(page.isPresent()) retrieveCondition.put("page", page.get());
@@ -77,6 +78,9 @@ public class PosterApiController {
 
         if(isFilteredDate.isPresent()) retrieveCondition.put("isFilteredDate", isFilteredDate.get());
         else retrieveCondition.put("isFilteredDate", null);
+
+        if(isActivated.isPresent()) retrieveCondition.put("isActivated", isActivated.get());
+        else retrieveCondition.put("isActivated", null);
 
         List<RetrieveDtoPoster> allRetrieveDtoPosters = posterService.retrieveAllPosters_v2(retrieveCondition);
 
