@@ -23,33 +23,40 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
     }
 
     @Override
-    public List<Poster> findAllByCondition(RetrieveConditionDtoPoster retrieveConditionForPoster) {
+    public List<Poster> findAllByCondition(RetrieveConditionDtoPoster conditions) {
         return jpaQueryFactory
                 .select(poster)
                 .from(poster)
                 .leftJoin(poster.user, user).fetchJoin()
-                .where(condition(retrieveConditionForPoster))
+                .where(condition(conditions))
                 .fetch();
     }
 
-    private BooleanBuilder condition(RetrieveConditionDtoPoster condition) {
+    private BooleanBuilder condition(RetrieveConditionDtoPoster conditions) {
         BooleanBuilder builder = new BooleanBuilder();
 
         // 1. Page 조건을 가공합니다.
-        if(!condition.isUnlimited()) {
-            builder.and(goeColumnPosition(condition.getStartIndexOfPage()));
-            builder.and(loeColumnPosition(condition.getLastIndexOfPage()));
+        if(!conditions.isUnlimited()) {
+            builder.and(goeColumnPosition(conditions.getStartIndexOfPage()));
+            builder.and(loeColumnPosition(conditions.getLastIndexOfPage()));
         }
 
         // 2. UserEmail 조건을 가공합니다.
-        if(condition.isHasUserEmail()) {
-            builder.and(eqUserEmail(condition.getUserEmail()));
+        if(conditions.isHasUserEmail()) {
+            builder.and(eqUserEmail(conditions.getUserEmail()));
         }
 
         // 3. IsFilteredDate 조건을 가공합니다.
-        if(condition.isFilteredDate()) {
-            builder.and(loeStartedDate(condition.getCurrentDate()));
-            builder.and(goeFinishedDate(condition.getCurrentDate()));
+        if(conditions.isFilteredDate()) {
+            builder.and(loeStartedDate(conditions.getCurrentDate()));
+            builder.and(goeFinishedDate(conditions.getCurrentDate()));
+        }
+
+        // 4. IsActivated 조건을 가공합니다.
+        if(conditions.isActivated()) {
+            builder.and(isActivatedEqTrue());
+        } else {
+            builder.and(isActivatedEqFalse());
         }
 
         return builder;
@@ -73,5 +80,13 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
 
     private BooleanExpression eqUserEmail(String userEmail) {
         return !isEmpty(userEmail) ? user.email.eq(userEmail) : null;
+    }
+
+    private BooleanExpression isActivatedEqTrue() {
+        return poster.isActivated.eq('Y');
+    }
+
+    private BooleanExpression isActivatedEqFalse() {
+        return poster.isActivated.eq('N');
     }
 }

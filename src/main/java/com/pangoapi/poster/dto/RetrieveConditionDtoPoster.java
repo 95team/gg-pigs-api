@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 import static com.pangoapi._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -26,6 +25,7 @@ public class RetrieveConditionDtoPoster {
 
     boolean isUnlimited = false;
     boolean isFilteredDate = false;
+    boolean isActivated = true;
     boolean hasUserEmail = false;
 
     public void isUnlimitedIsTrue() { this.isUnlimited = true; }
@@ -39,6 +39,10 @@ public class RetrieveConditionDtoPoster {
     public void hasUserEmailIsTrue() { this.hasUserEmail = true; }
 
     public void hasUserEmailIsFalse() { this.hasUserEmail = false; }
+
+    public void isActivatedIsTrue() { this.isActivated = true; }
+
+    public void isActivatedIsFalse() { this.isActivated = false; }
 
     public void pageIsDefault() { this.page = "1"; }
 
