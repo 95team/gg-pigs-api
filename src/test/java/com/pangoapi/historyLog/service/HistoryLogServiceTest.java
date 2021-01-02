@@ -41,7 +41,7 @@ class HistoryLogServiceTest {
         String content = "This is a content.";
 
         // When
-        boolean resultOfWritingLog = historyLogService.writeHistoryLog(HistoryLogAction.CREATE, HistoryLogUser, title, content);
+        boolean resultOfWritingLog = historyLogService.writeHistoryLog(HistoryLogAction.CREATE, HistoryLogUser, title, content, true);
 
         // Then
         Assertions.assertThat(resultOfWritingLog).isTrue();

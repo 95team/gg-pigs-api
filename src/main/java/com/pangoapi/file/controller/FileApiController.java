@@ -26,7 +26,7 @@ public class FileApiController {
         String fileType = httpServletRequest.getParameter("fileType");
         String serviceType = httpServletRequest.getParameter("serviceType");
 
-        String uploadImageUrl = fileService.uploadOneImage(
+        String uploadImageUrl = fileService.uploadImageToGitHub(
                 FileDto.builder()
                         .file(file)
                         .fileType(fileType)

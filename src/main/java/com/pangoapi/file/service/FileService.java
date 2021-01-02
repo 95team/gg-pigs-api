@@ -1,6 +1,7 @@
 package com.pangoapi.file.service;
 
 import com.pangoapi._common.CommonDefinition;
+import com.pangoapi._common.utility.github.GitHubClient;
 import com.pangoapi.file.dto.FileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +18,29 @@ import java.io.IOException;
 public class FileService {
 
     @Autowired private Environment environment;
+    @Autowired private GitHubClient gitHubClient;
 
-    public String uploadOneImage(FileDto fileDto) throws IOException {
+    @Transactional
+    public String uploadImageToGitHub(FileDto fileDto) throws IOException {
         if(!fileDto.checkFileSize()) throw new IllegalArgumentException("데이터를 업로드할 수 없습니다. (Check the file size. File size is allowed up to " + CommonDefinition.ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_STRING + ".)");
         if(!fileDto.checkFileExtension()) throw new IllegalArgumentException("데이터를 업로드할 수 없습니다. (Check the file extension or fileType.)");
 
-        final String uploadServerHost = environment.getProperty("application.server.host");
-        final String uploadDirectory = environment.getProperty("application.upload.image-directory");
+        String uploadImagePath;
+        String uploadRawPath = environment.getProperty("application.github.image.raw-path");
+        String uploadContentPath = null;
         int tryCount = 0;
-        int tryThreshold = 10;
-        String uploadImageUrl = uploadServerHost + "images/";
-        String uploadImageFileName = null;
+        int tryThreshold = 5;
 
         for(; tryCount < tryThreshold; tryCount++){
-            uploadImageFileName = fileDto.uploadFile(uploadDirectory);
-            if(!StringUtils.isEmpty(uploadImageFileName)) break;
+            uploadContentPath = gitHubClient.uploadContent(fileDto);
+
+            if(!StringUtils.isEmpty(uploadContentPath)) break;
         }
         if(tryCount >= tryThreshold) throw new IOException("데이터를 업로드할 수 없습니다. (Check the server status)");
 
-        uploadImageUrl += uploadImageFileName;
+        uploadImagePath = uploadRawPath + uploadContentPath;
 
-        return uploadImageUrl;
+        return uploadImagePath;
     }
 
 }

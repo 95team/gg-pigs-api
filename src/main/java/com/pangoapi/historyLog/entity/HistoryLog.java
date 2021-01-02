@@ -40,4 +40,6 @@ public class HistoryLog {
 
     @Column(length = 512)
     private String content;
+
+    private char isSuccessful;
 }

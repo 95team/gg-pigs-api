@@ -9,10 +9,8 @@ import com.pangoapi.user.entity.User;
 import com.pangoapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class HistoryLogService {
 
@@ -20,8 +18,7 @@ public class HistoryLogService {
     private final HistoryLogRepository historyLogRepository;
     private final HistoryLogTypeRepository historyLogTypeRepository;
 
-    @Transactional
-    public boolean writeHistoryLog(HistoryLogAction type, User worker, String title, String content) {
+    public boolean writeHistoryLog(HistoryLogAction type, User worker, String title, String content, boolean isSuccessful) {
         boolean resultOfWritingLog = false;
 
         HistoryLogType historyLogType = this.findHistoryLogTypeByType(type.name());
@@ -32,6 +29,7 @@ public class HistoryLogService {
                 .content(content)
                 .user(worker)
                 .historyLogType(historyLogType)
+                .isSuccessful(isSuccessful ? 'Y' : 'N')
                 .build();
 
         try {
