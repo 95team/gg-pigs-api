@@ -53,10 +53,8 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
         }
 
         // 4. IsActivated 조건을 가공합니다.
-        if(conditions.isActivated()) {
-            builder.and(isActivatedEqTrue());
-        } else {
-            builder.and(isActivatedEqFalse());
+        if(conditions.isFilteredByActivated()) {
+            builder.and(eqIsActivated(conditions.getIsActivated()));
         }
 
         return builder;
@@ -80,6 +78,18 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
 
     private BooleanExpression eqUserEmail(String userEmail) {
         return !isEmpty(userEmail) ? user.email.eq(userEmail) : null;
+    }
+
+    private BooleanExpression eqIsActivated(char isActivated) {
+        if(isActivated == 'Y') {
+            return this.isActivatedEqTrue();
+        }
+        else if(isActivated == 'N') {
+            return this.isActivatedEqFalse();
+        }
+        else {
+            return null;
+        }
     }
 
     private BooleanExpression isActivatedEqTrue() {
