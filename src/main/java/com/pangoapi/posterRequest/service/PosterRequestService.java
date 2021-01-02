@@ -197,6 +197,10 @@ public class PosterRequestService {
         User reviewer = userRepository.findUserByEmail(updaterEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         if(work.equalsIgnoreCase("review")) {
+            if(posterRequest.getReviewStatus() == PosterReviewStatus.APPROVAL) {
+                throw new BadRequestException("이 항목은 이미 승인되었습니다. (This item is already approved)");
+            }
+
             String beforeReviewStatus = String.valueOf(posterRequest.getReviewStatus());
             String afterReviewStatus = updateDtoPosterRequest.getReviewStatus().toUpperCase();
             boolean isNotChangedReviewStatus = beforeReviewStatus.equalsIgnoreCase(afterReviewStatus);
