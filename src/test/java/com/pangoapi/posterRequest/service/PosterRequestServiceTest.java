@@ -32,6 +32,7 @@ import java.util.Optional;
 import static com.pangoapi._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -138,7 +139,7 @@ class PosterRequestServiceTest {
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
         Mockito.verify(posterRequest, times(1)).changeReviewStatusToApproval();
         Mockito.verify(posterService, times(1)).createPoster(any(CreateDtoPoster.class));
-        Mockito.verify(historyLogService, times(2)).writeHistoryLog(any(), any(User.class), anyString(), anyString());
+        Mockito.verify(historyLogService, times(2)).writeHistoryLog(any(), any(User.class), anyString(), anyString(), anyBoolean());
     }
 
     /**
@@ -162,7 +163,7 @@ class PosterRequestServiceTest {
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
         Mockito.verify(posterRequest, times(1)).changeReviewStatusToPending();
-        Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), any(User.class), anyString(), anyString());
+        Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), any(User.class), anyString(), anyString(), anyBoolean());
     }
 
     /**

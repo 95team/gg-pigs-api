@@ -360,13 +360,13 @@ public class PosterRequestService {
         String content = "PosterRequest: " + posterRequestId + "\n" +
                 "Before Review Status: " + beforeReviewStatus + "\n" +
                 "After Review Status: " + afterReviewStatus;
-        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, worker, title, content);
+        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, worker, title, content, true);
     }
 
     private void HLForInsertPRIntoPoster(User worker, Long posterRequestId, Long posterId) {
         String title = "Insert PosterRequest into Poster";
         String content = "PosterRequest: " + posterRequestId + "\n"
                 + "Poster: " + posterId;
-        historyLogService.writeHistoryLog(HistoryLogAction.CREATE, worker, title, content);
+        historyLogService.writeHistoryLog(HistoryLogAction.CREATE, worker, title, content, true);
     }
 }
