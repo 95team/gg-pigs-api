@@ -45,15 +45,13 @@ public class GitHubClient {
     @Value("${application.admin.email}")
     private String adminUserEmail;
 
-    private final UserRepository userRepository;
-    private final HistoryLogService historyLogService;
-
     private Retrofit retrofit;
     private GitHub github;
-
     private Gson gson;
-
     private User adminUser;
+
+    private final UserRepository userRepository;
+    private final HistoryLogService historyLogService;
 
     @PostConstruct
     private void init() {
@@ -61,7 +59,6 @@ public class GitHubClient {
          * Initialize objects
          * 1. API Client library (Retrofit)
          * 2. Gson object
-         * 3. User object (admin user for history-log)
          * */
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
