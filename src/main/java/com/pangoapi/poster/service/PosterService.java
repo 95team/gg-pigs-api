@@ -136,16 +136,22 @@ public class PosterService {
 
         // 4. IsActivated 정보를 가공합니다.
         if(StringUtils.hasText(retrieveCondition.get("isActivated"))) {
-            if(retrieveCondition.get("isActivated").equalsIgnoreCase("true") ||
+            if(retrieveCondition.get("isActivated").equalsIgnoreCase("-1")) {
+                condition.filteredByActivatedIsFalse();
+            }
+            else if(retrieveCondition.get("isActivated").equalsIgnoreCase("true") ||
                     retrieveCondition.get("isActivated").equalsIgnoreCase("y")) {
-                condition.isActivatedIsTrue();
+                condition.setIsActivated('Y');
+                condition.filteredByActivatedIsTrue();
             }
             else {
-                condition.isActivatedIsFalse();
+                condition.setIsActivated('N');
+                condition.filteredByActivatedIsTrue();
             }
         }
         else {
-            condition.isActivatedIsTrue();
+            condition.setIsActivated('Y');
+            condition.filteredByActivatedIsTrue();
         }
 
         List<Poster> posters = posterRepository.findAllByCondition(condition);

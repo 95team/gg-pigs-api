@@ -22,10 +22,12 @@ public class RetrieveConditionDtoPoster {
     long lastIndexOfPage = Long.valueOf(POSTER_LAYOUT_SIZE);
 
     LocalDate currentDate = LocalDate.now();
+    
+    char isActivated = 'Y'; 
 
     boolean isUnlimited = false;
     boolean isFilteredDate = false;
-    boolean isActivated = true;
+    boolean isFilteredByActivated = true;
     boolean hasUserEmail = false;
 
     public void isUnlimitedIsTrue() { this.isUnlimited = true; }
@@ -40,9 +42,9 @@ public class RetrieveConditionDtoPoster {
 
     public void hasUserEmailIsFalse() { this.hasUserEmail = false; }
 
-    public void isActivatedIsTrue() { this.isActivated = true; }
+    public void filteredByActivatedIsTrue() { this.isFilteredByActivated = true; }
 
-    public void isActivatedIsFalse() { this.isActivated = false; }
+    public void filteredByActivatedIsFalse() { this.isFilteredByActivated = false; }
 
     public void pageIsDefault() { this.page = "1"; }
 
