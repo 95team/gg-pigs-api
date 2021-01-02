@@ -162,7 +162,7 @@ public class PosterRequest {
                 .id(null)
                 .user(user)
                 .posterType(posterType)
-                .reviewStatus(PosterReviewStatus.NON_APPROVAL)
+                .reviewStatus(PosterReviewStatus.NEW)
                 .title(createDtoPosterRequest.getTitle())
                 .description(createDtoPosterRequest.getDescription())
                 .keywords(createDtoPosterRequest.getKeywords())
