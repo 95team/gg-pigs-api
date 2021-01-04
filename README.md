@@ -1,11 +1,14 @@
-# gg-pigs-api
 
+<p>
 <a href="https://github.com/pigs-pango-team/gg-pigs-api/issues">
   <img alt="Issues" src="https://img.shields.io/github/issues/pigs-pango-team/gg-pigs-api?color=0088ff" />
 </a>
 <a href="https://github.com/pigs-pango-team/gg-pigs-api/pulls">
   <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/pigs-pango-team/gg-pigs-api?color=0088ff" />
 </a>
+</p>
+
+# gg-pigs-api
 
 <BR>
 
