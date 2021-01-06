@@ -16,15 +16,13 @@
 
 # gg-pigs-api
 
-<BR>
-
-This is a repository for pango api
+A repository for api server (https://gg-pigs.com)
 
 <BR>
 
-## 0.Setting for pango api
+## Setting
 
-### 0. Create spring project (with dependencies)
+### 1. Create spring project (with dependencies)
 
 > https://start.spring.io/
 
@@ -49,10 +47,13 @@ This is a repository for pango api
 
 <BR>
 
-## 1. Build Setup
-```
-Here will be written soon
-```
+## Command
+
+### 1. Build
+`./gradlew build`
+
+### 2. Test
+`./gradlew test`
 
 <BR>
 
