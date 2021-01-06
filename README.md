@@ -4,7 +4,7 @@
 <p>
   
 <a href="https://github.com/pigs-pango-team/gg-pigs-api/actions">  
-  <img alt="Build" src="https://github.com/pigs-pango-team/gg-pigs-api/workflows/Java%20CI%20with%20Gradle/badge.svg" />
+  <img alt="Build" src="![build](https://github.com/pigs-pango-team/gg-pigs-api/workflows/build/badge.svg)" />
 </a>
 <a href="https://github.com/pigs-pango-team/gg-pigs-api/issues">
   <img alt="Issues" src="https://img.shields.io/github/issues/pigs-pango-team/gg-pigs-api?color=0088ff" />
