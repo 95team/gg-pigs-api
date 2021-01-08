@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,5 +50,14 @@ public class LoginController {
         }
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), responseDtoLogin);
+    }
+
+    @PostMapping("/api/v1/logout")
+    public ApiResponse<ResponseDtoLogin> logout(HttpServletResponse response) {
+
+        Cookie logoutCookie = cookieProvider.destroyCookie("jwt", null);
+        response.addCookie(logoutCookie);
+
+        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), new ArrayList<>());
     }
 }

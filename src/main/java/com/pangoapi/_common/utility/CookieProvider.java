@@ -18,11 +18,19 @@ public class CookieProvider {
     private boolean httpOnly = true;
 
     public Cookie generateCookie(String name, String value) {
+        return this.generateCookie(name, value, this.uri, this.expiry, this.httpOnly);
+    }
+
+    public Cookie generateCookie(String name, String value, String uri, int expiry, boolean httpOnly) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath(this.uri);
-        cookie.setMaxAge(this.expiry);
-        cookie.setHttpOnly(this.httpOnly);
+        cookie.setPath(uri);
+        cookie.setMaxAge(expiry);
+        cookie.setHttpOnly(httpOnly);
 
         return cookie;
+    }
+
+    public Cookie destroyCookie(String name, String value) {
+        return this.generateCookie(name, value, this.uri, 0, this.httpOnly);
     }
 }

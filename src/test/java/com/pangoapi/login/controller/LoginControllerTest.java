@@ -59,8 +59,8 @@ class LoginControllerTest {
         Mockito.when(jwtProvider.generateToken(anyString(), anyString(), anyString())).thenReturn(token);
 
         // Configuration of CookieProvider
-        Cookie cookie = new Cookie("name", "value");
-        Mockito.when(cookieProvider.generateCookie(anyString(), anyString())).thenReturn(cookie);
+        Mockito.when(cookieProvider.generateCookie(anyString(), anyString())).thenReturn(new Cookie("name", "value"));
+        Mockito.when(cookieProvider.destroyCookie(anyString(), any())).thenReturn(new Cookie("name", null));
     }
 
     @Test
@@ -73,6 +73,18 @@ class LoginControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(content))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    public void 로그아웃() throws Exception {
+        // Given
+
+        // When // Then
+        mockMvc.perform(post("/api/v1/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
