@@ -29,4 +29,19 @@ class CookieProviderTest {
         Assertions.assertThat(cookie.getName()).isEqualTo(name);
         Assertions.assertThat(cookie.getValue()).isEqualTo(value);
     }
+
+    @Test
+    public void When_call_destroyCookie_Then_set_expiry_0() {
+        // Given
+        String name = "jwt";
+        String value = null;
+
+        // When
+        Cookie cookie = cookieProvider.destroyCookie(name, value);
+
+        // Then
+        Assertions.assertThat(cookie.getName()).isEqualTo(name);
+        Assertions.assertThat(cookie.getValue()).isNull();
+        Assertions.assertThat(cookie.getMaxAge()).isEqualTo(0);
+    }
 }
