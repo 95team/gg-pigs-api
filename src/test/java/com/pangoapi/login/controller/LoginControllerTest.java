@@ -79,9 +79,7 @@ class LoginControllerTest {
 
     @Test
     public void 로그아웃() throws Exception {
-        // Given
-
-        // When // Then
+        // Given // When // Then
         mockMvc.perform(post("/api/v1/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
