@@ -31,6 +31,10 @@ public class CookieProvider {
     }
 
     public Cookie destroyCookie(String name, String value) {
+        /**
+         * [Note]
+         * 1. MaxAge 를 '0' 으로 설정하여 쿠키를 삭제합니다.
+         * */
         return this.generateCookie(name, value, this.uri, 0, this.httpOnly);
     }
 }
