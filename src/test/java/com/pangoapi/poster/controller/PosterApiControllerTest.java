@@ -51,6 +51,7 @@ class PosterApiControllerTest {
         String mockUserEmail = "test@email.com";
         String mockDescription = "This is a detail description.";
         String mockKeywords = "This is a keywords.";
+        String mockSlug = "This-is-a-title";
         String mockPosterType = "R1";
         String mockImagePath = "/src/image/exmaple.jpg";
         String mockSiteUrl = "siteUrl";
@@ -60,7 +61,7 @@ class PosterApiControllerTest {
         String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         createDtoPoster = new CreateDtoPoster(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
-        retrieveDtoPoster = new RetrieveDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+        retrieveDtoPoster = new RetrieveDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockSlug, mockPosterType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
         updateDtoPoster = new UpdateDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
 
         Mockito.when(posterService.retrievePoster(any(Long.class))).thenReturn(retrieveDtoPoster);
