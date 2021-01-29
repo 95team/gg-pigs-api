@@ -12,6 +12,7 @@ public class WebConfigurer implements WebMvcConfigurer {
         registry.addMapping("/api/v1/**")
                 .allowedOrigins(
                         "http://localhost:3000",
+                        "http://localhost:8000",
                         "https://gg-pigs.com"
                 )
                 .allowedMethods("*")
@@ -20,6 +21,7 @@ public class WebConfigurer implements WebMvcConfigurer {
         registry.addMapping("/api/v2/**")
                 .allowedOrigins(
                         "http://localhost:3000",
+                        "http://localhost:8000",
                         "https://gg-pigs.com"
                 )
                 .allowedMethods("*")
