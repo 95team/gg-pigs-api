@@ -4,6 +4,7 @@ import com.pangoapi.poster.entity.Poster;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 
@@ -18,6 +19,7 @@ public class RetrieveDtoPoster {
     private String title;
     private String description;
     private String keywords;
+    private String slug;
     private String posterType;
     private String posterWidth;
     private String posterHeight;
@@ -30,10 +32,13 @@ public class RetrieveDtoPoster {
     private String finishedDate;
 
     public static RetrieveDtoPoster createRetrieveDtoPoster(Poster poster) {
+        String slug = generateSlugByTitle(poster.getTitle());
+
         return RetrieveDtoPoster.builder()
                 .id(poster.getId())
                 .userEmail(poster.getUser() != null ? poster.getUser().getEmail() : "")
                 .title(poster.getTitle())
+                .slug(slug)
                 .description(poster.getDescription())
                 .keywords(poster.getKeywords())
                 .posterType(poster.getPosterType().getType())
@@ -47,5 +52,16 @@ public class RetrieveDtoPoster {
                 .startedDate(poster.getStartedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .finishedDate(poster.getFinishedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
+    }
+
+    private static String generateSlugByTitle(String title) {
+        String slug = "";
+
+        if(!StringUtils.isEmpty(title)) {
+            slug = title.replace(" ", "-");
+            slug = slug.replaceAll("[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9-]", "");
+        }
+
+        return slug;
     }
 }

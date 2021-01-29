@@ -2,7 +2,6 @@ package com.pangoapi.poster.service;
 
 import com.pangoapi.poster.entity.Poster;
 import com.pangoapi.posterType.entity.PosterType;
-import com.pangoapi.poster.service.PosterService;
 import com.pangoapi.user.entity.User;
 import com.pangoapi.poster.dto.CreateDtoPoster;
 import com.pangoapi.poster.dto.RetrieveDtoPoster;
@@ -56,12 +55,14 @@ class PosterServiceTest {
     private Long posterId = 1L;
     private Long rowPosition = 1L;
     private Long columnPosition = 1L;
+    private String title = "This is a title";
     private String posterType = "R1";
 
     @BeforeEach
     void setUp() {
         // Configuration of poster
         Mockito.when(savedPoster.getId()).thenReturn(posterId);
+        Mockito.when(savedPoster.getTitle()).thenReturn(title);
         Mockito.when(savedPoster.getPosterType()).thenReturn(savedPosterType);
         Mockito.when(savedPoster.getStartedDate()).thenReturn(LocalDate.now());
         Mockito.when(savedPoster.getFinishedDate()).thenReturn(LocalDate.now().plusMonths(1));
