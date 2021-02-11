@@ -26,6 +26,7 @@ public class CookieProvider {
         cookie.setPath(uri);
         cookie.setMaxAge(expiry);
         cookie.setHttpOnly(httpOnly);
+        cookie.setSecure(true);
 
         return cookie;
     }
