@@ -78,7 +78,7 @@ public class PosterRequestApiController {
      * */
     @GetMapping("/api/v1/poster-requests/{posterRequestId}")
     public ApiResponse retrievePosterRequest(@PathVariable("posterRequestId") Long _posterRequestId) {
-        com.gg_pigs.posterRequest.dto.RetrieveDtoPosterRequest retrieveDtoPosterRequest = posterRequestService.retrievePosterRequest(_posterRequestId);
+        RetrieveDtoPosterRequest retrieveDtoPosterRequest = posterRequestService.retrievePosterRequest(_posterRequestId);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoPosterRequest);
     }
@@ -94,7 +94,7 @@ public class PosterRequestApiController {
             }
         }
 
-        List<com.gg_pigs.posterRequest.dto.RetrieveDtoPosterRequest> allRetrieveDtoPosterRequests = posterRequestService.retrieveAllPosterRequests(retrieveOptions);
+        List<RetrieveDtoPosterRequest> allRetrieveDtoPosterRequests = posterRequestService.retrieveAllPosterRequests(retrieveOptions);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoPosterRequests);
     }
