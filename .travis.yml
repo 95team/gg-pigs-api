@@ -12,7 +12,7 @@ branches:
     - feature/#112-cicd
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_7083026e7482_key -iv $encrypted_7083026e7482_iv -in application.yml.enc -out application.yml -d
+  - openssl aes-256-cbc -K $encrypted_cf949bb46ec4_key -iv $encrypted_cf949bb46ec4_iv -in src/test/resources/application.yml.enc -ougit t src/test/resources/application.yml -d
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
