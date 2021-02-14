@@ -1,0 +1,29 @@
+language: java
+
+os: linux
+
+dist: bionic
+
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - master
+    - develop
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_cf949bb46ec4_key -iv $encrypted_cf949bb46ec4_iv -in src/test/resources/application.yml.enc -out src/test/resources/application.yml -d
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+notifications:
+  email:
+    - pigs95team@gmail.com
