@@ -23,7 +23,7 @@ public interface PosterRequestService {
 
 
     /** UPDATE */
-    /** PosterRequest 단건 조회 */
+    /** PosterRequest 단건 수정 */
     Long updatePosterRequest(String work, String updaterEmail, Long posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception;
 
 
@@ -39,7 +39,8 @@ public interface PosterRequestService {
     List<String[]> retrieveAllPossibleSeats(HashMap<String, String> wantedDate) throws Exception;
 
     /**
-     * @description 1. '신청 가능한 모든 자리' 와 '요청이 들어온 자리' 와 비교하여 신청이 가능한지 확인합니다.
+     * @description
+     * 1. '신청 가능한 모든 자리' 와 '요청이 들어온 자리' 와 비교하여 신청이 가능한지 확인합니다.
      */
     boolean isPossibleSeat(List<String[]> allPossibleSeats, Long rowPosition, Long columnPosition, String stringTypeOfPosterType);
 }

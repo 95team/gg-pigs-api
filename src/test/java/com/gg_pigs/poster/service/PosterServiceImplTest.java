@@ -42,7 +42,7 @@ import static org.mockito.Mockito.times;
 )
 class PosterServiceImplTest {
 
-    @Autowired PosterServiceImpl posterService;
+    @Autowired PosterServiceImpl posterServiceImpl;
 
     @MockBean UserRepository userRepository;
     @MockBean PosterTypeRepository posterTypeRepository;
@@ -89,7 +89,7 @@ class PosterServiceImplTest {
         Mockito.when(createDtoPoster.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
 
         // When
-        Long savedPosterId = posterService.createPoster(createDtoPoster);
+        Long savedPosterId = posterServiceImpl.createPoster(createDtoPoster);
 
         // Then
         assertThat(savedPosterId).isEqualTo(posterId);  // 1. createOnePoster 함수의 반환 값은 savedPosterId 이다.
@@ -102,7 +102,7 @@ class PosterServiceImplTest {
         Long savedPosterId = savedPoster.getId();
 
         // When
-        RetrieveDtoPoster foundPoster = posterService.retrievePoster(savedPosterId);
+        RetrieveDtoPoster foundPoster = posterServiceImpl.retrievePoster(savedPosterId);
 
         // Then
         assertThat(foundPoster.getClass()).isEqualTo(RetrieveDtoPoster.class);  // 1. retrieveOnePoster 함수의 반환 클래스는 RetrieveDtoPoster 클래스다.
@@ -118,7 +118,7 @@ class PosterServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        List<Poster> posterList = posterService.retrieveAllPosters(retrieveCondition);
+        List<Poster> posterList = posterServiceImpl.retrieveAllPosters(retrieveCondition);
 
         // Then
         assertThat(posterList.getClass()).isEqualTo(ArrayList.class);
@@ -132,7 +132,7 @@ class PosterServiceImplTest {
         Mockito.when(updateDtoPoster.getId()).thenReturn(posterId);
 
         // When
-        Long updatedPosterId = posterService.updatePoster(updateDtoPoster.getId(), updateDtoPoster);
+        Long updatedPosterId = posterServiceImpl.updatePoster(updateDtoPoster.getId(), updateDtoPoster);
 
         // Then
         assertThat(updatedPosterId).isEqualTo(updateDtoPoster.getId()); // 1. updateOnePoster 함수의 반환 값은 updatedPosterId 이다.
@@ -143,7 +143,7 @@ class PosterServiceImplTest {
     @Test
     public void When_call_deletePoster_Then_return_void() {
         // Given // When
-        posterService.deletePoster(savedPoster.getId());
+        posterServiceImpl.deletePoster(savedPoster.getId());
 
         // Then
         Mockito.verify(posterRepository, times(1)).deleteById(any(Long.class));  // 1. posterRepository 의 deleteById 함수가 1회 호출된다.
