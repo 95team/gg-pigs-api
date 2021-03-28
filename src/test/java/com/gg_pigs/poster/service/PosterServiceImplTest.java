@@ -37,12 +37,12 @@ import static org.mockito.Mockito.times;
 
 @SpringBootTest(
         classes = {
-                PosterService.class,
+                PosterServiceImpl.class,
         }
 )
-class PosterServiceTest {
+class PosterServiceImplTest {
 
-    @Autowired PosterService posterService;
+    @Autowired PosterServiceImpl posterService;
 
     @MockBean UserRepository userRepository;
     @MockBean PosterTypeRepository posterTypeRepository;
@@ -110,17 +110,6 @@ class PosterServiceTest {
     }
 
     @Test
-    public void When_call_retrieveAllPosters_Then_return_list() {
-        // Given // When
-        HashMap<String, String> retrieveOptions = new HashMap<String, String>();
-        List<Poster> posterList = posterService.retrieveAllPosters(retrieveOptions);
-
-        // Then
-        assertThat(posterList.getClass()).isEqualTo(ArrayList.class);
-        Mockito.verify(posterRepository, times(1)).findAllByPage(anyLong(), anyLong());
-    }
-
-    @Test
     public void When_call_retrieveAllPosters_v2_Then_return_list() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
@@ -129,7 +118,7 @@ class PosterServiceTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        List<Poster> posterList = posterService.retrieveAllPosters_v2(retrieveCondition);
+        List<Poster> posterList = posterService.retrieveAllPosters(retrieveCondition);
 
         // Then
         assertThat(posterList.getClass()).isEqualTo(ArrayList.class);
