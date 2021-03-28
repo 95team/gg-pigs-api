@@ -59,7 +59,7 @@ public class PosterRequestApiController {
                 }});
 
         // 1-2. '신청 가능한 모든 자리' 와 '요청이 들어온 자리' 와 비교하여 신청이 가능한지 확인합니다.
-        if(!PosterRequestService.isPossibleSeat(
+        if(!posterRequestService.isPossibleSeat(
                 allPossibleSeats,
                 Long.parseLong(createDtoPosterRequest.getRowPosition()),
                 Long.parseLong(createDtoPosterRequest.getColumnPosition()),
@@ -83,23 +83,7 @@ public class PosterRequestApiController {
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoPosterRequest);
     }
 
-    @GetMapping("/api/v1/poster-requests")
-    public ApiResponse retrieveAllPosterRequests(@RequestParam("page") Optional<String> page) {
-        HashMap<String, String> retrieveOptions = new HashMap<>();
-        if(page.isPresent()) {
-            if (page.get().equalsIgnoreCase("0")) {
-                retrieveOptions.put("page", "1");
-            } else {
-                retrieveOptions.put("page", page.get());
-            }
-        }
-
-        List<RetrieveDtoPosterRequest> allRetrieveDtoPosterRequests = posterRequestService.retrieveAllPosterRequests(retrieveOptions);
-
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoPosterRequests);
-    }
-
-    @GetMapping("/api/v2/poster-requests")
+    @GetMapping({"/api/v1/poster-requests", "/api/v2/poster-requests"})
     public ApiResponse retrieveAllPosterRequests(@RequestParam("page") Optional<String> page,
                                                        @RequestParam("userEmail") Optional<String> userEmail,
                                                        @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
@@ -114,7 +98,7 @@ public class PosterRequestApiController {
         if(isFilteredDate.isPresent()) retrieveCondition.put("isFilteredDate", isFilteredDate.get());
         else retrieveCondition.put("isFilteredDate", null);
 
-        List<RetrieveDtoPosterRequest> allRetrieveDtoPosterRequests = posterRequestService.retrieveAllPosterRequests_v2(retrieveCondition);
+        List<RetrieveDtoPosterRequest> allRetrieveDtoPosterRequests = posterRequestService.retrieveAllPosterRequests(retrieveCondition);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoPosterRequests);
     }

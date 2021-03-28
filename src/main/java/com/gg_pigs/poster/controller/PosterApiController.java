@@ -6,7 +6,6 @@ import com.gg_pigs.poster.dto.RetrieveDtoPoster;
 import com.gg_pigs.poster.dto.UpdateDtoPoster;
 import com.gg_pigs.poster.service.PosterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

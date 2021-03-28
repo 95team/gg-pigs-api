@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -73,6 +75,7 @@ class PosterRequestApiControllerTest {
         retrieveDtoPosterRequest = new RetrieveDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, "300", "300", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NEW, mockStartedDate, mockFinishedDate);
 
         Mockito.when(posterRequestService.retrievePosterRequest(any(Long.class))).thenReturn(retrieveDtoPosterRequest);
+        Mockito.when(posterRequestService.isPossibleSeat(any(), anyLong(), anyLong(), anyString())).thenReturn(true);
     }
 
     @Test
