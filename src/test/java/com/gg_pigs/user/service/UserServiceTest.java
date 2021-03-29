@@ -22,9 +22,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(
-        classes = {
-                UserService.class
-        }
+        classes = { UserService.class }
 )
 class UserServiceTest {
 
