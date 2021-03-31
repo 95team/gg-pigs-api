@@ -1,4 +1,4 @@
-package com.gg_pigs._config.auth;
+package com.gg_pigs._config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
-public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
