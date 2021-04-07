@@ -4,8 +4,11 @@ import java.util.regex.Pattern;
 
 public class CommonDefinition {
 
-    /** Advertisement layouts */
-    public static final int ADVERTISEMENT_LAYOUT_SIZE = 6;
+    /** Cache */
+    public static final int DEFAULT_CACHE_MAX_AGE = 30;
+    public static final int ZERO_CACHE_MAX_AGE = 0;
+
+    /** Poster layouts */
     public static final int POSTER_LAYOUT_SIZE = 6;
 
     /** Image files */

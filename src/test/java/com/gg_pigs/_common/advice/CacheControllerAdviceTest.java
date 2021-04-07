@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.gg_pigs._common.CommonDefinition.DEFAULT_CACHE_MAX_AGE;
+import static com.gg_pigs._common.CommonDefinition.ZERO_CACHE_MAX_AGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,9 +34,6 @@ class CacheControllerAdviceTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockBean PosterService posterService;
-
-    private final int defaultCacheMaxAge = 30;
-    private final int zeroCacheMaxAge = 0;
 
     private CreateDtoPoster createDtoPoster;
     private UpdateDtoPoster updateDtoPoster;
@@ -62,7 +61,7 @@ class CacheControllerAdviceTest {
     @Test
     public void When_call_GET_method_Then_set_cache() throws Exception {
         // Given
-        String targetCacheControl = "max-age=" +  defaultCacheMaxAge;
+        String targetCacheControl = "max-age=" +  DEFAULT_CACHE_MAX_AGE;
 
         // When
         MockHttpServletResponse response = mockMvc.perform(get("/api/v2/posters"))
@@ -78,7 +77,7 @@ class CacheControllerAdviceTest {
     @Test
     public void When_call_POST_method_Then_set_cache_zero() throws Exception {
         // Given
-        String targetCacheControl = "max-age=" +  zeroCacheMaxAge;
+        String targetCacheControl = "max-age=" +  ZERO_CACHE_MAX_AGE;
 
         // When
         String content = objectMapper.writeValueAsString(createDtoPoster);
@@ -99,7 +98,7 @@ class CacheControllerAdviceTest {
     @Test
     public void When_call_PUT_method_Then_set_cache_zero() throws Exception {
         // Given
-        String targetCacheControl = "max-age=" +  zeroCacheMaxAge;
+        String targetCacheControl = "max-age=" +  ZERO_CACHE_MAX_AGE;
 
         // When
         String content = objectMapper.writeValueAsString(updateDtoPoster);
@@ -120,7 +119,7 @@ class CacheControllerAdviceTest {
     @Test
     public void When_call_DELETE_method_Then_set_cache_zero() throws Exception {
         // Given
-        String targetCacheControl = "max-age=" +  zeroCacheMaxAge;
+        String targetCacheControl = "max-age=" +  ZERO_CACHE_MAX_AGE;
 
         // When
         MockHttpServletResponse response = mockMvc.perform(delete("/api/v1/posters/1"))

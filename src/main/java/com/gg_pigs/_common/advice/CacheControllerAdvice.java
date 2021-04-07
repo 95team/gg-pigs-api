@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
+import static com.gg_pigs._common.CommonDefinition.DEFAULT_CACHE_MAX_AGE;
+
 @ControllerAdvice
 public class CacheControllerAdvice implements ResponseBodyAdvice {
-
-    private final int defaultCacheMaxAge = 30;
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
@@ -39,7 +39,7 @@ public class CacheControllerAdvice implements ResponseBodyAdvice {
         String requestMethod = request.getMethod();
 
         if( requestMethod.equals(HttpMethod.GET.name()) && (responseStatus < HttpStatus.MULTIPLE_CHOICES.value()) ) {
-            response.setHeader(HttpHeaders.CACHE_CONTROL, CacheControl.maxAge(defaultCacheMaxAge, TimeUnit.SECONDS).getHeaderValue());
+            response.setHeader(HttpHeaders.CACHE_CONTROL, CacheControl.maxAge(DEFAULT_CACHE_MAX_AGE, TimeUnit.SECONDS).getHeaderValue());
         }
 
         return body;
