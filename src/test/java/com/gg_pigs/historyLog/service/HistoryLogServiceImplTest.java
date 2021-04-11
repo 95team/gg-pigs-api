@@ -21,9 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
                 HistoryLogServiceImpl.class,
         }
 )
-class HistoryLogServiceTest {
+class HistoryLogServiceImplTest {
 
-    @Autowired HistoryLogService historyLogService;
+    @Autowired HistoryLogServiceImpl historyLogServiceImpl;
 
     @MockBean UserRepository userRepository;
     @MockBean HistoryLogRepository historyLogRepository;
@@ -39,7 +39,7 @@ class HistoryLogServiceTest {
         String content = "This is a content.";
 
         // When
-        boolean resultOfWritingLog = historyLogService.writeHistoryLog(HistoryLogAction.CREATE, HistoryLogUser, title, content, true);
+        boolean resultOfWritingLog = historyLogServiceImpl.writeHistoryLog(HistoryLogAction.CREATE, HistoryLogUser, title, content, true);
 
         // Then
         Assertions.assertThat(resultOfWritingLog).isTrue();
