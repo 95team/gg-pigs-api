@@ -1,4 +1,4 @@
-package com.gg_pigs._config;
+package com.gg_pigs._common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

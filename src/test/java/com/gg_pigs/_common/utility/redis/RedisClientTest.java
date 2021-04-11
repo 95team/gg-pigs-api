@@ -1,6 +1,6 @@
 package com.gg_pigs._common.utility.redis;
 
-import com.gg_pigs._config.RedisConfigurer;
+import com.gg_pigs._common.config.RedisConfigurer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

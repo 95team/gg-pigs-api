@@ -1,4 +1,4 @@
-package com.gg_pigs._config;
+package com.gg_pigs._common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
 public class RedisConfigurer {
