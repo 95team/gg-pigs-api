@@ -33,7 +33,7 @@ public class UserApiController {
      * */
     @PostMapping("/api/v1/users")
     public ApiResponse createOneUser(@RequestBody CreateDtoUser createDtoUser) {
-        Long userId = userService.createOneUser(createDtoUser);
+        Long userId = userService.createUser(createDtoUser);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), userId);
     }
@@ -43,7 +43,7 @@ public class UserApiController {
      * */
     @GetMapping("/api/v1/users/{userId}")
     public ApiResponse retrieveOneUser(@PathVariable("userId") Long _userId) {
-        RetrieveDtoUser retrieveDtoUser = userService.retrieveOneUser(_userId);
+        RetrieveDtoUser retrieveDtoUser = userService.retrieveUser(_userId);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }
@@ -53,14 +53,14 @@ public class UserApiController {
         Claims payload = jwtProvider.getPayloadFromToken(token);
         String userEmail = payload.getAudience();
 
-        RetrieveDtoUser retrieveDtoUser = userService.retrieveOneUserByEmail(userEmail);
+        RetrieveDtoUser retrieveDtoUser = userService.retrieveUserByEmail(userEmail);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }
 
     @GetMapping("/api/v1/users")
     public ApiResponse retrieveAllUser() {
-        List<RetrieveDtoUser> allRetrieveDtoUsers = userService.retrieveAllUser();
+        List<RetrieveDtoUser> allRetrieveDtoUsers = userService.retrieveAllUsers();
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoUsers);
     }
@@ -70,7 +70,7 @@ public class UserApiController {
      * */
     @PutMapping("/api/v1/users/{userId}")
     public ApiResponse updateOneUser(@PathVariable("userId") Long _userId, @RequestBody UpdateDtoUser updateDtoUser) {
-        Long userId = userService.updateOneUser(_userId, updateDtoUser);
+        Long userId = userService.updateUser(_userId, updateDtoUser);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), userId);
     }
@@ -80,7 +80,7 @@ public class UserApiController {
      * */
     @DeleteMapping("/api/v1/users/{userId}")
     public ApiResponse deleteOneUser(@PathVariable("userId") Long _userId) {
-        userService.deleteOneUser(_userId);
+        userService.deleteUser(_userId);
 
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
     }

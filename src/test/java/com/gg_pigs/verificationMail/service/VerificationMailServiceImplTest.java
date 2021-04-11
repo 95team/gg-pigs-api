@@ -25,11 +25,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
 @SpringBootTest(
-        classes = {
-                VerificationMailService.class
-        }
+        classes = { VerificationMailServiceImpl.class }
 )
-class VerificationMailServiceTest {
+class VerificationMailServiceImplTest {
 
     @Autowired Environment environment;
 
@@ -42,16 +40,16 @@ class VerificationMailServiceTest {
     @Mock RequestDtoVerificationMail requestDtoVerificationMail;
     @Mock ResponseDtoVerificationMail responseDtoVerificationMail;
 
-    private VerificationMailService verificationMailService;
+    private VerificationMailServiceImpl verificationMailServiceImpl;
     private String receiver = "pigs95team@gmail.com";
 
     @BeforeEach
     void setUp() throws Exception {
-        verificationMailService = Mockito.spy(new VerificationMailService(environment, javaMailSender, userRepository, verificationMailRepository));
+        verificationMailServiceImpl = Mockito.spy(new VerificationMailServiceImpl(environment, javaMailSender, userRepository, verificationMailRepository));
 
         // Configuration of verificationMailService
-        Mockito.doReturn(mailHandler).when(verificationMailService).makeMailHandler(any(JavaMailSender.class));
-        Mockito.doReturn(responseDtoVerificationMail).when(verificationMailService).makeResponseDtoVerificationMail();
+        Mockito.doReturn(mailHandler).when(verificationMailServiceImpl).makeMailHandler(any(JavaMailSender.class));
+        Mockito.doReturn(responseDtoVerificationMail).when(verificationMailServiceImpl).makeResponseDtoVerificationMail();
 
         // Configuration of verificationMailRepository
         Mockito.when(verificationMailRepository.save(any(VerificationMail.class))).thenReturn(sentVerificationMail);
@@ -64,7 +62,7 @@ class VerificationMailServiceTest {
     @Test
     public void When_call_sendVerificationEmail_Then_return_responseDtoVerificationMail() throws Exception {
         // Given // When
-        responseDtoVerificationMail = verificationMailService.sendVerificationEmail(requestDtoVerificationMail);
+        responseDtoVerificationMail = verificationMailServiceImpl.send4EmailVerification(requestDtoVerificationMail);
 
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).countByEmail(anyString());

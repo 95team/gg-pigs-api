@@ -15,13 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(
-        classes = {
-                UserSaltService.class,
-        }
+        classes = { UserSaltServiceImpl.class }
 )
-class UserSaltServiceTest {
+class UserSaltServiceImplTest {
 
-    @Autowired UserSaltService userSaltService;
+    @Autowired UserSaltServiceImpl userSaltServiceImpl;
 
     @MockBean UserSaltRepository userSaltRepository;
 
@@ -54,7 +52,7 @@ class UserSaltServiceTest {
         Mockito.when(userSalt.getId()).thenReturn(1L);
 
         // When
-        Long userSaltId = userSaltService.createOneUserSalt(user, password);
+        Long userSaltId = userSaltServiceImpl.createUserSalt(user, password);
 
         // Then
         Mockito.verify(userSaltRepository, Mockito.times(1)).save(any(UserSalt.class));

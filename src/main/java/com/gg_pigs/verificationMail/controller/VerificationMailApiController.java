@@ -18,7 +18,7 @@ public class VerificationMailApiController {
 
     @PostMapping("/api/v1/verification-mails")
     public ApiResponse sendVerificationEmail(@RequestBody RequestDtoVerificationMail requestDtoVerificationMail) throws Exception {
-        ResponseDtoVerificationMail responseDtoVerificationMail = verificationMailService.sendVerificationEmail(requestDtoVerificationMail);
+        ResponseDtoVerificationMail responseDtoVerificationMail = verificationMailService.send4EmailVerification(requestDtoVerificationMail);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), responseDtoVerificationMail);
     }

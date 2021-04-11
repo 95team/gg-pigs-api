@@ -47,23 +47,7 @@ public class PosterApiController {
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoPoster);
     }
 
-    @GetMapping("/api/v1/posters")
-    public ApiResponse retrieveAllPosters(@RequestParam("page") Optional<String> page) {
-        HashMap<String, String> retrieveOptions = new HashMap<String, String>();
-        if(page.isPresent()) {
-            if (page.get().equalsIgnoreCase("0")) {
-                retrieveOptions.put("page", "1");
-            } else {
-                retrieveOptions.put("page", page.get());
-            }
-        }
-
-        List<RetrieveDtoPoster> allRetrieveDtoPosters = posterService.retrieveAllPosters(retrieveOptions);
-
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoPosters);
-    }
-
-    @GetMapping("/api/v2/posters")
+    @GetMapping({"/api/v1/posters", "/api/v2/posters"})
     public ApiResponse retrieveAllPosters(@RequestParam("page") Optional<String> page,
                                           @RequestParam("userEmail") Optional<String> userEmail,
                                           @RequestParam("isFilteredDate") Optional<String> isFilteredDate,
@@ -82,7 +66,7 @@ public class PosterApiController {
         if(isActivated.isPresent()) retrieveCondition.put("isActivated", isActivated.get());
         else retrieveCondition.put("isActivated", null);
 
-        List<RetrieveDtoPoster> allRetrieveDtoPosters = posterService.retrieveAllPosters_v2(retrieveCondition);
+        List<RetrieveDtoPoster> allRetrieveDtoPosters = posterService.retrieveAllPosters(retrieveCondition);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoPosters);
     }

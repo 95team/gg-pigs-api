@@ -51,7 +51,7 @@ class UserApiControllerTest {
     @Test
     public void user_한건_조회() throws Exception {
         // Given
-        Mockito.when(userService.retrieveOneUser(anyLong())).thenReturn(retrieveDtoUser);
+        Mockito.when(userService.retrieveUser(anyLong())).thenReturn(retrieveDtoUser);
 
         // When // Then
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/users/1"))
@@ -66,7 +66,7 @@ class UserApiControllerTest {
     @Test
     public void user_전체_조회() throws Exception {
         // Given
-        Mockito.when(userService.retrieveOneUser(anyLong())).thenReturn(retrieveDtoUser);
+        Mockito.when(userService.retrieveUser(anyLong())).thenReturn(retrieveDtoUser);
 
         // When // Then
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/users"))

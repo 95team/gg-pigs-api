@@ -3,91 +3,33 @@ package com.gg_pigs.user.service;
 import com.gg_pigs.user.dto.CreateDtoUser;
 import com.gg_pigs.user.dto.RetrieveDtoUser;
 import com.gg_pigs.user.dto.UpdateDtoUser;
-import com.gg_pigs.user.entity.User;
-import com.gg_pigs.user.repository.UserRepository;
-import com.gg_pigs.userSalt.service.UserSaltService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-@Service
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
-    private final UserSaltService userSaltService;
+    /** CREATE */
+    /** User 단건 생성 */
+    Long createUser(CreateDtoUser userDto);
 
-    /**
-     * CREATE
-     */
-    @Transactional
-    public Long createOneUser(CreateDtoUser createDtoUser) {
-        if(createDtoUser.getEmail() == null ||createDtoUser.getPassword() == null) {
-            throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the required value)");
-        }
-        if(!User.checkEmailFormat(createDtoUser.getEmail())) {
-            throw new IllegalArgumentException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
-        }
-        if(userRepository.countByEmail(createDtoUser.getEmail()) >= 1) {
-            throw new DataIntegrityViolationException("이미 사용 중인 이메일입니다. (Please check the email.)");
-        }
 
-        User newUser;
-        Long newUserId;
-        try {
-            newUser = userRepository.save(User.createUser(createDtoUser));
-            userSaltService.createOneUserSalt(newUser, createDtoUser.getPassword());
-            newUserId = newUser.getId();
-        } catch (DataIntegrityViolationException exception) {
-            throw new DataIntegrityViolationException("적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)");
-        }
+    /** RETRIEVE */
+    /** User 단건 조회 (using id) */
+    RetrieveDtoUser retrieveUser(Long userId);
 
-        return newUserId;
-    }
+    /** User 단건 조회 (using email) */
+    RetrieveDtoUser retrieveUserByEmail(String email);
 
-    /**
-     * RETRIEVE
-     */
-    public RetrieveDtoUser retrieveOneUser(Long _userId) {
-        User user = userRepository.findById(_userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+    /** User 전체 조회 */
+    List<RetrieveDtoUser> retrieveAllUsers();
 
-        return RetrieveDtoUser.createRetrieveDtoUser(user);
-    }
 
-    public RetrieveDtoUser retrieveOneUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+    /** UPDATE */
+    /** User 단건 수정 */
+    Long updateUser(Long userId, UpdateDtoUser updateDtoUser);
 
-        return RetrieveDtoUser.createRetrieveDtoUser(user);
-    }
 
-    public List<RetrieveDtoUser> retrieveAllUser() {
-        List<User> users = userRepository.findAll();
-
-        return users.stream().map(user -> RetrieveDtoUser.createRetrieveDtoUser(user)).collect(Collectors.toList());
-    }
-
-    /**
-     * UPDATE
-     */
-    @Transactional
-    public Long updateOneUser(Long _userId, UpdateDtoUser updateDtoUser) {
-        User user = userRepository.findById(_userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
-
-        user.changeUser(updateDtoUser);
-
-        return user.getId();
-    }
-
-    /**
-     * DELETE
-     */
-    public void deleteOneUser(Long _userId) {
-        userRepository.deleteById(_userId);
-    }
+    /** DELETE */
+    /** User 단건 생성 */
+    void deleteUser(Long userId);
 }

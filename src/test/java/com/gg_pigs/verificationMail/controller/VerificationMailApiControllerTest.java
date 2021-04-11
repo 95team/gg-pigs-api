@@ -41,7 +41,7 @@ class VerificationMailApiControllerTest {
         responseDtoVerificationMail = new ResponseDtoVerificationMail();
         responseDtoVerificationMail.changeToSuccess(sender, receiver, verificationCode);
 
-        Mockito.when(verificationMailService.sendVerificationEmail(any(RequestDtoVerificationMail.class))).thenReturn(responseDtoVerificationMail);
+        Mockito.when(verificationMailService.send4EmailVerification(any(RequestDtoVerificationMail.class))).thenReturn(responseDtoVerificationMail);
     }
 
     @Test

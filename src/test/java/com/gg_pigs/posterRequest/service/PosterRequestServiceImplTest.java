@@ -39,12 +39,12 @@ import static org.mockito.Mockito.times;
 
 @SpringBootTest(
         classes = {
-                PosterRequestService.class
+                PosterRequestServiceImpl.class
         }
 )
-class PosterRequestServiceTest {
+class PosterRequestServiceImplTest {
 
-    @Autowired PosterRequestService posterRequestService;
+    @Autowired PosterRequestServiceImpl posterRequestServiceImpl;
 
     @MockBean UserRepository userRepository;
     @MockBean PosterRepository posterRepository;
@@ -92,7 +92,7 @@ class PosterRequestServiceTest {
         Mockito.when(createDtoPosterRequest.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
 
         // When
-        posterRequestService.createPosterRequest(createDtoPosterRequest);
+        posterRequestServiceImpl.createPosterRequest(createDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequestRepository, times(1)).save(any(PosterRequest.class));
@@ -111,7 +111,7 @@ class PosterRequestServiceTest {
         Mockito.when(createDtoPosterRequest.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
 
         // When
-        posterRequestService.createPosterRequest(createDtoPosterRequest);
+        posterRequestServiceImpl.createPosterRequest(createDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequestRepository, times(1)).save(any(PosterRequest.class));
@@ -133,7 +133,7 @@ class PosterRequestServiceTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
-        posterRequestService.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+        posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
@@ -158,7 +158,7 @@ class PosterRequestServiceTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
-        posterRequestService.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+        posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
@@ -170,7 +170,7 @@ class PosterRequestServiceTest {
      * Test: retrieveAllPosterRequest_v2()
      * */
     @Test
-    public void When_call_retrieveAllPosterRequests_v2_Then_return_list() {
+    public void When_call_retrieveAllPosterRequests_Then_return_list() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", null);
@@ -178,7 +178,7 @@ class PosterRequestServiceTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        List<Poster> posterList = posterRequestService.retrieveAllPosterRequests_v2(retrieveCondition);
+        List<Poster> posterList = posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
 
         // Then
         assertThat(posterList.getClass()).isEqualTo(ArrayList.class);
@@ -202,7 +202,7 @@ class PosterRequestServiceTest {
         allPossibleSeats2D[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
 
         // When
-        List<String[]> allPossibleSeatsAsList = posterRequestService.getPossibleSeatsAsList(allPossibleSeats2D);
+        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats2D);
 
         // Then
         assertThat(allPossibleSeatsAsList.get(0).length).isEqualTo(2);
@@ -224,12 +224,12 @@ class PosterRequestServiceTest {
         int possibleRowIndex = 1; int possibleColumnIndex = 1;
         allPossibleSeats2D[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
 
-        List<String[]> allPossibleSeatsAsList = posterRequestService.getPossibleSeatsAsList(allPossibleSeats2D);
+        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats2D);
 
         // When
-        boolean isPossible = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R1");
-        boolean isImpossible1 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 2L, "R2");
-        boolean isImpossible2 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R2");
+        boolean isPossible = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R1");
+        boolean isImpossible1 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 2L, "R2");
+        boolean isImpossible2 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R2");
 
         // Then
         assertThat(isPossible).isEqualTo(true);
@@ -253,7 +253,7 @@ class PosterRequestServiceTest {
         }});
 
         // When
-        boolean resultOfCalculation = posterRequestService.calculatePossibleSeats(allSeats, impossibleSeats);
+        boolean resultOfCalculation = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
 
         // Then
         assertThat(resultOfCalculation).isEqualTo(true);
@@ -265,7 +265,7 @@ class PosterRequestServiceTest {
             put("rowPosition", String.valueOf(impossibleRowIndex + 1));
             put("columnPosition", String.valueOf(impossibleColumnIndex + 1));
         }});
-        boolean resultOfCalculation2 = posterRequestService.calculatePossibleSeats(allSeats, impossibleSeats);
+        boolean resultOfCalculation2 = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
         assertThat(resultOfCalculation2).isEqualTo(false);
     }
 
@@ -285,7 +285,7 @@ class PosterRequestServiceTest {
         }});
 
         // When
-        boolean resultOfCalculation = posterRequestService.calculatePossibleSeats(allSeats, impossibleSeats);
+        boolean resultOfCalculation = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
 
         // Then
         assertThat(resultOfCalculation).isEqualTo(false);
