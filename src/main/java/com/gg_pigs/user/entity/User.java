@@ -1,6 +1,7 @@
 package com.gg_pigs.user.entity;
 
 import com.gg_pigs._common.CommonDefinition;
+import com.gg_pigs._common.utility.EmailUtility;
 import com.gg_pigs.user.dto.CreateDtoUser;
 import com.gg_pigs.user.dto.UpdateDtoUser;
 import lombok.AccessLevel;
@@ -50,7 +51,7 @@ public class User {
     public static Boolean checkEmailFormat(String email) {
         boolean result = false;
 
-        Pattern pattern = CommonDefinition.ALLOWABLE_EMAIL_FORMAT_PATTERN;
+        Pattern pattern = EmailUtility.ALLOWABLE_EMAIL_FORMAT_PATTERN;
         Matcher matcher = pattern.matcher(email);
 
         if(matcher.find()) { result = true; }

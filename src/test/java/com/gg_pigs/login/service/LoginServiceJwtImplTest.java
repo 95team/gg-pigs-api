@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import javax.servlet.http.Cookie;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,14 +26,14 @@ import static org.mockito.ArgumentMatchers.anyString;
         classes = {
                 JwtProvider.class,
                 CookieProvider.class,
-                LoginService.class
+                LoginServiceJwtImpl.class
         }
 )
 class LoginServiceTest {
 
     @Autowired JwtProvider jwtProvider;
     @Autowired CookieProvider cookieProvider;
-    @Autowired LoginService loginService;
+    @Autowired LoginServiceJwtImpl loginService;
 
     @MockBean UserRepository userRepository;
     @MockBean UserSaltRepository userSaltRepository;
@@ -58,6 +60,9 @@ class LoginServiceTest {
         Mockito.when(user.getRole()).thenReturn(userRole);
         Mockito.when(user.getEmail()).thenReturn(loginEmail);
 
+        // Configuration of Digest
+        Mockito.when(userSalt.getDigest()).thenReturn(digest);
+
         // Configuration of UserRepository
         Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(java.util.Optional.of(user));
 
@@ -66,34 +71,27 @@ class LoginServiceTest {
     }
 
     @Test
-    public void When_call_login_Then_return_LoginResult() {
+    public void When_success_login_Then_return_cookie() {
         // Given
-        RequestDtoLogin correctRequestDtoLogin = new RequestDtoLogin(loginEmail, correctLoginPassword);
-        RequestDtoLogin wrongRequestDtoLogin = new RequestDtoLogin(loginEmail, wrongLoginPassword);
-        Mockito.when(userSalt.getDigest()).thenReturn(digest);
+        RequestDtoLogin correctLoginDto = new RequestDtoLogin(loginEmail, correctLoginPassword);
 
         // When
-        LoginResult correctLoginResult = loginService.login(correctRequestDtoLogin);
-        LoginResult wrongLoginResult = loginService.login(wrongRequestDtoLogin);
+        Cookie loginCookie = loginService.login(correctLoginDto);
 
         // Then
-        assertThat(correctLoginResult.isLogin()).isEqualTo(true);
-        assertThat(correctLoginResult.getRole()).isEqualTo(userRole);
-        assertThat(correctLoginResult.getEmail()).isEqualTo(loginEmail);
-
-        assertThat(wrongLoginResult.isLogin()).isEqualTo(false);
-        assertThat(wrongLoginResult.getRole()).isEqualTo(userRole);
-        assertThat(wrongLoginResult.getEmail()).isEqualTo(loginEmail);
+        System.out.println(loginCookie);
     }
 
     @Test
-    public void When_call_checkPw_Then_check_the_password() {
-        // Given // When
-        boolean correctResultOfCheckPw = loginService.checkPw(correctLoginPassword, digest);
-        boolean wrongResultOfCheckPw = loginService.checkPw(wrongLoginPassword, digest);
+    public void When_failed_login_Then_throw_exception() {
+        // Given
+        RequestDtoLogin wrongLoginDto = new RequestDtoLogin(loginEmail, wrongLoginPassword);
+
+        // When
+        Cookie loginCookie = loginService.login(wrongLoginDto);
 
         // Then
-        assertThat(correctResultOfCheckPw).isEqualTo(true);
-        assertThat(wrongResultOfCheckPw).isEqualTo(false);
+
+        System.out.println(loginCookie);
     }
 }

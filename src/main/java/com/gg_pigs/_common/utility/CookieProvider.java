@@ -1,5 +1,6 @@
 package com.gg_pigs._common.utility;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -13,22 +14,30 @@ import javax.servlet.http.Cookie;
 @Service
 public class CookieProvider {
 
-    private String uri = "/";
-    private int expiry = 3600;
-    private boolean httpOnly = true;
+    private final String uri = "/";
+    private final int expiry = 3600;
+    private final boolean isHttpOnly = true;
+    private final boolean isSecure = false;
+
+    @Value("${application.cookie.login-cookie-name}")
+    private String loginCookieName;
 
     public Cookie generateCookie(String name, String value) {
-        return this.generateCookie(name, value, this.uri, this.expiry, this.httpOnly);
+        return this.generateCookie(name, value, this.uri, this.expiry, this.isHttpOnly, this.isSecure);
     }
 
-    public Cookie generateCookie(String name, String value, String uri, int expiry, boolean httpOnly) {
+    private Cookie generateCookie(String name, String value, String uri, int expiry, boolean httpOnly, boolean secure) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath(uri);
         cookie.setMaxAge(expiry);
         cookie.setHttpOnly(httpOnly);
-        cookie.setSecure(true);
+        cookie.setSecure(secure);
 
         return cookie;
+    }
+
+    public Cookie generateLoginCookie(String value) {
+        return this.generateCookie(this.loginCookieName, value);
     }
 
     public Cookie destroyCookie(String name, String value) {
@@ -36,6 +45,10 @@ public class CookieProvider {
          * [Note]
          * 1. MaxAge 를 '0' 으로 설정하여 쿠키를 삭제합니다.
          * */
-        return this.generateCookie(name, value, this.uri, 0, this.httpOnly);
+        return this.generateCookie(name, value, this.uri, 0, this.isHttpOnly, this.isSecure);
+    }
+
+    public Cookie destroyLoginCookie() {
+        return this.destroyCookie(this.loginCookieName, null);
     }
 }
