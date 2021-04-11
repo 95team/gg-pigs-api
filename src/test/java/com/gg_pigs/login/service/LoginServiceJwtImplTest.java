@@ -1,26 +1,20 @@
 package com.gg_pigs.login.service;
 
+import com.gg_pigs._common.exception.LoginFailureException;
 import com.gg_pigs._common.utility.CookieProvider;
 import com.gg_pigs._common.utility.JwtProvider;
-import com.gg_pigs.login.dto.LoginResult;
 import com.gg_pigs.login.dto.RequestDtoLogin;
 import com.gg_pigs.user.entity.User;
-import com.gg_pigs.user.repository.UserRepository;
 import com.gg_pigs.userSalt.entity.UserSalt;
-import com.gg_pigs.userSalt.repository.UserSaltRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.servlet.http.Cookie;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(
         classes = {
@@ -29,29 +23,23 @@ import static org.mockito.ArgumentMatchers.anyString;
                 LoginServiceJwtImpl.class
         }
 )
-class LoginServiceTest {
+class LoginServiceJwtImplTest {
 
     @Autowired JwtProvider jwtProvider;
     @Autowired CookieProvider cookieProvider;
-    @Autowired LoginServiceJwtImpl loginService;
-
-    @MockBean UserRepository userRepository;
-    @MockBean UserSaltRepository userSaltRepository;
+    @Autowired LoginServiceJwtImpl loginServiceJwtImpl;
 
     @Mock User user;
     @Mock UserSalt userSalt;
 
-    private long userId = 1L;
-    private String userRole = "ROLE_USER";
+    private final long userId = 1L;
+    private final String userRole = "ROLE_USER";
 
-    private String loginEmail = "pigs95team@gmail.com";
-    private String loginPassword = "thisisapassword";
+    private final String loginEmail = "pigs95team@gmail.com";
+    private final String loginPassword = "thisisapassword";
 
-    private String correctLoginPassword = loginPassword;
-    private String wrongLoginPassword = loginPassword + "a";
-
-    private String salt = UserSalt.generateSalt();
-    private String digest = UserSalt.generateDigest(loginPassword, salt);
+    private final String salt = UserSalt.generateSalt();
+    private final String digest = UserSalt.generateDigest(loginPassword, salt);
 
     @BeforeEach
     void setUp() {
@@ -62,36 +50,54 @@ class LoginServiceTest {
 
         // Configuration of Digest
         Mockito.when(userSalt.getDigest()).thenReturn(digest);
-
-        // Configuration of UserRepository
-        Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(java.util.Optional.of(user));
-
-        // Configuration of UserSaltRepository
-        Mockito.when(userSaltRepository.findUserSaltByUserId(anyLong())).thenReturn(java.util.Optional.of(userSalt));
     }
 
     @Test
     public void When_success_login_Then_return_cookie() {
         // Given
-        RequestDtoLogin correctLoginDto = new RequestDtoLogin(loginEmail, correctLoginPassword);
+        String correctLoginPassword = loginPassword;
+        RequestDtoLogin correctLoginDto = RequestDtoLogin.builder()
+                .email(loginEmail)
+                .password(correctLoginPassword)
+                .digest(digest)
+                .role(userRole)
+                .build();
 
         // When
-        Cookie loginCookie = loginService.login(correctLoginDto);
+        Cookie loginCookie = loginServiceJwtImpl.login(correctLoginDto);
 
         // Then
-        System.out.println(loginCookie);
+        Assertions.assertThat(loginCookie.getValue()).isNotNull();
     }
 
-    @Test
+    @Test()
     public void When_failed_login_Then_throw_exception() {
         // Given
-        RequestDtoLogin wrongLoginDto = new RequestDtoLogin(loginEmail, wrongLoginPassword);
+        String wrongLoginPassword = loginPassword + "a";
+        RequestDtoLogin wrongLoginDto = RequestDtoLogin.builder()
+                .email(loginEmail)
+                .password(wrongLoginPassword)
+                .digest(digest)
+                .role(userRole)
+                .build();
 
         // When
-        Cookie loginCookie = loginService.login(wrongLoginDto);
+        try {
+            Cookie loginCookie = loginServiceJwtImpl.login(wrongLoginDto);
+        } catch (LoginFailureException loginFailureException) {
+            return;
+        }
 
         // Then
+        Assertions.fail("LoginFailureException 예외가 발생해야 합니다.");
+    }
 
-        System.out.println(loginCookie);
+    @Test()
+    public void When_logout_Then_return_null_cookie() {
+        // Given // When
+        Cookie logoutCookie = loginServiceJwtImpl.logout();
+
+        // Then
+        Assertions.assertThat(logoutCookie.getValue()).isNull();
     }
 }

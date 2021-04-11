@@ -1,6 +1,7 @@
 package com.gg_pigs.userSalt.service;
 
 import com.gg_pigs.user.entity.User;
+import com.gg_pigs.userSalt.dto.RetrieveDtoUserSalt;
 import com.gg_pigs.userSalt.entity.UserSalt;
 import com.gg_pigs.userSalt.repository.UserSaltRepository;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @SpringBootTest(
         classes = { UserSaltServiceImpl.class }
@@ -46,7 +50,7 @@ class UserSaltServiceImplTest {
     }
 
     @Test
-    public void When_call_createOneUserSalt_Then_call_save_function() {
+    public void When_call_createUserSalt_Then_call_save_function() {
         // Given
         Mockito.when(userSaltRepository.save(any(UserSalt.class))).thenReturn(userSalt);
         Mockito.when(userSalt.getId()).thenReturn(1L);
@@ -56,5 +60,17 @@ class UserSaltServiceImplTest {
 
         // Then
         Mockito.verify(userSaltRepository, Mockito.times(1)).save(any(UserSalt.class));
+    }
+
+    @Test
+    public void When_call_retrieveUserSalt_Then_return_retrieveDtoUserSalt() {
+        // Given
+        Mockito.when(userSaltRepository.findUserSaltByUserId(anyLong())).thenReturn(Optional.ofNullable(userSalt));
+
+        // When
+        RetrieveDtoUserSalt retrieveDtoUserSalt = userSaltServiceImpl.retrieveUserSalt(1L);
+
+        // Then
+        assertThat(retrieveDtoUserSalt).isNotNull();
     }
 }
