@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(
         classes = {
-                HistoryLogService.class,
+                HistoryLogServiceImpl.class,
         }
 )
 class HistoryLogServiceTest {
