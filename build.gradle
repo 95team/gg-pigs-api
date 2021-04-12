@@ -1,0 +1,71 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.3.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"                     // Spring Boot Querydsl, https://plugins.gradle.org/plugin/com.ewerk.gradle.plugins.querydsl
+	id 'java'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'          // Spring Boot SMTP, https://www.baeldung.com/spring-email, https://victorydntmd.tistory.com/342
+	implementation 'org.springframework.data:spring-data-redis'					// Spring Boot Redis, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
+	implementation 'io.lettuce:lettuce-core'									// Spring Boot Redis - Lettuce, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
+	implementation 'redis.clients:jedis'										// Spring Boot Redis - Jedis, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
+	implementation 'org.jsoup:jsoup:1.13.1'                                     // Spring Boot Jsoup(Html parser), https://jsoup.org/download
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'   // Spring Boot DataSource Decorator, https://github.com/gavlyukovskiy/spring-boot-data-source-decorator#spring-boot-datasource-decorator
+	implementation 'com.querydsl:querydsl-jpa'                                  // Spring Boot Querydsl, https://www.baeldung.com/querydsl-with-jpa-tutorial
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'                        // Spring Boot JWT, https://github.com/jwtk/jjwt
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'                           // Spring Boot JWT, https://github.com/jwtk/jjwt
+	implementation 'com.squareup.retrofit2:retrofit:2.9.0'                      // Spring Boot Retrofit, https://github.com/square/retrofit
+	implementation 'com.squareup.retrofit2:converter-gson:2.9.0'                // Spring Boot Retrofit, https://github.com/square/retrofit/tree/master/retrofit-converters/gson
+
+	compileOnly 'org.projectlombok:lombok'
+
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// Spring Boot Querydsl
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
