@@ -1,12 +1,15 @@
 package com.gg_pigs.userSalt.service;
 
 import com.gg_pigs.user.entity.User;
+import com.gg_pigs.userSalt.dto.RetrieveDtoUserSalt;
 import com.gg_pigs.userSalt.entity.UserSalt;
 import com.gg_pigs.userSalt.repository.UserSaltRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,5 +35,14 @@ public class UserSaltServiceImpl implements UserSaltService {
         }
 
         return userSaltId;
+    }
+
+    @Override
+    public RetrieveDtoUserSalt retrieveUserSalt(Long userId) {
+        UserSalt userSalt = userSaltRepository.findUserSaltByUserId(userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+
+        RetrieveDtoUserSalt retrieveDtoUserSalt = RetrieveDtoUserSalt.createRetrieveDtoUserSalt(userSalt);
+
+        return retrieveDtoUserSalt;
     }
 }

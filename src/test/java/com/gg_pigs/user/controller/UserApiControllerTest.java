@@ -1,7 +1,6 @@
 package com.gg_pigs.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gg_pigs._common.utility.JwtProvider;
 import com.gg_pigs.user.dto.CreateDtoUser;
 import com.gg_pigs.user.dto.RetrieveDtoUser;
 import com.gg_pigs.user.dto.UpdateDtoUser;
@@ -30,7 +29,6 @@ class UserApiControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
 
-    @MockBean JwtProvider jwtProvider;
     @MockBean UserService userService;
 
     private CreateDtoUser createDtoUser = new CreateDtoUser();

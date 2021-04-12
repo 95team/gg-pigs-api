@@ -1,11 +1,14 @@
 package com.gg_pigs.login.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gg_pigs._common.utility.CookieProvider;
 import com.gg_pigs._common.utility.JwtProvider;
-import com.gg_pigs.login.dto.LoginResult;
 import com.gg_pigs.login.dto.RequestDtoLogin;
 import com.gg_pigs.login.service.LoginService;
+import com.gg_pigs.user.dto.RetrieveDtoUser;
+import com.gg_pigs.user.service.UserService;
+import com.gg_pigs.userSalt.dto.RetrieveDtoUserSalt;
+import com.gg_pigs.userSalt.service.UserSaltService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,60 +35,68 @@ class LoginControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
 
-    @MockBean JwtProvider jwtProvider;
-    @MockBean CookieProvider cookieProvider;
+    @MockBean UserService userService;
+    @MockBean UserSaltService userSaltService;
     @MockBean LoginService loginService;
+    @MockBean JwtProvider jwtProvider;
 
-    @Mock LoginResult loginResult;
+    @Mock RetrieveDtoUser retrieveDtoUser;
+    @Mock RetrieveDtoUserSalt retrieveDtoUserSalt;
 
-    private RequestDtoLogin requestDtoLogin;
-    private String loginRole = "ROLE_USER";
-    private String loginEmail = "pigs95team@gmail.com";
-    private String loginPassword = "thisisapassword";
-    private String token = "thisisatoken";
+    private final Long userId = 1L;
+    private final String userRole = "role";
+    private final String userDigest = "digest";
+    private final String cookieName = "test";
+    private final String cookieValue = "test";
+    private final Cookie loginCookie = new Cookie(cookieName, "test");
+    private final Cookie logoutCookie = new Cookie(cookieName, null);
 
     @BeforeEach
     public void setUp() {
-        // Configuration of Dto (RequestDtoLogin)
-        requestDtoLogin = new RequestDtoLogin(loginEmail, loginPassword);
-
-        // Configuration of LoginResult
-        Mockito.when(loginResult.isLogin()).thenReturn(true);
-        Mockito.when(loginResult.getRole()).thenReturn(loginRole);
-        Mockito.when(loginResult.getEmail()).thenReturn(loginEmail);
-
         // Configuration of LoginService
-        Mockito.when(loginService.login(any(RequestDtoLogin.class))).thenReturn(loginResult);
+        Mockito.when(loginService.login(any(RequestDtoLogin.class))).thenReturn(loginCookie);
+        Mockito.when(loginService.logout()).thenReturn(logoutCookie);
 
-        // Configuration of JwtProvider
-        Mockito.when(jwtProvider.generateToken(anyString(), anyString(), anyString())).thenReturn(token);
+        // Configuration of UserService
+        Mockito.when(retrieveDtoUser.getUserId()).thenReturn(userId);
+        Mockito.when(retrieveDtoUser.getRole()).thenReturn(userRole);
+        Mockito.when(userService.retrieveUserByEmail(anyString())).thenReturn(retrieveDtoUser);
 
-        // Configuration of CookieProvider
-        Mockito.when(cookieProvider.generateCookie(anyString(), anyString())).thenReturn(new Cookie("name", "value"));
-        Mockito.when(cookieProvider.destroyCookie(anyString(), any())).thenReturn(new Cookie("name", null));
+        // Configuration of UserSaltService
+        Mockito.when(retrieveDtoUserSalt.getDigest()).thenReturn(userDigest);
+        Mockito.when(userSaltService.retrieveUserSalt(anyLong())).thenReturn(retrieveDtoUserSalt);
     }
 
     @Test
-    public void 로그인() throws Exception {
+    public void When_로그인_Then_cookie_has_value() throws Exception {
         // Given
-        String content = objectMapper.writeValueAsString(requestDtoLogin);
+        String email = "pigs95team@gmail.com";
+        String password = "thisisapassword";
 
-        // When // Then
-        mockMvc.perform(post("/api/v1/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(content))
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/api/v1/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", email)
+                .param("password", password))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andReturn().getResponse();
+
+        // Then
+        Assertions.assertThat(response.getCookie(cookieName).getValue()).isEqualTo(cookieValue);
     }
 
     @Test
-    public void 로그아웃() throws Exception {
-        // Given // When // Then
-        mockMvc.perform(post("/api/v1/logout")
+    public void When_로그아웃_Then_cookie_is_null() throws Exception {
+        // Given // When
+        MockHttpServletResponse response = mockMvc.perform(post("/api/v1/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andReturn().getResponse();
+
+        // Then
+        Assertions.assertThat(response.getCookie(cookieName).getValue()).isNull();
     }
 }
