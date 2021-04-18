@@ -44,6 +44,8 @@ class LoginControllerTest {
     @Mock RetrieveDtoUserSalt retrieveDtoUserSalt;
 
     private final Long userId = 1L;
+    private final String userEmail = "pigs95team@gmail.com";
+    private final String userPassword = "thisisapassword";
     private final String userRole = "role";
     private final String userDigest = "digest";
     private final String cookieName = "test";
@@ -70,14 +72,13 @@ class LoginControllerTest {
     @Test
     public void When_로그인_Then_cookie_has_value() throws Exception {
         // Given
-        String email = "pigs95team@gmail.com";
-        String password = "thisisapassword";
+        RequestDtoLogin requestDtoLogin = RequestDtoLogin.builder().email(userEmail).password(userPassword).build();
+        String content = objectMapper.writeValueAsString(requestDtoLogin);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/api/v1/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("email", email)
-                .param("password", password))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn().getResponse();

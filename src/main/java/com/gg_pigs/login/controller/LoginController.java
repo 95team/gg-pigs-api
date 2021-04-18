@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
@@ -34,7 +34,10 @@ public class LoginController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/api/v1/login")
-    public ApiResponse login(HttpServletResponse response, @RequestParam String email, @RequestParam String password) {
+    public ApiResponse login(HttpServletResponse response, @RequestBody RequestDtoLogin requestDtoLogin) {
+        String email = requestDtoLogin.getEmail();
+        String password = requestDtoLogin.getPassword();
+
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password)) {
             throw new BadRequestException("적절하지 않은 요청입니다. (Please check the required value)");
         }
