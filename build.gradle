@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"                     // Spring Boot Querydsl, https://plugins.gradle.org/plugin/com.ewerk.gradle.plugins.querydsl
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com'
@@ -54,7 +55,7 @@ test {
 	useJUnitPlatform()
 }
 
-// Spring Boot Querydsl
+// Configuration for query-dsl
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
 	jpa = true
@@ -69,3 +70,21 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
+
+// Configuration for jacoco
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled false
+		csv.enabled false
+
+		html.destination layout.buildDirectory.dir('reports-jacoco').get().asFile
+	}
+	dependsOn test
+}
+
