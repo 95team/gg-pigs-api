@@ -1,6 +1,5 @@
 package com.gg_pigs.poster.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +8,6 @@ import java.time.LocalDate;
 
 import static com.gg_pigs._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
