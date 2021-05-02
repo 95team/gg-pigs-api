@@ -4,7 +4,6 @@ import com.gg_pigs.poster.entity.Poster;
 import com.gg_pigs.posterType.entity.PosterType;
 import com.gg_pigs.user.entity.User;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +44,8 @@ class RetrieveDtoPosterTest {
         RetrieveDtoPoster retrieveDtoPoster = RetrieveDtoPoster.createRetrieveDtoPoster(poster);
 
         // Then
+        Assertions.assertThat(retrieveDtoPoster.getTitle()).isEqualTo(pTitle);
+        Assertions.assertThat(retrieveDtoPoster.getUserEmail()).isEqualTo(uEmail);
         Assertions.assertThat(retrieveDtoPoster.getPosterType()).isEqualTo(pType);
     }
 
@@ -63,5 +64,6 @@ class RetrieveDtoPosterTest {
 
         // Then
         Assertions.assertThat(retrieveDtoPoster.getPosterType()).isEqualTo(pType);
+        Assertions.assertThat(retrieveDtoPoster.getUserEmail()).isEqualTo("");
     }
 }

@@ -31,7 +31,7 @@ public class RetrieveDtoPosterRequest {
     private String startedDate;
     private String finishedDate;
 
-    public static com.gg_pigs.posterRequest.dto.RetrieveDtoPosterRequest createRetrieveDtoPosterRequest(PosterRequest posterRequest) {
+    public static RetrieveDtoPosterRequest createRetrieveDtoPosterRequest(PosterRequest posterRequest) {
         return RetrieveDtoPosterRequest.builder()
                 .id(posterRequest.getId())
                 .userEmail(posterRequest.getUser() != null ? posterRequest.getUser().getEmail() : "")
