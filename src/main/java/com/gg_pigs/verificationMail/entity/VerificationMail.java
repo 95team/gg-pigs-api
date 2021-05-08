@@ -1,6 +1,7 @@
 package com.gg_pigs.verificationMail.entity;
 
 import com.gg_pigs._common.CommonDefinition;
+import com.gg_pigs._common.enums.VerificationMailStatus;
 import com.gg_pigs._common.utility.EmailUtility;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -52,11 +53,11 @@ public class VerificationMail {
     private LocalDate sentDate;
 
     public void changeStatusToSuccess() {
-        this.status = "SUCCESS";
+        this.status = VerificationMailStatus.SUCCESS.name();
     }
 
     public void changeStatusToFailure() {
-        this.status = "FAILURE";
+        this.status = VerificationMailStatus.FAILURE.name();
     }
 
     public static Boolean checkEmailFormat(String email) {
@@ -101,7 +102,7 @@ public class VerificationMail {
     }
 
     public static VerificationMail createVerificationMail(String fromEmail, String toEmail, String subject, String content, String verificationCode) {
-        String status = "WAITING";
+        String status = VerificationMailStatus.WAITING.name();
         LocalDate sentDate = LocalDate.now();
 
         return VerificationMail.builder()
