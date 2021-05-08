@@ -59,7 +59,7 @@ public class PosterRequestServiceImpl implements PosterRequestService {
         User user = userRepository.findUserByEmail(createDtoPosterRequest.getUserEmail()).orElse(null);
         PosterType posterType = posterTypeRepository.findPosterTypeByType(createDtoPosterRequest.getPosterType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        Long posterRequestId = null;
+        Long posterRequestId;
         try {
             posterRequestId = posterRequestRepository.save(PosterRequest.createPosterRequest(createDtoPosterRequest, user, posterType)).getId();
         } catch (DataIntegrityViolationException exception) {
