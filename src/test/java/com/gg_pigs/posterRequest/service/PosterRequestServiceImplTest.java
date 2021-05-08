@@ -426,34 +426,30 @@ class PosterRequestServiceImplTest {
         Mockito.verify(posterRequestRepository, times(1)).deleteById(anyLong());
     }
 
-    /**
-     * Test: getPossibleSeatsAsList()
-     * */
+    @DisplayName("[테스트] getPossibleSeatsAsList()")
     @Test
-    public void When_call_getPossibleSeatsAsList_Then_return_possibleSeatsAsList() throws Exception {
+    public void Test_getPossibleSeatsAsList() {
         // Given
-        int[][] allPossibleSeats2D = new int[POSTER_LAYOUT_SIZE + 1][POSTER_LAYOUT_SIZE + 1];
+        int[][] allPossibleSeats = new int[POSTER_LAYOUT_SIZE + 1][POSTER_LAYOUT_SIZE + 1];
         for(int i = 1; i <= POSTER_LAYOUT_SIZE; i++) {
             for(int j = 1; j <= POSTER_LAYOUT_SIZE; j++) {
-                allPossibleSeats2D[i][j] = IMPOSSIBLE_SEAT;
+                allPossibleSeats[i][j] = IMPOSSIBLE_SEAT;
             }
         }
 
         int possibleRowIndex = 1; int possibleColumnIndex = 1;
-        allPossibleSeats2D[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
+        allPossibleSeats[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
 
         // When
-        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats2D);
+        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats);
 
         // Then
         assertThat(allPossibleSeatsAsList.get(0).length).isEqualTo(2);
     }
 
-    /**
-     * Test (case1): calculatePossibleSeats()
-     * */
+    @DisplayName("[테스트] calculatePossibleSeats() : PR 타입 - R1")
     @Test
-    public void When_call_calculatePossibleSeats_Then_calculate_possibleSeats_case1() {
+    public void Test_calculatePossibleSeats_with_R1_type() {
         // Given
         int[][] allSeats = new int[POSTER_LAYOUT_SIZE + 1][POSTER_LAYOUT_SIZE + 1];
         int impossibleRowIndex = 1; int impossibleColumnIndex = 1;
@@ -470,22 +466,11 @@ class PosterRequestServiceImplTest {
         // Then
         assertThat(resultOfCalculation).isEqualTo(true);
         assertThat(allSeats[impossibleRowIndex][impossibleColumnIndex]).isEqualTo(-1);
-
-
-        impossibleSeats.add(new HashMap<String, String>() {{
-            put("posterType", "R6");
-            put("rowPosition", String.valueOf(impossibleRowIndex + 1));
-            put("columnPosition", String.valueOf(impossibleColumnIndex + 1));
-        }});
-        boolean resultOfCalculation2 = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
-        assertThat(resultOfCalculation2).isEqualTo(false);
     }
 
-    /**
-     * Test (case2): calculatePossibleSeats()
-     * */
+    @DisplayName("[테스트] calculatePossibleSeats() : PR 타입 - R6")
     @Test
-    public void When_call_calculatePossibleSeats_Then_calculate_possibleSeats_case2() {
+    public void Test_calculatePossibleSeats_with_R6_type() {
         // Given
         int[][] allSeats = new int[POSTER_LAYOUT_SIZE + 1][POSTER_LAYOUT_SIZE + 1];
         int impossibleRowIndex = 1; int impossibleColumnIndex = 1;
@@ -501,7 +486,6 @@ class PosterRequestServiceImplTest {
 
         // Then
         assertThat(resultOfCalculation).isEqualTo(false);
-        assertThat(allSeats[impossibleRowIndex + 1][impossibleColumnIndex]).isEqualTo(0);
     }
 
     @DisplayName("[테스트] isPossibleSeat()")
