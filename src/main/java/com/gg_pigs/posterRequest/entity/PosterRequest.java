@@ -86,7 +86,7 @@ public class PosterRequest {
         this.imagePath = imagePath;
     }
 
-    public void changeStieUrl(String siteUrl) { this.siteUrl = siteUrl; }
+    public void changeSiteUrl(String siteUrl) { this.siteUrl = siteUrl; }
 
     public void changeRowPosition(Long rowPosition) { this.rowPosition = rowPosition; }
 
@@ -114,7 +114,7 @@ public class PosterRequest {
         if(updateDtoPosterRequest.getDescription() != null) changeDescription(updateDtoPosterRequest.getDescription());
         if(updateDtoPosterRequest.getKeywords() != null) changeKeywords(updateDtoPosterRequest.getKeywords());
         if(updateDtoPosterRequest.getImagePath() != null) changeImagePath(updateDtoPosterRequest.getImagePath());
-        if(updateDtoPosterRequest.getSiteUrl() != null) changeStieUrl(updateDtoPosterRequest.getSiteUrl());
+        if(updateDtoPosterRequest.getSiteUrl() != null) changeSiteUrl(updateDtoPosterRequest.getSiteUrl());
         if(updateDtoPosterRequest.getRowPosition() != null) {
             try {
                 changeRowPosition(Long.parseLong(updateDtoPosterRequest.getRowPosition()));
@@ -146,8 +146,9 @@ public class PosterRequest {
     }
 
     public static PosterRequest createPosterRequest(CreateDtoPosterRequest createDtoPosterRequest, User user, PosterType posterType) throws Exception {
-        LocalDate startedDate = LocalDate.now(); LocalDate finishedDate = LocalDate.now().plusMonths(1);
         Long rowPosition, columnPosition;
+        LocalDate startedDate; LocalDate finishedDate;
+
         try {
             rowPosition = Long.parseLong(createDtoPosterRequest.getRowPosition());
             columnPosition = Long.parseLong(createDtoPosterRequest.getColumnPosition());

@@ -1,6 +1,7 @@
 package com.gg_pigs.user.entity;
 
 import com.gg_pigs._common.CommonDefinition;
+import com.gg_pigs._common.enums.UserRole;
 import com.gg_pigs._common.utility.EmailUtility;
 import com.gg_pigs.user.dto.CreateDtoUser;
 import com.gg_pigs.user.dto.UpdateDtoUser;
@@ -10,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -98,10 +100,10 @@ public class User {
             throw new IllegalArgumentException("이메일은 필수값 입니다. (Please check the data 'email')");
         }
 
-        String defaultName = null;
+        String defaultName = StringUtils.isEmpty(createDtoUser.getName()) ? null : createDtoUser.getName();
+        String defaultPhone = StringUtils.isEmpty(createDtoUser.getPhone()) ? null : createDtoUser.getPhone();
         String defaultEmail = createDtoUser.getEmail();
-        String defaultPhone = null;
-        String defaultRole = "ROLE_USER";
+        String defaultRole = UserRole.ROLE_USER.name();
         String defaultOauthType = null;
         Character defaultIsActivated = 'N';
         Character defaultIsAuthenticated = 'N';

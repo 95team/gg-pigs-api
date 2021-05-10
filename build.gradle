@@ -85,6 +85,15 @@ jacocoTestReport {
 
 		html.destination layout.buildDirectory.dir('reports-jacoco').get().asFile
 	}
+
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it, excludes: ["**/Q**.class"])
+				})
+		)
+	}
+
 	dependsOn test
 }
 
