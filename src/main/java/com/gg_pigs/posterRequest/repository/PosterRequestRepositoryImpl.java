@@ -39,8 +39,8 @@ public class PosterRequestRepositoryImpl implements PosterRequestRepositoryCusto
 
         // 3. IsFilteredDate 조건을 가공합니다.
         if(condition.isFilteredDate()) {
-            builder.and(loeStartedDate(condition.getCurrentDate()));
-            builder.and(goeFinishedDate(condition.getCurrentDate()));
+            builder.and(loeStartedDate(LocalDate.now()));
+            builder.and(goeFinishedDate(LocalDate.now()));
         }
 
         return jpaQueryFactory

@@ -17,11 +17,13 @@ import com.gg_pigs.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityNotFoundException;
@@ -41,65 +43,82 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
-@SpringBootTest(
-        classes = {
-                PosterRequestServiceImpl.class
-        }
-)
+@MockitoSettings(strictness = Strictness.LENIENT)
+@ExtendWith(MockitoExtension.class)
 class PosterRequestServiceImplTest {
 
-    @Autowired PosterRequestServiceImpl posterRequestServiceImpl;
+    @InjectMocks PosterRequestServiceImpl posterRequestServiceImpl;
 
-    @MockBean UserRepository userRepository;
-    @MockBean PosterRepository posterRepository;
-    @MockBean PosterTypeRepository posterTypeRepository;
-    @MockBean PosterRequestRepository posterRequestRepository;
+    // Service
+    @Mock PosterService posterService;
+    @Mock HistoryLogService historyLogService;
 
-    @MockBean PosterService posterService;
-    @MockBean HistoryLogService historyLogService;
+    // Repository
+    @Mock UserRepository userRepository;
+    @Mock PosterRepository posterRepository;
+    @Mock PosterTypeRepository ptRepository;
+    @Mock PosterRequestRepository prRepository;
 
-    @Mock CreateDtoPosterRequest createDtoPosterRequest;
-    @Mock PosterRequest posterRequest;
-    @Mock PosterType posterType;
+    // Entity & Dto
     @Mock User user;
+    @Mock PosterType posterType;
+    @Mock PosterRequest posterRequest;
+    @Mock CreateDtoPosterRequest createDtoPR;
 
     final int POSSIBLE_SEAT = 1;
     final int IMPOSSIBLE_SEAT = -1;
 
     @BeforeEach
     public void setUp() {
-        // Configuration of PosterTypeRepository
-        Mockito.when(posterTypeRepository.findPosterTypeByType(any())).thenReturn(Optional.of(posterType));
+        // Configuration of UserRepository
+        Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.ofNullable(user));
 
-        // Configuration of PosterRequestRepository
-        Mockito.when(posterRequestRepository.findById(anyLong())).thenReturn(Optional.of(posterRequest));
-        Mockito.when(posterRequestRepository.findByIdWithFetch(anyLong())).thenReturn(Optional.of(posterRequest));
+        // Configuration of PRRepository
+        Mockito.when(prRepository.findById(anyLong())).thenReturn(Optional.of(posterRequest));
+        Mockito.when(prRepository.findByIdWithFetch(anyLong())).thenReturn(Optional.of(posterRequest));
 
-        // Configuration of PosterRequest
+        // Configuration of PR
         Mockito.when(posterRequest.getId()).thenReturn(1L);
         Mockito.when(posterRequest.getPosterType()).thenReturn(posterType);
         Mockito.when(posterRequest.getStartedDate()).thenReturn(LocalDate.now());
         Mockito.when(posterRequest.getFinishedDate()).thenReturn(LocalDate.now().plusMonths(1));
 
-        // Configuration of PosterRequest
-        Mockito.when(createDtoPosterRequest.getPosterType()).thenReturn("R1");
-        Mockito.when(createDtoPosterRequest.getRowPosition()).thenReturn("1");
-        Mockito.when(createDtoPosterRequest.getColumnPosition()).thenReturn("1");
-        Mockito.when(createDtoPosterRequest.getStartedDate()).thenReturn(String.valueOf(LocalDate.now()));
-        Mockito.when(createDtoPosterRequest.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
+        // Configuration of createDtoPR
+        Mockito.when(createDtoPR.getUserEmail()).thenReturn("pigs95team@gmail.com");
+        Mockito.when(createDtoPR.getPosterType()).thenReturn("R1");
+        Mockito.when(createDtoPR.getRowPosition()).thenReturn("1");
+        Mockito.when(createDtoPR.getColumnPosition()).thenReturn("1");
+        Mockito.when(createDtoPR.getStartedDate()).thenReturn(String.valueOf(LocalDate.now()));
+        Mockito.when(createDtoPR.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
     }
 
     @DisplayName("[테스트] createOnePosterRequest() : save() 함수 1회 호출")
     @Test
     public void Test_createOnePosterRequest() throws Exception {
         // Given
-        Mockito.when(posterRequestRepository.save(any())).thenReturn(posterRequest);
+        Mockito.when(ptRepository.findPosterTypeByType(any())).thenReturn(Optional.of(posterType));
+        Mockito.when(prRepository.save(any())).thenReturn(posterRequest);
 
         // When
-        posterRequestServiceImpl.createPosterRequest(createDtoPosterRequest);
+        posterRequestServiceImpl.createPosterRequest(createDtoPR);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).save(any(PosterRequest.class));
+        Mockito.verify(prRepository, times(1)).save(any(PosterRequest.class));
+    }
+
+    @DisplayName("[테스트] createOnePosterRequest() : EntityNotFoundException 에러 발생")
+    @Test
+    public void Test_createOnePosterRequest_with_EntityNotFoundException() {
+        // Given
+        String expectedMessage = "해당 데이터를 조회할 수 없습니다.";
+
+        Mockito.when(prRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
+
+        // When
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.createPosterRequest(createDtoPR));
+
+        // Then
+        assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
     @DisplayName("[테스트] createOnePosterRequest() : DataIntegrityViolationException 에러 발생")
@@ -108,10 +127,11 @@ class PosterRequestServiceImplTest {
         // Given
         String expectedMessage = "적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)";
 
-        Mockito.when(posterRequestRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
+        Mockito.when(ptRepository.findPosterTypeByType(any())).thenReturn(Optional.of(posterType));
+        Mockito.when(prRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
 
         // When
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> posterRequestServiceImpl.createPosterRequest(createDtoPosterRequest));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> posterRequestServiceImpl.createPosterRequest(createDtoPR));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
@@ -127,7 +147,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.retrievePosterRequest(prId);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).findById(anyLong());
+        Mockito.verify(prRepository, times(1)).findById(anyLong());
     }
 
     @DisplayName("[테스트] retrievePosterRequest() : EntityNotFoundException 에러 발생")
@@ -137,7 +157,7 @@ class PosterRequestServiceImplTest {
         String expectedMessage = "해당 데이터를 조회할 수 없습니다.";
 
         Long prId = 1L;
-        Mockito.when(posterRequestRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Mockito.when(prRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // When
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.retrievePosterRequest(prId));
@@ -159,7 +179,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).findAllByCondition(any());
+        Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
     @DisplayName("[테스트] retrieveAllPosterRequests() (page)")
@@ -175,7 +195,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).findAllByCondition(any());
+        Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
     @DisplayName("[테스트] retrieveAllPosterRequests() (userEmail)")
@@ -191,7 +211,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).findAllByCondition(any());
+        Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
     @DisplayName("[테스트] retrieveAllPosterRequests() (isFilteredDate)")
@@ -207,7 +227,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).findAllByCondition(any());
+        Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
     @DisplayName("[테스트] retrieveAllPossibleSeats() : Poster 타입 Row 타입")
@@ -423,7 +443,7 @@ class PosterRequestServiceImplTest {
         posterRequestServiceImpl.deletePosterRequest(prId);
 
         // Then
-        Mockito.verify(posterRequestRepository, times(1)).deleteById(anyLong());
+        Mockito.verify(prRepository, times(1)).deleteById(anyLong());
     }
 
     @DisplayName("[테스트] getPossibleSeatsAsList()")
