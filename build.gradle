@@ -74,6 +74,7 @@ compileQuerydsl {
 // Configuration for jacoco
 test {
 	useJUnitPlatform()
+
 	finalizedBy jacocoTestReport
 }
 
@@ -86,14 +87,26 @@ jacocoTestReport {
 		html.destination layout.buildDirectory.dir('reports-jacoco').get().asFile
 	}
 
-	afterEvaluate {
-		classDirectories.setFrom(
-				files(classDirectories.files.collect {
-					fileTree(dir: it, excludes: ["**/Q**.class"])
-				})
-		)
-	}
-
-	dependsOn test
+	finalizedBy jacocoTestCoverageVerification
 }
 
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.70
+			}
+		}
+
+		rule {
+			enabled = true
+			element = 'BUNDLE'
+
+			limit {
+				counter = 'INSTRUCTION'
+				value = 'COVEREDRATIO'
+				minimum = 0.70
+			}
+		}
+	}
+}
