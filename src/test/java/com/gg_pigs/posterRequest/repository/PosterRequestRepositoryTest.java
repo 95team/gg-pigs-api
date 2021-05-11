@@ -79,13 +79,10 @@ public class PosterRequestRepositoryTest {
         RetrieveConditionDtoPosterRequest condition = new RetrieveConditionDtoPosterRequest();
 
         // 1. Page 정보를 설정합니다.
-        condition.setPage("2");
-        condition.calculatePage();
-        condition.isFilteredDateIsFalse();
+        condition.setPageCondition("2");
 
         // 2. UserEmail 정보를 설정합니다. (Must be "test@email.com")
-        condition.hasUserEmailIsTrue();
-        condition.setUserEmail("test@email.com");
+        condition.setUserEmailCondition("test@email.com");
 
         // 3. IsFilteredDate 정보를 설정합니다.
         condition.isFilteredDateIsTrue();
