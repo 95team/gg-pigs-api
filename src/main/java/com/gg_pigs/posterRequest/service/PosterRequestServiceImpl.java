@@ -294,7 +294,7 @@ public class PosterRequestServiceImpl implements PosterRequestService {
     }
 
     private Long InsertPRIntoPoster(PosterRequest posterRequest) throws Exception {
-        return posterService.createPoster(CreateDtoPoster.createByPR(posterRequest));
+        return posterService.createPoster(CreateDtoPoster.of(posterRequest));
     }
 
     /**

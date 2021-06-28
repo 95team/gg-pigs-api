@@ -16,4 +16,7 @@ public class CommonDefinition {
     public static final Long ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_LONG = (long) 20 * 1000 * 1000;
 
     public static final Pattern ALLOWABLE_IMAGE_FILE_EXTENSION_PATTERN = Pattern.compile("(?i)^(.+).(jpg|jpeg|gif|tif|tiff|bmp|png|raw|svg)$");
+
+    /** Poster-Slug pattern */
+    public static final String ALLOWABLE_POSTER_SLUG_PATTERN_STRING = "[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9-]";
 }

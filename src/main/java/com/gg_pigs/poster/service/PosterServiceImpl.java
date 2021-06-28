@@ -2,7 +2,7 @@ package com.gg_pigs.poster.service;
 
 import com.gg_pigs.poster.dto.CreateDtoPoster;
 import com.gg_pigs.poster.dto.RetrieveConditionDtoPoster;
-import com.gg_pigs.poster.dto.RetrieveDtoPoster;
+import com.gg_pigs.poster.dto.ReadDtoPoster;
 import com.gg_pigs.poster.dto.UpdateDtoPoster;
 import com.gg_pigs.poster.entity.Poster;
 import com.gg_pigs.poster.repository.PosterRepository;
@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -30,16 +30,14 @@ public class PosterServiceImpl implements PosterService {
     private final PosterRepository posterRepository;
     private final PosterTypeRepository posterTypeRepository;
 
-    /**
-     * CREATE
-     */
+    /** CREATE */
     @Override
     @Transactional
     public Long createPoster(CreateDtoPoster createDtoPoster) throws Exception {
         User user = userRepository.findUserByEmail(createDtoPoster.getUserEmail()).orElse(null);
         PosterType posterType = posterTypeRepository.findPosterTypeByType(createDtoPoster.getPosterType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        Long posterId = null;
+        Long posterId;
         try {
             posterId = posterRepository.save(Poster.createPoster(createDtoPoster, user, posterType)).getId();
         } catch (DataIntegrityViolationException exception) {
@@ -49,18 +47,16 @@ public class PosterServiceImpl implements PosterService {
         return posterId;
     }
 
-    /**
-     * RETRIEVE
-     */
+    /** READ */
     @Override
-    public RetrieveDtoPoster retrievePoster(Long _posterId) {
-        Poster poster = posterRepository.findById(_posterId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+    public ReadDtoPoster readPoster(Long posterId) {
+        Poster poster = posterRepository.findById(posterId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        return RetrieveDtoPoster.createRetrieveDtoPoster(poster);
+        return ReadDtoPoster.of(poster);
     }
 
     @Override
-    public List retrieveAllPosters(HashMap<String, String> retrieveCondition) {
+    public List readPosters(Map<String, String> retrieveCondition) {
         RetrieveConditionDtoPoster condition = new RetrieveConditionDtoPoster();
 
         // 1. Page 정보를 가공합니다.
@@ -128,27 +124,23 @@ public class PosterServiceImpl implements PosterService {
 
         List<Poster> posters = posterRepository.findAllByCondition(condition);
 
-        return posters.stream().map(poster -> RetrieveDtoPoster.createRetrieveDtoPoster(poster)).collect(Collectors.toList());
+        return posters.stream().map(ReadDtoPoster::of).collect(Collectors.toList());
     }
 
-    /**
-     * UPDATE
-     */
+    /** UPDATE */
     @Override
     @Transactional
-    public Long updatePoster(Long _posterId, UpdateDtoPoster updateDtoPoster) throws Exception {
-        Poster poster = posterRepository.findById(_posterId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
+    public Long updatePoster(Long posterId, UpdateDtoPoster updateDtoPoster) throws Exception {
+        Poster poster = posterRepository.findById(posterId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         poster.changePoster(updateDtoPoster);
 
         return poster.getId();
     }
 
-    /**
-     * DELETE
-     */
+    /** DELETE */
     @Override
-    public void deletePoster(Long _posterId) {
-        posterRepository.deleteById(_posterId);
+    public void deletePoster(Long posterId) {
+        posterRepository.deleteById(posterId);
     }
 }

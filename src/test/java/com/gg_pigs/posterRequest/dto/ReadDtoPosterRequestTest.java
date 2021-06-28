@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
-class RetrieveDtoPosterRequestTest {
+class ReadDtoPosterRequestTest {
 
     @Mock User user;
     @Mock PosterRequest posterRequest;

@@ -8,11 +8,13 @@ import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 
+import static com.gg_pigs._common.CommonDefinition.ALLOWABLE_POSTER_SLUG_PATTERN_STRING;
+
 
 @AllArgsConstructor
 @Builder
 @Getter
-public class RetrieveDtoPoster {
+public class ReadDtoPoster {
 
     private Long id;
     private String userEmail;
@@ -27,16 +29,17 @@ public class RetrieveDtoPoster {
     private String siteUrl;
     private String rowPosition;
     private String columnPosition;
-    private char isActivated;
+    private Character isActivated;
     private String startedDate;
     private String finishedDate;
 
-    public static RetrieveDtoPoster createRetrieveDtoPoster(Poster poster) {
+    public static ReadDtoPoster of(Poster poster) {
+        String userEmail = (poster.getUser() != null) ? poster.getUser().getEmail() : "";
         String slug = generateSlugByTitle(poster.getTitle());
 
-        return RetrieveDtoPoster.builder()
+        return ReadDtoPoster.builder()
                 .id(poster.getId())
-                .userEmail(poster.getUser() != null ? poster.getUser().getEmail() : "")
+                .userEmail(userEmail)
                 .title(poster.getTitle())
                 .slug(slug)
                 .description(poster.getDescription())
@@ -55,13 +58,8 @@ public class RetrieveDtoPoster {
     }
 
     private static String generateSlugByTitle(String title) {
-        String slug = "";
-
-        if(!StringUtils.isEmpty(title)) {
-            slug = title.replace(" ", "-");
-            slug = slug.replaceAll("[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9-]", "");
-        }
-
-        return slug;
+        return !StringUtils.isEmpty(title)
+                ? title.replace(" ", "-").replaceAll(ALLOWABLE_POSTER_SLUG_PATTERN_STRING, "")
+                : "";
     }
 }

@@ -34,7 +34,7 @@ class CreateDtoPosterTest {
         Mockito.when(posterType.getType()).thenReturn("R1");
 
         // When
-        CreateDtoPoster createDtoPoster = CreateDtoPoster.createByPR(posterRequest);
+        CreateDtoPoster createDtoPoster = CreateDtoPoster.of(posterRequest);
 
         // Then
         Assertions.assertThat(createDtoPoster.getTitle()).isEqualTo(prTitle);
@@ -51,7 +51,7 @@ class CreateDtoPosterTest {
         Mockito.when(posterRequest.getPosterType()).thenReturn(null);
 
         // When
-        CreateDtoPoster createDtoPoster = CreateDtoPoster.createByPR(posterRequest);
+        CreateDtoPoster createDtoPoster = CreateDtoPoster.of(posterRequest);
 
         // Then
         Assertions.assertThat(createDtoPoster.getTitle()).isEqualTo(prTitle);

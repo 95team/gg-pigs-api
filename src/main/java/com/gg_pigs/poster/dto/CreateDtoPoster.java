@@ -24,7 +24,7 @@ public class CreateDtoPoster {
     private String startedDate;
     private String finishedDate;
 
-    public static CreateDtoPoster createByPR(PosterRequest posterRequest) {
+    public static CreateDtoPoster of(PosterRequest posterRequest) {
         String userEmail = (posterRequest.getUser() != null)
                 ? posterRequest.getUser().getEmail()
                 : null;
