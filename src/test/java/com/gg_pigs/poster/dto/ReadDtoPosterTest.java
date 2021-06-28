@@ -38,9 +38,9 @@ class ReadDtoPosterTest {
         Mockito.when(posterType.getType()).thenReturn(pType);
     }
 
-    @DisplayName("[테스트] createRetrieveDtoPoster() (user, posterType is not null)")
+    @DisplayName("[테스트] of() (user, posterType is not null)")
     @Test
-    void Test_createRetrieveDtoPoster() {
+    void Test_of() {
         // Given
         Mockito.when(poster.getUser()).thenReturn(user);
         Mockito.when(user.getEmail()).thenReturn(uEmail);
@@ -54,9 +54,9 @@ class ReadDtoPosterTest {
         Assertions.assertThat(readDtoPoster.getPosterType()).isEqualTo(pType);
     }
 
-    @DisplayName("[테스트] createRetrieveDtoPoster() (user is null)")
+    @DisplayName("[테스트] of() (user is null)")
     @Test
-    void Test_createRetrieveDtoPoster_with_null() {
+    void Test_of_with_null() {
         // Given // When
         ReadDtoPoster readDtoPoster = ReadDtoPoster.of(poster);
 
