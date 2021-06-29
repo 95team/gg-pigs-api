@@ -78,4 +78,17 @@ class ReadDtoPosterTest {
         // Then
         Assertions.assertThat(readDtoPoster.getSlug().replaceAll(ALLOWABLE_POSTER_SLUG_PATTERN_STRING, "")).isEqualTo(readDtoPoster.getSlug());
     }
+
+    @DisplayName("[테스트] generateSlugByTitle() (title is null)")
+    @Test
+    void Test_generateSlugByTitle_with_null() {
+        // Given
+        Mockito.when(poster.getTitle()).thenReturn(null);
+
+        // When
+        ReadDtoPoster readDtoPoster = ReadDtoPoster.of(poster);
+
+        // Then
+        Assertions.assertThat(readDtoPoster.getSlug()).isEqualTo("");
+    }
 }
