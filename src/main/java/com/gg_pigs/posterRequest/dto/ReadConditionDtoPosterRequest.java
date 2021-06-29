@@ -10,7 +10,7 @@ import static com.gg_pigs._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class RetrieveConditionDtoPosterRequest {
+public class ReadConditionDtoPosterRequest {
 
     private final int DEFAULT_VALUE = 1;
     private final int UNLIMIT_VALUE = -1;

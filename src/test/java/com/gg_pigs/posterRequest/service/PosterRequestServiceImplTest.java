@@ -144,7 +144,7 @@ class PosterRequestServiceImplTest {
         Long prId = 1L;
 
         // When
-        posterRequestServiceImpl.retrievePosterRequest(prId);
+        posterRequestServiceImpl.readPosterRequest(prId);
 
         // Then
         Mockito.verify(prRepository, times(1)).findById(anyLong());
@@ -160,7 +160,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(prRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // When
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.retrievePosterRequest(prId));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.readPosterRequest(prId));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
@@ -176,7 +176,7 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestServiceImpl.readPosterRequests(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
@@ -192,7 +192,7 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestServiceImpl.readPosterRequests(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
@@ -208,7 +208,7 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestServiceImpl.readPosterRequests(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
@@ -224,7 +224,7 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", "Y");
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestServiceImpl.readPosterRequests(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
@@ -253,7 +253,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(posterRepository.findAllImpossibleSeats(anyLong(), anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(impossibleSeats);
 
         // When
-        List<String[]> allPossibleSeats = posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate);
+        List<String[]> allPossibleSeats = posterRequestServiceImpl.getAllPossibleSeats(wantedDate);
 
         // Then
         assertThat(allPossibleSeats.size()).isEqualTo(expectedCounts);
@@ -282,7 +282,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(posterRepository.findAllImpossibleSeats(anyLong(), anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(impossibleSeats);
 
         // When
-        List<String[]> allPossibleSeats = posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate);
+        List<String[]> allPossibleSeats = posterRequestServiceImpl.getAllPossibleSeats(wantedDate);
 
         // Then
         assertThat(allPossibleSeats.size()).isEqualTo(expectedCounts);
@@ -301,7 +301,7 @@ class PosterRequestServiceImplTest {
         wantedDate.put("finishedDate", LocalDate.now().plusMonths(1).toString());
 
         // When
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> posterRequestServiceImpl.getAllPossibleSeats(wantedDate));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);

@@ -9,8 +9,8 @@ import com.gg_pigs.poster.repository.PosterRepository;
 import com.gg_pigs.poster.service.PosterService;
 import com.gg_pigs.posterType.entity.PosterType;
 import com.gg_pigs.posterRequest.dto.CreateDtoPosterRequest;
-import com.gg_pigs.posterRequest.dto.RetrieveConditionDtoPosterRequest;
-import com.gg_pigs.posterRequest.dto.RetrieveDtoPosterRequest;
+import com.gg_pigs.posterRequest.dto.ReadConditionDtoPosterRequest;
+import com.gg_pigs.posterRequest.dto.ReadDtoPosterRequest;
 import com.gg_pigs.posterRequest.dto.UpdateDtoPosterRequest;
 import com.gg_pigs.posterRequest.entity.PosterRequest;
 import com.gg_pigs.posterRequest.repository.PosterRequestRepository;
@@ -26,7 +26,6 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,9 +48,7 @@ public class PosterRequestServiceImpl implements PosterRequestService {
     private static final int POSSIBLE_SEAT = 1;
     private static final int IMPOSSIBLE_SEAT = -1;
 
-    /**
-     * CREATE
-     */
+    /** CREATE */
     @Override
     @Transactional
     public Long createPosterRequest(CreateDtoPosterRequest createDtoPosterRequest) throws Exception {
@@ -68,19 +65,17 @@ public class PosterRequestServiceImpl implements PosterRequestService {
         return posterRequestId;
     }
 
-    /**
-     * RETRIEVE
-     */
+    /** RETRIEVE */
     @Override
-    public RetrieveDtoPosterRequest retrievePosterRequest(Long _posterRequestId) {
+    public ReadDtoPosterRequest readPosterRequest(Long _posterRequestId) {
         PosterRequest posterRequest = posterRequestRepository.findById(_posterRequestId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        return RetrieveDtoPosterRequest.createRetrieveDtoPosterRequest(posterRequest);
+        return ReadDtoPosterRequest.of(posterRequest);
     }
 
     @Override
-    public List retrieveAllPosterRequests(HashMap<String, String> retrieveCondition) {
-        RetrieveConditionDtoPosterRequest condition = new RetrieveConditionDtoPosterRequest();
+    public List readPosterRequests(Map<String, String> retrieveCondition) {
+        ReadConditionDtoPosterRequest condition = new ReadConditionDtoPosterRequest();
 
         // 1. Page 정보를 가공합니다.
         condition.setPageCondition(retrieveCondition.get("page"));
@@ -93,11 +88,11 @@ public class PosterRequestServiceImpl implements PosterRequestService {
 
         List<PosterRequest> posterRequests = posterRequestRepository.findAllByCondition(condition);
         
-        return posterRequests.stream().map(RetrieveDtoPosterRequest::createRetrieveDtoPosterRequest).collect(Collectors.toList());
+        return posterRequests.stream().map(ReadDtoPosterRequest::of).collect(Collectors.toList());
     }
 
     @Override
-    public List<String[]> retrieveAllPossibleSeats(HashMap<String, String> wantedDate) throws Exception {
+    public List<String[]> getAllPossibleSeats(Map<String, String> wantedDate) throws Exception {
         int[][] allSeats = new int[POSTER_LAYOUT_SIZE + 1][POSTER_LAYOUT_SIZE + 1];
 
         Long startIndexOfPage, lastIndexOfPage;
@@ -125,9 +120,7 @@ public class PosterRequestServiceImpl implements PosterRequestService {
         return allPossibleSeats;
     }
 
-    /**
-     * UPDATE
-     */
+    /** UPDATE */
     @Override
     @Transactional
     public Long updatePosterRequest(String work, String updaterEmail, Long posterRequestId, UpdateDtoPosterRequest updateDtoPosterRequest) throws Exception {
@@ -175,17 +168,13 @@ public class PosterRequestServiceImpl implements PosterRequestService {
         return posterRequestId;
     }
 
-    /**
-     * DELETE
-     */
+    /** DELETE */
     @Override
     public void deletePosterRequest(Long _posterRequestId) {
         posterRequestRepository.deleteById(_posterRequestId);
     }
 
-    /**
-     * ETC
-     */
+    /** ETC */
     public boolean calculatePossibleSeats(int[][] allSeats, List<Map<String, String>> impossibleSeats) {
         int[][] allSeatsCopy = new int[allSeats.length][allSeats[0].length];
 
@@ -234,7 +223,6 @@ public class PosterRequestServiceImpl implements PosterRequestService {
         }
     }
 
-    @Override
     public boolean isPossibleSeat(List<String[]> allPossibleSeats, Long rowPosition, Long columnPosition, String stringTypeOfPosterType) {
         boolean isPossible = true;
 

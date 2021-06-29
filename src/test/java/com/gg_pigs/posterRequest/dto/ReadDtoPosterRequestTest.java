@@ -4,6 +4,7 @@ import com.gg_pigs.posterRequest.entity.PosterRequest;
 import com.gg_pigs.posterType.entity.PosterType;
 import com.gg_pigs.user.entity.User;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,47 +28,41 @@ class ReadDtoPosterRequestTest {
     LocalDate prStartedDate = LocalDate.now();
     LocalDate prFinishedDate = LocalDate.now().plusMonths(1);
 
-    @DisplayName("테스트: createRetrieveDtoPosterRequest")
-    @Test
-    void Test_createRetrieveDtoPosterRequest() {
-        // Given
+    @BeforeEach
+    void setUp() {
         Mockito.when(posterRequest.getTitle()).thenReturn(prTitle);
+        Mockito.when(posterRequest.getPosterType()).thenReturn(posterType);
         Mockito.when(posterRequest.getStartedDate()).thenReturn(prStartedDate);
         Mockito.when(posterRequest.getFinishedDate()).thenReturn(prFinishedDate);
 
-        Mockito.when(posterRequest.getUser()).thenReturn(user);
-        Mockito.when(posterRequest.getPosterType()).thenReturn(posterType);
-
-        Mockito.when(user.getEmail()).thenReturn(uEmail);
         Mockito.when(posterType.getType()).thenReturn(prType);
-
-        // When
-        RetrieveDtoPosterRequest retrieveDtoPosterRequest = RetrieveDtoPosterRequest.createRetrieveDtoPosterRequest(posterRequest);
-
-        // Then
-        Assertions.assertThat(retrieveDtoPosterRequest.getTitle()).isEqualTo(prTitle);
-        Assertions.assertThat(retrieveDtoPosterRequest.getUserEmail()).isEqualTo(uEmail);
-        Assertions.assertThat(retrieveDtoPosterRequest.getPosterType()).isEqualTo(prType);
     }
 
-    @DisplayName("테스트: createRetrieveDtoPosterRequest (user is null)")
+    @DisplayName("[테스트] of()")
     @Test
-    void Test_createRetrieveDtoPosterRequest_with_null() {
+    void Test_of() {
         // Given
-        Mockito.when(posterRequest.getTitle()).thenReturn(prTitle);
-        Mockito.when(posterRequest.getStartedDate()).thenReturn(prStartedDate);
-        Mockito.when(posterRequest.getFinishedDate()).thenReturn(prFinishedDate);
-
-        Mockito.when(posterRequest.getPosterType()).thenReturn(posterType);
-
-        Mockito.when(posterType.getType()).thenReturn(prType);
+        Mockito.when(posterRequest.getUser()).thenReturn(user);
+        Mockito.when(user.getEmail()).thenReturn(uEmail);
 
         // When
-        RetrieveDtoPosterRequest retrieveDtoPosterRequest = RetrieveDtoPosterRequest.createRetrieveDtoPosterRequest(posterRequest);
+        ReadDtoPosterRequest readDtoPosterRequest = ReadDtoPosterRequest.of(posterRequest);
 
         // Then
-        Assertions.assertThat(retrieveDtoPosterRequest.getTitle()).isEqualTo(prTitle);
-        Assertions.assertThat(retrieveDtoPosterRequest.getUserEmail()).isEqualTo("");
-        Assertions.assertThat(retrieveDtoPosterRequest.getPosterType()).isEqualTo(prType);
+        Assertions.assertThat(readDtoPosterRequest.getTitle()).isEqualTo(prTitle);
+        Assertions.assertThat(readDtoPosterRequest.getUserEmail()).isEqualTo(uEmail);
+        Assertions.assertThat(readDtoPosterRequest.getPosterType()).isEqualTo(prType);
+    }
+
+    @DisplayName("[테스트] of() (user is null)")
+    @Test
+    void Test_of_with_null() {
+        // Given // When
+        ReadDtoPosterRequest readDtoPosterRequest = ReadDtoPosterRequest.of(posterRequest);
+
+        // Then
+        Assertions.assertThat(readDtoPosterRequest.getTitle()).isEqualTo(prTitle);
+        Assertions.assertThat(readDtoPosterRequest.getUserEmail()).isEqualTo("");
+        Assertions.assertThat(readDtoPosterRequest.getPosterType()).isEqualTo(prType);
     }
 }

@@ -1,7 +1,7 @@
 package com.gg_pigs.posterRequest.repository;
 
 import com.gg_pigs.posterRequest.dto.CreateDtoPosterRequest;
-import com.gg_pigs.posterRequest.dto.RetrieveConditionDtoPosterRequest;
+import com.gg_pigs.posterRequest.dto.ReadConditionDtoPosterRequest;
 import com.gg_pigs.posterRequest.entity.PosterRequest;
 import com.gg_pigs.posterType.entity.PosterType;
 import com.gg_pigs.user.dto.CreateDtoUser;
@@ -76,7 +76,7 @@ public class PosterRequestRepositoryTest {
     void When_call_findAllByCondition_Then_return_list_by_condition() {
         // Given
         int sizeOfPosterRequests = 1;
-        RetrieveConditionDtoPosterRequest condition = new RetrieveConditionDtoPosterRequest();
+        ReadConditionDtoPosterRequest condition = new ReadConditionDtoPosterRequest();
 
         // 1. Page 정보를 설정합니다.
         condition.setPageCondition("2");

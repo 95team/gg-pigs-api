@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import static com.gg_pigs._common.CommonDefinition.POSTER_LAYOUT_SIZE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RetrieveConditionDtoPosterRequestTest {
+class ReadConditionDtoPosterRequestTest {
 
-    RetrieveConditionDtoPosterRequest condition = new RetrieveConditionDtoPosterRequest();
+    ReadConditionDtoPosterRequest condition = new ReadConditionDtoPosterRequest();
 
     @DisplayName("[테스트] isUnlimitedIsTrue()")
     @Test
