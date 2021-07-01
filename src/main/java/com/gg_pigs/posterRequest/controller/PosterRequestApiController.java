@@ -37,11 +37,9 @@ public class PosterRequestApiController {
     private final JwtProvider jwtProvider;
     private final PosterRequestService posterRequestService;
 
-    /**
-     * CREATE
-     * */
+    /** CREATE */
     @PostMapping("/api/v1/poster-requests")
-    public ApiResponse createPosterRequest(@RequestBody CreateDtoPosterRequest createDtoPosterRequest) throws Exception {
+    public ApiResponse create(@RequestBody CreateDtoPosterRequest createDtoPosterRequest) throws Exception {
         // 1. 요청이 들어온 Poster-Request 가 '신청 가능한 자리' 에 있는지 확인합니다.
         // 1-1. 현재 '신청 가능한 모든 자리' 를 조회합니다.
         int intTypeOfPage = Integer.parseInt(createDtoPosterRequest.getColumnPosition()) / POSTER_LAYOUT_SIZE + 1;
@@ -69,25 +67,23 @@ public class PosterRequestApiController {
         }
 
         // 2. 신청이 가능하다면, Poster-Request 를 생성합니다.
-        Long posterRequestId = posterRequestService.createPosterRequest(createDtoPosterRequest);
+        Long posterRequestId = posterRequestService.create(createDtoPosterRequest);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterRequestId);
     }
 
-    /**
-     * RETRIEVE
-     * */
+    /** RETRIEVE */
     @GetMapping("/api/v1/poster-requests/{posterRequestId}")
-    public ApiResponse readPosterRequest(@PathVariable("posterRequestId") Long posterRequestId) {
-        ReadDtoPosterRequest readDtoPosterRequest = posterRequestService.readPosterRequest(posterRequestId);
+    public ApiResponse read(@PathVariable("posterRequestId") Long posterRequestId) {
+        ReadDtoPosterRequest readDtoPosterRequest = posterRequestService.read(posterRequestId);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), readDtoPosterRequest);
     }
 
     @GetMapping({"/api/v1/poster-requests", "/api/v2/poster-requests"})
-    public ApiResponse readPosterRequests(@RequestParam("page") Optional<String> page,
-                                                       @RequestParam("userEmail") Optional<String> userEmail,
-                                                       @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
+    public ApiResponse readAll(@RequestParam("page") Optional<String> page,
+                               @RequestParam("userEmail") Optional<String> userEmail,
+                               @RequestParam("isFilteredDate") Optional<String> isFilteredDate) {
         Map<String, String> retrieveCondition = new HashMap<>();
 
         if(page.isPresent()) retrieveCondition.put("page", page.get());
@@ -99,13 +95,13 @@ public class PosterRequestApiController {
         if(isFilteredDate.isPresent()) retrieveCondition.put("isFilteredDate", isFilteredDate.get());
         else retrieveCondition.put("isFilteredDate", null);
 
-        List<ReadDtoPosterRequest> allReadDtoPosterRequests = posterRequestService.readPosterRequests(retrieveCondition);
+        List<ReadDtoPosterRequest> allReadDtoPosterRequests = posterRequestService.readAll(retrieveCondition);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allReadDtoPosterRequests);
     }
 
     @GetMapping("/api/v1/poster-requests/seats")
-    public ApiResponse retrieveAllPossibleSeats(@RequestParam("page") String page, @RequestParam("startedDate") String startedDate, @RequestParam("finishedDate") String finishedDate) throws Exception{
+    public ApiResponse getAllPossibleSeats(@RequestParam("page") String page, @RequestParam("startedDate") String startedDate, @RequestParam("finishedDate") String finishedDate) throws Exception{
         List<String[]> allPossibleSeats = posterRequestService.getAllPossibleSeats(
                 new HashMap<String, String>() {{
                     put("page", page);
@@ -116,11 +112,9 @@ public class PosterRequestApiController {
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allPossibleSeats);
     }
 
-    /**
-     * UPDATE
-     * */
+    /** UPDATE */
     @PutMapping("/api/v1/poster-requests/{posterRequestId}")
-    public ApiResponse updatePosterRequest(
+    public ApiResponse update(
             @CookieValue("jwt") String token,
             @RequestParam("work") String work,
             @PathVariable("posterRequestId") Long posterRequestId,
@@ -136,18 +130,19 @@ public class PosterRequestApiController {
         if(!StringUtils.hasText(updaterEmail)) {
             throw new BadRequestException("적절하지 않은 요청입니다. (Please check the admin's email)");
         }
+        if(!work.equalsIgnoreCase("review")) {
+            throw new BadRequestException("적절하지 않은 요청입니다. (Please check the parameter value)");
+        }
 
-        Long updatePosterRequestId = posterRequestService.updatePosterRequest(work, updaterEmail, posterRequestId, updateDtoPosterRequest);
+        Long updatePosterRequestId = posterRequestService.update(work, updaterEmail, posterRequestId, updateDtoPosterRequest);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), updatePosterRequestId);
     }
 
-    /**
-     * DELETE
-     * */
+    /** DELETE */
     @DeleteMapping("/api/v1/poster-requests/{posterRequestId}")
-    public ApiResponse deletePosterRequest(@PathVariable("posterRequestId") Long posterRequestId) {
-        posterRequestService.deletePosterRequest(posterRequestId);
+    public ApiResponse delete(@PathVariable("posterRequestId") Long posterRequestId) {
+        posterRequestService.delete(posterRequestId);
 
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
     }

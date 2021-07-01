@@ -73,7 +73,7 @@ class PosterRequestApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(posterRequestService.readPosterRequest(any(Long.class))).thenReturn(readDtoPosterRequest);
+        Mockito.when(posterRequestService.read(any(Long.class))).thenReturn(readDtoPosterRequest);
         Mockito.when(posterRequestService.isPossibleSeat(any(), anyLong(), anyLong(), anyString())).thenReturn(true);
     }
 
