@@ -24,48 +24,40 @@ public class UserApiController {
 
     private final UserService userService;
 
-    /**
-     * CREATE
-     * */
+    /** CREATE */
     @PostMapping("/api/v1/users")
-    public ApiResponse createOneUser(@RequestBody CreateDtoUser createDtoUser) {
+    public ApiResponse create(@RequestBody CreateDtoUser createDtoUser) {
         Long userId = userService.create(createDtoUser);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), userId);
     }
 
-    /**
-     * RETRIEVE
-     * */
+    /** READ */
     @GetMapping("/api/v1/users/{userId}")
-    public ApiResponse retrieveOneUser(@PathVariable("userId") Long _userId) {
+    public ApiResponse read(@PathVariable("userId") Long _userId) {
         RetrieveDtoUser retrieveDtoUser = userService.read(_userId);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }
 
     @GetMapping("/api/v1/users")
-    public ApiResponse retrieveAllUser() {
+    public ApiResponse readAll() {
         List<RetrieveDtoUser> allRetrieveDtoUsers = userService.retrieveAllUsers();
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allRetrieveDtoUsers);
     }
 
-    /**
-     * UPDATE
-     * */
+    /** UPDATE */
     @PutMapping("/api/v1/users/{userId}")
-    public ApiResponse updateOneUser(@PathVariable("userId") Long _userId, @RequestBody UpdateDtoUser updateDtoUser) {
+    public ApiResponse update(@PathVariable("userId") Long _userId, @RequestBody UpdateDtoUser updateDtoUser) {
         Long userId = userService.update(_userId, updateDtoUser);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), userId);
     }
 
-    /**
-     * DELETE
-     * */
+    /** DELETE */
     @DeleteMapping("/api/v1/users/{userId}")
-    public ApiResponse deleteOneUser(@PathVariable("userId") Long _userId) {
+    public ApiResponse delete(@PathVariable("userId") Long _userId) {
         userService.delete(_userId);
 
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
