@@ -26,11 +26,11 @@ public class FileUtil {
     }
 
     public static boolean isImageFile(MultipartFile file) {
-        return ALLOWABLE_IMAGE_FILE_EXTENSION_LIST.contains(getFileExtension(file));
+        return ALLOWABLE_IMAGE_FILE_EXTENSION_LIST.contains(getFileExtension(file).toUpperCase());
     }
 
     public static boolean isImageFile(String fileName) {
-        return ALLOWABLE_IMAGE_FILE_EXTENSION_LIST.contains(getFileExtension(fileName));
+        return ALLOWABLE_IMAGE_FILE_EXTENSION_LIST.contains(getFileExtension(fileName).toUpperCase());
     }
 
     public static String makeRandomFileName(@Nullable String fileName) {
