@@ -45,7 +45,7 @@ public class LoginController {
             throw new BadRequestException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
 
-        RetrieveDtoUser userDto = userService.retrieveUserByEmail(email);
+        RetrieveDtoUser userDto = userService.readByEmail(email);
         RetrieveDtoUserSalt userSaltDto = userSaltService.read(userDto.getUserId());
 
         RequestDtoLogin loginDto = RequestDtoLogin.builder()
@@ -72,7 +72,7 @@ public class LoginController {
     @GetMapping("/api/v1/login-users")
     public ApiResponse checkLoginUser(@CookieValue("${application.cookie.login-cookie-name}") String token) {
         Claims payloadFromToken = jwtProvider.getPayloadFromToken(token);
-        RetrieveDtoUser retrieveDtoUser = userService.retrieveUserByEmail(payloadFromToken.getAudience());
+        RetrieveDtoUser retrieveDtoUser = userService.readByEmail(payloadFromToken.getAudience());
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }

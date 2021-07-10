@@ -48,7 +48,7 @@ class UserServiceTest {
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
 
         // When
-        userService.createUser(createDtoUser);
+        userService.create(createDtoUser);
 
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).countByEmail(anyString());
@@ -61,7 +61,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then
-        assertThat(userService.retrieveUser(userId).getClass()).isEqualTo(RetrieveDtoUser.class);
+        assertThat(userService.read(userId).getClass()).isEqualTo(RetrieveDtoUser.class);
     }
 
     @Test
@@ -76,13 +76,13 @@ class UserServiceTest {
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then
-        assertThat(userService.updateUser(userId, updateDtoUser).getClass()).isEqualTo(Long.class);
+        assertThat(userService.update(userId, updateDtoUser).getClass()).isEqualTo(Long.class);
     }
 
     @Test
     public void When_call_deleteOneUser_Then_call_deleteById_function() {
         // Given // When
-        userService.deleteUser(userId);
+        userService.delete(userId);
 
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).deleteById(anyLong());

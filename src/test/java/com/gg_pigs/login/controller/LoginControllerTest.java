@@ -62,7 +62,7 @@ class LoginControllerTest {
         // Configuration of UserService
         Mockito.when(retrieveDtoUser.getUserId()).thenReturn(userId);
         Mockito.when(retrieveDtoUser.getRole()).thenReturn(userRole);
-        Mockito.when(userService.retrieveUserByEmail(anyString())).thenReturn(retrieveDtoUser);
+        Mockito.when(userService.readByEmail(anyString())).thenReturn(retrieveDtoUser);
 
         // Configuration of UserSaltService
         Mockito.when(retrieveDtoUserSalt.getDigest()).thenReturn(userDigest);

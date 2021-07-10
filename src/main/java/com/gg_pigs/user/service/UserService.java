@@ -25,7 +25,7 @@ public class UserService {
 
     /** CREATE */
     @Transactional
-    public Long createUser(CreateDtoUser createDtoUser) {
+    public Long create(CreateDtoUser createDtoUser) {
         if(createDtoUser.getEmail() == null ||createDtoUser.getPassword() == null) {
             throw new IllegalArgumentException("적절하지 않은 요청입니다. (Please check the required value)");
         }
@@ -50,13 +50,13 @@ public class UserService {
     }
 
     /** READ */
-    public RetrieveDtoUser retrieveUser(Long _userId) {
+    public RetrieveDtoUser read(Long _userId) {
         User user = userRepository.findById(_userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         return RetrieveDtoUser.createRetrieveDtoUser(user);
     }
 
-    public RetrieveDtoUser retrieveUserByEmail(String email) {
+    public RetrieveDtoUser readByEmail(String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         return RetrieveDtoUser.createRetrieveDtoUser(user);
@@ -70,7 +70,7 @@ public class UserService {
 
     /** UPDATE */
     @Transactional
-    public Long updateUser(Long _userId, UpdateDtoUser updateDtoUser) {
+    public Long update(Long _userId, UpdateDtoUser updateDtoUser) {
         User user = userRepository.findById(_userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         user.changeUser(updateDtoUser);
@@ -79,7 +79,7 @@ public class UserService {
     }
 
     /** DELETE */
-    public void deleteUser(Long _userId) {
+    public void delete(Long _userId) {
         userRepository.deleteById(_userId);
     }
 }
