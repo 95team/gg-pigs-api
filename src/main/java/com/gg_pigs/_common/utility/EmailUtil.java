@@ -3,7 +3,7 @@ package com.gg_pigs._common.utility;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EmailUtility {
+public class EmailUtil {
 
     /** Mail */
     public static final Pattern ALLOWABLE_EMAIL_FORMAT_PATTERN = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
