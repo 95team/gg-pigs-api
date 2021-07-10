@@ -21,8 +21,11 @@ import static com.gg_pigs._common.utility.FileUtil.makeRandomFileName;
 @Service
 public class GitHubFileService implements FileService {
 
-    @Autowired private Environment environment;
-    @Autowired private GitHubClient gitHubClient;
+    private final int UPLOAD_TRY_THRESHOLD = 5;
+
+    private final Environment environment;
+    private final GitHubClient gitHubClient;
+
 
     @Override
     public String upload(MultipartFile file) throws IOException {
@@ -41,15 +44,14 @@ public class GitHubFileService implements FileService {
         String uploadRawPath = environment.getProperty("application.github.image.raw-path");
         String uploadContentPath = null;
         int tryCount = 0;
-        int tryThreshold = 5;
 
-        for(; tryCount < tryThreshold; tryCount++){
+        for(; tryCount < UPLOAD_TRY_THRESHOLD; tryCount++){
             uploadContentPath = gitHubClient.uploadImageContent(file, makeRandomFileName(file.getOriginalFilename()));
             if(!StringUtils.isEmpty(uploadContentPath)) {
                 break;
             }
         }
-        if(tryCount >= tryThreshold) {
+        if(tryCount >= UPLOAD_TRY_THRESHOLD) {
             throw new IOException("데이터를 업로드할 수 없습니다. (Check the upload server's status)");
         }
 
