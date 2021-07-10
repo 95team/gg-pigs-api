@@ -30,7 +30,7 @@ public class PosterApiController {
 
     /** CREATE */
     @PostMapping("/api/v1/posters")
-    public ApiResponse createPoster(@RequestBody CreateDtoPoster createDtoPoster) throws Exception {
+    public ApiResponse create(@RequestBody CreateDtoPoster createDtoPoster) throws Exception {
         Long posterId = posterService.createPoster(createDtoPoster);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterId);
@@ -38,17 +38,17 @@ public class PosterApiController {
 
     /** READ */
     @GetMapping("/api/v1/posters/{posterId}")
-    public ApiResponse readPoster(@PathVariable("posterId") Long posterId) {
+    public ApiResponse read(@PathVariable("posterId") Long posterId) {
         ReadDtoPoster readDtoPoster = posterService.readPoster(posterId);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), readDtoPoster);
     }
 
     @GetMapping({"/api/v1/posters", "/api/v2/posters"})
-    public ApiResponse readPosters(@RequestParam("page") Optional<String> page,
-                                   @RequestParam("userEmail") Optional<String> userEmail,
-                                   @RequestParam("isFilteredDate") Optional<String> isFilteredDate,
-                                   @RequestParam("isActivated") Optional<String> isActivated) {
+    public ApiResponse readAll(@RequestParam("page") Optional<String> page,
+                               @RequestParam("userEmail") Optional<String> userEmail,
+                               @RequestParam("isFilteredDate") Optional<String> isFilteredDate,
+                               @RequestParam("isActivated") Optional<String> isActivated) {
         Map<String, String> condition = new HashMap<>();
 
         if(page.isPresent()) condition.put("page", page.get());
@@ -70,7 +70,7 @@ public class PosterApiController {
 
     /** UPDATE */
     @PutMapping("/api/v1/posters/{posterId}")
-    public ApiResponse updatePoster(@PathVariable("posterId") Long posterId, @RequestBody UpdateDtoPoster updateDtoPoster) throws Exception {
+    public ApiResponse update(@PathVariable("posterId") Long posterId, @RequestBody UpdateDtoPoster updateDtoPoster) throws Exception {
         Long updatePosterId = posterService.updatePoster(posterId, updateDtoPoster);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), updatePosterId);
@@ -78,7 +78,7 @@ public class PosterApiController {
 
     /** DELETE */
     @DeleteMapping("/api/v1/posters/{posterId}")
-    public ApiResponse deletePoster(@PathVariable("posterId") Long posterId) {
+    public ApiResponse delete(@PathVariable("posterId") Long posterId) {
         posterService.deletePoster(posterId);
 
         return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());

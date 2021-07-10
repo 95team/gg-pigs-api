@@ -68,9 +68,9 @@ class PosterApiControllerTest {
         Mockito.when(posterService.readPoster(any(Long.class))).thenReturn(readDtoPoster);
     }
 
-    @DisplayName("[테스트] createPoster() : Poster 생성")
+    @DisplayName("[테스트] create() : Poster 생성")
     @Test
-    public void Test_createPoster() throws Exception {
+    public void Test_create() throws Exception {
         String content = objectMapper.writeValueAsString(createDtoPoster);
 
         mockMvc.perform(post("/api/v1/posters")
@@ -81,9 +81,9 @@ class PosterApiControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("[테스트] readPoster() : Poster 조회")
+    @DisplayName("[테스트] read() : Poster 조회")
     @Test
-    public void Test_readPoster() throws Exception {
+    public void Test_read() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
@@ -93,9 +93,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
-    @DisplayName("[테스트] readPosters() : Poster 리스트 조회 (v1)")
+    @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v1)")
     @Test
-    public void Test_readPosters_v1() throws Exception {
+    public void Test_readAll_v1() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -105,9 +105,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
-    @DisplayName("[테스트] readPosters() : Poster 리스트 조회 (v2)")
+    @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v2)")
     @Test
-    public void Test_readPosters_v2() throws Exception {
+    public void Test_readAll_v2() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v2/posters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -117,9 +117,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
-    @DisplayName("[테스트] updatePoster() : Poster 수정")
+    @DisplayName("[테스트] update() : Poster 수정")
     @Test
-    public void Test_updatePoster() throws Exception {
+    public void Test_update() throws Exception {
         String content = objectMapper.writeValueAsString(updateDtoPoster);
 
         mockMvc.perform(put("/api/v1/posters/1")
@@ -130,9 +130,9 @@ class PosterApiControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("[테스트] deletePoster() : Poster 삭제")
+    @DisplayName("[테스트] delete() : Poster 삭제")
     @Test
-    public void Test_deletePoster() throws Exception {
+    public void Test_delete() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
