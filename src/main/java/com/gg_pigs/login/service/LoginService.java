@@ -7,13 +7,13 @@ import javax.servlet.http.Cookie;
 public interface LoginService {
 
     /**
-     * Function for login
+     * Login method
      * @return Login cookie
      * */
     Cookie login(RequestDtoLogin loginDto);
 
     /**
-     * Function for logout
+     * Logout method
      * @return Logout cookie (Expiration is 0)
      * */
     Cookie logout();
