@@ -5,11 +5,12 @@ import com.gg_pigs._common.enums.PosterReviewStatus;
 import com.gg_pigs._common.enums.UserRole;
 import com.gg_pigs._common.utility.JwtProvider;
 import com.gg_pigs.posterRequest.dto.CreateDtoPosterRequest;
-import com.gg_pigs.posterRequest.dto.RetrieveDtoPosterRequest;
+import com.gg_pigs.posterRequest.dto.ReadDtoPosterRequest;
 import com.gg_pigs.posterRequest.dto.UpdateDtoPosterRequest;
 import com.gg_pigs.posterRequest.service.PosterRequestService;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -53,10 +54,6 @@ class PosterRequestApiControllerTest {
 
     @Mock Claims claims;
 
-    private CreateDtoPosterRequest createDtoPosterRequest;
-    private RetrieveDtoPosterRequest retrieveDtoPosterRequest;
-    private UpdateDtoPosterRequest updateDtoPosterRequest;
-
     private Long mockId = 1L;
     private String mockTitle = "This is a title.";
     private String mockUserEmail = "test@email.com";
@@ -70,23 +67,25 @@ class PosterRequestApiControllerTest {
     private String mockStartedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     private String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
+    private CreateDtoPosterRequest createDtoPosterRequest = new CreateDtoPosterRequest(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
+    private ReadDtoPosterRequest readDtoPosterRequest = new ReadDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, "300", "300", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NEW, mockStartedDate, mockFinishedDate);
+    private UpdateDtoPosterRequest updateDtoPosterRequest = new UpdateDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NEW.name(), mockStartedDate, mockFinishedDate);
+
     @BeforeEach
     void setUp() {
-        retrieveDtoPosterRequest = new RetrieveDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, "300", "300", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NEW, mockStartedDate, mockFinishedDate);
-
-        Mockito.when(posterRequestService.retrievePosterRequest(any(Long.class))).thenReturn(retrieveDtoPosterRequest);
+        Mockito.when(posterRequestService.read(any(Long.class))).thenReturn(readDtoPosterRequest);
         Mockito.when(posterRequestService.isPossibleSeat(any(), anyLong(), anyLong(), anyString())).thenReturn(true);
     }
 
+    @DisplayName("[테스트] createPosterRequest()")
     @Test
-    public void posterRequest_한건_생성() throws Exception {
+    public void Test_createPosterRequest() throws Exception {
         // Given
-        createDtoPosterRequest = new CreateDtoPosterRequest(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
         String content = objectMapper.writeValueAsString(createDtoPosterRequest);
 
         List<String[]> allPossibleSeats = new ArrayList<>();
         allPossibleSeats.add(new String[]{mockRowPosition, mockColumnPosition});
-        Mockito.when(posterRequestService.retrieveAllPossibleSeats(any())).thenReturn(allPossibleSeats);
+        Mockito.when(posterRequestService.getAllPossibleSeats(any())).thenReturn(allPossibleSeats);
 
         // When // Then
         mockMvc.perform(post("/api/v1/poster-requests")
@@ -97,8 +96,9 @@ class PosterRequestApiControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("[테스트] readPosterRequest()")
     @Test
-    public void posterRequest_한건_조회() throws Exception {
+    public void Test_readPosterRequest() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/poster-requests/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
@@ -108,8 +108,9 @@ class PosterRequestApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] readPosterRequests() (v1)")
     @Test
-    public void posterRequest_전체_조회() throws Exception {
+    public void Test_readPosterRequests_v1() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/poster-requests"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -119,8 +120,9 @@ class PosterRequestApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] readPosterRequests() (v2)")
     @Test
-    public void posterRequest_전체_조회_v2() throws Exception {
+    public void Test_readPosterRequests_v2() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v2/poster-requests"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -130,10 +132,10 @@ class PosterRequestApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] updatePosterRequest()")
     @Test
-    public void posterRequest_한건_업데이트() throws Exception {
+    public void Test_updatePosterRequest() throws Exception {
         // Given
-        updateDtoPosterRequest = new UpdateDtoPosterRequest(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterRequestType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, PosterReviewStatus.NEW.name(), mockStartedDate, mockFinishedDate);
         String content = objectMapper.writeValueAsString(updateDtoPosterRequest);
 
         Cookie cookie = new Cookie("jwt", "cookie");
@@ -154,8 +156,9 @@ class PosterRequestApiControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("[테스트] deletePosterRequest()")
     @Test
-    public void posterRequest_한건_삭제() throws Exception {
+    public void Test_deletePosterRequest() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/poster-requests/1"))
                 .andExpect(status().isOk())
                 .andDo(print())

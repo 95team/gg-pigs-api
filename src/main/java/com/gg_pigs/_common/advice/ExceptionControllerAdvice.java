@@ -83,7 +83,6 @@ public class ExceptionControllerAdvice {
     /**
      * handleMissingServletRequestParameterException(MissingServletRequestParameterException.class)
      * 목적 : @RequestParam 필수 값인 경우 체크한다.
-     * 예시 : @RequestParam("image") FileDto fileDto
      * */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ApiResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {

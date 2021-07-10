@@ -2,7 +2,7 @@ package com.gg_pigs.login.controller;
 
 import com.gg_pigs._common.dto.ApiResponse;
 import com.gg_pigs._common.exception.BadRequestException;
-import com.gg_pigs._common.utility.EmailUtility;
+import com.gg_pigs._common.utility.EmailUtil;
 import com.gg_pigs._common.utility.JwtProvider;
 import com.gg_pigs.login.dto.RequestDtoLogin;
 import com.gg_pigs.login.service.LoginService;
@@ -41,12 +41,12 @@ public class LoginController {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password)) {
             throw new BadRequestException("적절하지 않은 요청입니다. (Please check the required value)");
         }
-        if(!EmailUtility.checkEmailFormat(email)) {
+        if(!EmailUtil.checkEmailFormat(email)) {
             throw new BadRequestException("적절하지 않은 이메일 형식 입니다. (Please check the email)");
         }
 
-        RetrieveDtoUser userDto = userService.retrieveUserByEmail(email);
-        RetrieveDtoUserSalt userSaltDto = userSaltService.retrieveUserSalt(userDto.getUserId());
+        RetrieveDtoUser userDto = userService.readByEmail(email);
+        RetrieveDtoUserSalt userSaltDto = userSaltService.read(userDto.getUserId());
 
         RequestDtoLogin loginDto = RequestDtoLogin.builder()
                 .email(email)
@@ -72,7 +72,7 @@ public class LoginController {
     @GetMapping("/api/v1/login-users")
     public ApiResponse checkLoginUser(@CookieValue("${application.cookie.login-cookie-name}") String token) {
         Claims payloadFromToken = jwtProvider.getPayloadFromToken(token);
-        RetrieveDtoUser retrieveDtoUser = userService.retrieveUserByEmail(payloadFromToken.getAudience());
+        RetrieveDtoUser retrieveDtoUser = userService.readByEmail(payloadFromToken.getAudience());
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), retrieveDtoUser);
     }

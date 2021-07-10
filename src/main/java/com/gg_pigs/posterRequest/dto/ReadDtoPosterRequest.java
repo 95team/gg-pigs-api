@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @Builder
 @Getter
-public class RetrieveDtoPosterRequest {
+public class ReadDtoPosterRequest {
 
     private Long id;
     private String userEmail;
@@ -31,8 +31,8 @@ public class RetrieveDtoPosterRequest {
     private String startedDate;
     private String finishedDate;
 
-    public static RetrieveDtoPosterRequest createRetrieveDtoPosterRequest(PosterRequest posterRequest) {
-        return RetrieveDtoPosterRequest.builder()
+    public static ReadDtoPosterRequest of(PosterRequest posterRequest) {
+        return ReadDtoPosterRequest.builder()
                 .id(posterRequest.getId())
                 .userEmail(posterRequest.getUser() != null ? posterRequest.getUser().getEmail() : "")
                 .title(posterRequest.getTitle())

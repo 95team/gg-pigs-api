@@ -1,8 +1,7 @@
 package com.gg_pigs.verificationMail.entity;
 
-import com.gg_pigs._common.CommonDefinition;
 import com.gg_pigs._common.enums.VerificationMailStatus;
-import com.gg_pigs._common.utility.EmailUtility;
+import com.gg_pigs._common.utility.EmailUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,7 +62,7 @@ public class VerificationMail {
     public static Boolean checkEmailFormat(String email) {
         boolean result = false;
 
-        Pattern pattern = EmailUtility.ALLOWABLE_EMAIL_FORMAT_PATTERN;
+        Pattern pattern = EmailUtil.ALLOWABLE_EMAIL_FORMAT_PATTERN;
         Matcher matcher = pattern.matcher(email);
 
         if(matcher.find()) { result = true; }

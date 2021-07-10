@@ -45,9 +45,10 @@ import static org.mockito.Mockito.times;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
-class PosterRequestServiceImplTest {
+class PosterRequestServiceTest {
 
-    @InjectMocks PosterRequestServiceImpl posterRequestServiceImpl;
+    @InjectMocks
+    PosterRequestService posterRequestService;
 
     // Service
     @Mock PosterService posterService;
@@ -92,38 +93,38 @@ class PosterRequestServiceImplTest {
         Mockito.when(createDtoPR.getFinishedDate()).thenReturn(String.valueOf(LocalDate.now().plusMonths(1)));
     }
 
-    @DisplayName("[테스트] createOnePosterRequest() : save() 함수 1회 호출")
+    @DisplayName("[테스트] create() : save() 함수 1회 호출")
     @Test
-    public void Test_createOnePosterRequest() throws Exception {
+    public void Test_create() throws Exception {
         // Given
         Mockito.when(ptRepository.findPosterTypeByType(any())).thenReturn(Optional.of(posterType));
         Mockito.when(prRepository.save(any())).thenReturn(posterRequest);
 
         // When
-        posterRequestServiceImpl.createPosterRequest(createDtoPR);
+        posterRequestService.create(createDtoPR);
 
         // Then
         Mockito.verify(prRepository, times(1)).save(any(PosterRequest.class));
     }
 
-    @DisplayName("[테스트] createOnePosterRequest() : EntityNotFoundException 에러 발생")
+    @DisplayName("[테스트] create() : EntityNotFoundException 에러 발생")
     @Test
-    public void Test_createOnePosterRequest_with_EntityNotFoundException() {
+    public void Test_create_with_EntityNotFoundException() {
         // Given
         String expectedMessage = "해당 데이터를 조회할 수 없습니다.";
 
         Mockito.when(prRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
 
         // When
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.createPosterRequest(createDtoPR));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestService.create(createDtoPR));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] createOnePosterRequest() : DataIntegrityViolationException 에러 발생")
+    @DisplayName("[테스트] create() : DataIntegrityViolationException 에러 발생")
     @Test
-    public void Test_createOnePosterRequest_with_DataIntegrityViolationException() {
+    public void Test_create_with_DataIntegrityViolationException() {
         // Given
         String expectedMessage = "적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)";
 
@@ -131,28 +132,28 @@ class PosterRequestServiceImplTest {
         Mockito.when(prRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
 
         // When
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> posterRequestServiceImpl.createPosterRequest(createDtoPR));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> posterRequestService.create(createDtoPR));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] retrievePosterRequest() : findById() 1회 호출")
+    @DisplayName("[테스트] read() : findById() 1회 호출")
     @Test
-    public void Test_retrievePosterRequest() {
+    public void Test_read() {
         // Given
         Long prId = 1L;
 
         // When
-        posterRequestServiceImpl.retrievePosterRequest(prId);
+        posterRequestService.read(prId);
 
         // Then
         Mockito.verify(prRepository, times(1)).findById(anyLong());
     }
 
-    @DisplayName("[테스트] retrievePosterRequest() : EntityNotFoundException 에러 발생")
+    @DisplayName("[테스트] read() : EntityNotFoundException 에러 발생")
     @Test
-    public void Test_retrievePosterRequest_with_EntityNotFoundException() {
+    public void Test_read_with_EntityNotFoundException() {
         // Given
         String expectedMessage = "해당 데이터를 조회할 수 없습니다.";
 
@@ -160,15 +161,15 @@ class PosterRequestServiceImplTest {
         Mockito.when(prRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // When
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestServiceImpl.retrievePosterRequest(prId));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestService.read(prId));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] retrieveAllPosterRequests() : findAllByCondition() 1회 호출 (page:null, userEmail:null, isFilteredDate:null)")
+    @DisplayName("[테스트] readAll() : findAllByCondition() 1회 호출 (page:null, userEmail:null, isFilteredDate:null)")
     @Test
-    public void Test_retrieveAllPosterRequests() {
+    public void Test_readAll() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", null);
@@ -176,15 +177,15 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestService.readAll(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
-    @DisplayName("[테스트] retrieveAllPosterRequests() (page)")
+    @DisplayName("[테스트] readAll() (page)")
     @Test
-    public void Test_retrieveAllPosterRequests_with_page() {
+    public void Test_readAll_with_page() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", "-1");
@@ -192,15 +193,15 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestService.readAll(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
-    @DisplayName("[테스트] retrieveAllPosterRequests() (userEmail)")
+    @DisplayName("[테스트] readAll() (userEmail)")
     @Test
-    public void Test_retrieveAllPosterRequests_with_userEmail() {
+    public void Test_readAll_with_userEmail() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", null);
@@ -208,15 +209,15 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestService.readAll(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
-    @DisplayName("[테스트] retrieveAllPosterRequests() (isFilteredDate)")
+    @DisplayName("[테스트] readAll() (isFilteredDate)")
     @Test
-    public void Test_retrieveAllPosterRequests_with_isFilteredDate() {
+    public void Test_readAll_with_isFilteredDate() {
         // Given
         HashMap<String, String> retrieveCondition = new HashMap<>();
         retrieveCondition.put("page", null);
@@ -224,15 +225,15 @@ class PosterRequestServiceImplTest {
         retrieveCondition.put("isFilteredDate", "Y");
 
         // When
-        posterRequestServiceImpl.retrieveAllPosterRequests(retrieveCondition);
+        posterRequestService.readAll(retrieveCondition);
 
         // Then
         Mockito.verify(prRepository, times(1)).findAllByCondition(any());
     }
 
-    @DisplayName("[테스트] retrieveAllPossibleSeats() : Poster 타입 Row 타입")
+    @DisplayName("[테스트] getAllPossibleSeats() : Poster 타입 Row 타입")
     @Test
-    public void Test_retrieveAllPossibleSeats_with_rowType() throws Exception {
+    public void Test_getAllPossibleSeats_with_rowType() throws Exception {
         // Given
         String reservedPosterType = "R3";
         int expectedCounts = (POSTER_LAYOUT_SIZE * POSTER_LAYOUT_SIZE) - (reservedPosterType.charAt(1) - '0');
@@ -253,15 +254,15 @@ class PosterRequestServiceImplTest {
         Mockito.when(posterRepository.findAllImpossibleSeats(anyLong(), anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(impossibleSeats);
 
         // When
-        List<String[]> allPossibleSeats = posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate);
+        List<String[]> allPossibleSeats = posterRequestService.getAllPossibleSeats(wantedDate);
 
         // Then
         assertThat(allPossibleSeats.size()).isEqualTo(expectedCounts);
     }
 
-    @DisplayName("[테스트] retrieveAllPossibleSeats() : Poster 타입 Cn (Column 타입)")
+    @DisplayName("[테스트] getAllPossibleSeats() : Poster 타입 Cn (Column 타입)")
     @Test
-    public void Test_retrieveAllPossibleSeats_with_columnType() throws Exception {
+    public void Test_getAllPossibleSeats_with_columnType() throws Exception {
         // Given
         String reservedPosterType = "C3";
         int expectedCounts = (POSTER_LAYOUT_SIZE * POSTER_LAYOUT_SIZE) - (reservedPosterType.charAt(1) - '0');
@@ -282,15 +283,15 @@ class PosterRequestServiceImplTest {
         Mockito.when(posterRepository.findAllImpossibleSeats(anyLong(), anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(impossibleSeats);
 
         // When
-        List<String[]> allPossibleSeats = posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate);
+        List<String[]> allPossibleSeats = posterRequestService.getAllPossibleSeats(wantedDate);
 
         // Then
         assertThat(allPossibleSeats.size()).isEqualTo(expectedCounts);
     }
 
-    @DisplayName("[테스트] retrieveAllPossibleSeats() : IllegalArgumentException 에러 발생 (with wrongStartedDate)")
+    @DisplayName("[테스트] getAllPossibleSeats() : IllegalArgumentException 에러 발생 (with wrongStartedDate)")
     @Test
-    public void Test_retrieveAllPossibleSeats_with_IllegalArgumentException() throws Exception {
+    public void Test_getAllPossibleSeats_with_IllegalArgumentException() throws Exception {
         // Given
         String expectedMessage = "적절하지 않은 데이터 형식 입니다. (Please check the data)";
         String wrongStartedDate = "2021-01-01-01";
@@ -301,15 +302,15 @@ class PosterRequestServiceImplTest {
         wantedDate.put("finishedDate", LocalDate.now().plusMonths(1).toString());
 
         // When
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> posterRequestServiceImpl.retrieveAllPossibleSeats(wantedDate));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> posterRequestService.getAllPossibleSeats(wantedDate));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] updatePosterRequest() : Review-Status 를 승인(APPROVAL) 로 변경했을 경우, PosterRequest -> Poster 삽입이 진행됨을 체크")
+    @DisplayName("[테스트] update() : Review-Status 를 승인(APPROVAL) 로 변경했을 경우, PosterRequest -> Poster 삽입이 진행됨을 체크")
     @Test
-    public void Test_updatePosterRequest_with_ReviewStatus_APPROVAL() throws Exception {
+    public void Test_update_with_ReviewStatus_APPROVAL() throws Exception {
         // Given
         String work = "review";
         String updaterEmail = "pigs95team@gmail.com";
@@ -321,7 +322,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
-        posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+        posterRequestService.update(work, updaterEmail, 1L, updateDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
@@ -330,9 +331,9 @@ class PosterRequestServiceImplTest {
         Mockito.verify(historyLogService, times(2)).writeHistoryLog(any(), any(User.class), anyString(), anyString(), anyBoolean());
     }
 
-    @DisplayName("[테스트] updatePosterRequest() : Review-Status 를 승인(APPROVAL) 이 아닌 값으로 변경했을 경우, 'review-status 변경', '이력의 삽입' 을 체크")
+    @DisplayName("[테스트] update() : Review-Status 를 승인(APPROVAL) 이 아닌 값으로 변경했을 경우, 'review-status 변경', '이력의 삽입' 을 체크")
     @Test
-    public void Test_updatePosterRequest_with_ReviewStatus_PENDING() throws Exception {
+    public void Test_update_with_ReviewStatus_PENDING() throws Exception {
         // Given
         String work = "review";
         String updaterEmail = "pigs95team@gmail.com";
@@ -344,7 +345,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
-        posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+        posterRequestService.update(work, updaterEmail, 1L, updateDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
@@ -352,9 +353,9 @@ class PosterRequestServiceImplTest {
         Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), any(User.class), anyString(), anyString(), anyBoolean());
     }
 
-    @DisplayName("[테스트] updatePosterRequest() : Review-Status 를 승인(APPROVAL) 이 아닌 값으로 변경했을 경우, 'review-status 변경', '이력의 삽입' 을 체크")
+    @DisplayName("[테스트] update() : Review-Status 를 승인(APPROVAL) 이 아닌 값으로 변경했을 경우, 'review-status 변경', '이력의 삽입' 을 체크")
     @Test
-    public void Test_updatePosterRequest_with_ReviewStatus_NON_APPROVAL() throws Exception {
+    public void Test_update_with_ReviewStatus_NON_APPROVAL() throws Exception {
         // Given
         String work = "review";
         String updaterEmail = "pigs95team@gmail.com";
@@ -366,7 +367,7 @@ class PosterRequestServiceImplTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(reviewStatus);
 
         // When
-        posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest);
+        posterRequestService.update(work, updaterEmail, 1L, updateDtoPosterRequest);
 
         // Then
         Mockito.verify(posterRequest, times(1)).changeReviewer(anyString());
@@ -374,26 +375,9 @@ class PosterRequestServiceImplTest {
         Mockito.verify(historyLogService, times(1)).writeHistoryLog(any(), any(User.class), anyString(), anyString(), anyBoolean());
     }
 
-    @DisplayName("[테스트] updatePosterRequest() : BadRequestException 에러 발생 (work is not review)")
+    @DisplayName("[테스트] update() : BadRequestException 에러 발생 (ReviewStatus is already APPROVAL)")
     @Test
-    public void Test_updatePosterRequest_with_BadRequestException_case1() {
-        // Given
-        String expectedMessage = "적절하지 않은 요청입니다. (Please check the parameter value)";
-
-        String wrongWork = "not review";
-        String updaterEmail = "pigs95team@gmail.com";
-        UpdateDtoPosterRequest updateDtoPosterRequest = Mockito.mock(UpdateDtoPosterRequest.class);
-
-        // When
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> posterRequestServiceImpl.updatePosterRequest(wrongWork, updaterEmail, 1L, updateDtoPosterRequest));
-
-        // Then
-        assertThat(exception.getMessage()).isEqualTo(expectedMessage);
-    }
-
-    @DisplayName("[테스트] updatePosterRequest() : BadRequestException 에러 발생 (ReviewStatus is already APPROVAL)")
-    @Test
-    public void Test_updatePosterRequest_with_BadRequestException_case2() {
+    public void Test_update_with_BadRequestException_case2() {
         // Given
         String expectedMessage = "이 항목은 이미 승인되었습니다. (This item is already approved)";
 
@@ -406,15 +390,15 @@ class PosterRequestServiceImplTest {
         Mockito.when(posterRequest.getReviewStatus()).thenReturn(PosterReviewStatus.APPROVAL); // ReviewStatus is already APPROVAL
 
         // When
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> posterRequestService.update(work, updaterEmail, 1L, updateDtoPosterRequest));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] updatePosterRequest() : BadRequestException 에러 발생 (ReviewStatus is invalid value)")
+    @DisplayName("[테스트] update() : BadRequestException 에러 발생 (ReviewStatus is invalid value)")
     @Test
-    public void Test_updatePosterRequest_with_BadRequestException_case3() {
+    public void Test_update_with_BadRequestException_case3() {
         // Given
         String expectedMessage = "적절하지 않은 요청입니다. (Please check the parameter value)";
 
@@ -427,20 +411,20 @@ class PosterRequestServiceImplTest {
         Mockito.when(updateDtoPosterRequest.getReviewStatus()).thenReturn(PosterReviewStatus.NEW.name()); // ReviewStatus is invalid value
 
         // When
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> posterRequestServiceImpl.updatePosterRequest(work, updaterEmail, 1L, updateDtoPosterRequest));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> posterRequestService.update(work, updaterEmail, 1L, updateDtoPosterRequest));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("[테스트] deletePosterRequest()")
+    @DisplayName("[테스트] delete()")
     @Test
-    public void Test_deletePosterRequest() {
+    public void Test_delete() {
         // Given
         Long prId = 1L;
 
         // When
-        posterRequestServiceImpl.deletePosterRequest(prId);
+        posterRequestService.delete(prId);
 
         // Then
         Mockito.verify(prRepository, times(1)).deleteById(anyLong());
@@ -461,7 +445,7 @@ class PosterRequestServiceImplTest {
         allPossibleSeats[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
 
         // When
-        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats);
+        List<String[]> allPossibleSeatsAsList = posterRequestService.getPossibleSeatsAsList(allPossibleSeats);
 
         // Then
         assertThat(allPossibleSeatsAsList.get(0).length).isEqualTo(2);
@@ -481,7 +465,7 @@ class PosterRequestServiceImplTest {
         }});
 
         // When
-        boolean resultOfCalculation = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
+        boolean resultOfCalculation = posterRequestService.calculatePossibleSeats(allSeats, impossibleSeats);
 
         // Then
         assertThat(resultOfCalculation).isEqualTo(true);
@@ -502,7 +486,7 @@ class PosterRequestServiceImplTest {
         }});
 
         // When
-        boolean resultOfCalculation = posterRequestServiceImpl.calculatePossibleSeats(allSeats, impossibleSeats);
+        boolean resultOfCalculation = posterRequestService.calculatePossibleSeats(allSeats, impossibleSeats);
 
         // Then
         assertThat(resultOfCalculation).isEqualTo(false);
@@ -522,16 +506,16 @@ class PosterRequestServiceImplTest {
         int possibleRowIndex = 1; int possibleColumnIndex = 1;
         allPossibleSeats[possibleRowIndex][possibleColumnIndex] = POSSIBLE_SEAT;
 
-        List<String[]> allPossibleSeatsAsList = posterRequestServiceImpl.getPossibleSeatsAsList(allPossibleSeats);
+        List<String[]> allPossibleSeatsAsList = posterRequestService.getPossibleSeatsAsList(allPossibleSeats);
 
         // When
-        boolean isPossible1 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R1");
-        boolean isPossible2 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 7L, 1L, "R1");
-        boolean isPossible3 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 7L, "R1");
-        boolean isPossible4 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "C1");
-        boolean isImpossible1 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 2L, "R2");
-        boolean isImpossible2 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R2");
-        boolean isImpossible3 = posterRequestServiceImpl.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "C2");
+        boolean isPossible1 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R1");
+        boolean isPossible2 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 7L, 1L, "R1");
+        boolean isPossible3 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 7L, "R1");
+        boolean isPossible4 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "C1");
+        boolean isImpossible1 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 2L, "R2");
+        boolean isImpossible2 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "R2");
+        boolean isImpossible3 = posterRequestService.isPossibleSeat(allPossibleSeatsAsList, 1L, 1L, "C2");
 
         // Then
         assertThat(isPossible1).isEqualTo(true);

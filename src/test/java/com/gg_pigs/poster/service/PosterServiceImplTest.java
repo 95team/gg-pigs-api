@@ -4,7 +4,7 @@ import com.gg_pigs.poster.entity.Poster;
 import com.gg_pigs.posterType.entity.PosterType;
 import com.gg_pigs.user.entity.User;
 import com.gg_pigs.poster.dto.CreateDtoPoster;
-import com.gg_pigs.poster.dto.RetrieveDtoPoster;
+import com.gg_pigs.poster.dto.ReadDtoPoster;
 import com.gg_pigs.poster.dto.UpdateDtoPoster;
 import com.gg_pigs.poster.repository.PosterRepository;
 import com.gg_pigs.posterType.repository.PosterTypeRepository;
@@ -102,10 +102,10 @@ class PosterServiceImplTest {
         Long savedPosterId = savedPoster.getId();
 
         // When
-        RetrieveDtoPoster foundPoster = posterServiceImpl.retrievePoster(savedPosterId);
+        ReadDtoPoster foundPoster = posterServiceImpl.readPoster(savedPosterId);
 
         // Then
-        assertThat(foundPoster.getClass()).isEqualTo(RetrieveDtoPoster.class);  // 1. retrieveOnePoster 함수의 반환 클래스는 RetrieveDtoPoster 클래스다.
+        assertThat(foundPoster.getClass()).isEqualTo(ReadDtoPoster.class);  // 1. retrieveOnePoster 함수의 반환 클래스는 RetrieveDtoPoster 클래스다.
         Mockito.verify(posterRepository, times(1)).findById(anyLong()); // 2. PosterRepository 의 findById 함수가 1회 호출된다.
     }
 
@@ -118,7 +118,7 @@ class PosterServiceImplTest {
         retrieveCondition.put("isFilteredDate", null);
 
         // When
-        List<Poster> posterList = posterServiceImpl.retrieveAllPosters(retrieveCondition);
+        List<Poster> posterList = posterServiceImpl.readPosters(retrieveCondition);
 
         // Then
         assertThat(posterList.getClass()).isEqualTo(ArrayList.class);

@@ -1,6 +1,5 @@
 package com.gg_pigs._common.utility.github;
 
-import com.gg_pigs.file.dto.FileDto;
 import com.gg_pigs.historyLog.service.HistoryLogService;
 import com.gg_pigs.user.entity.User;
 import com.gg_pigs.user.repository.UserRepository;
@@ -20,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static com.gg_pigs._common.utility.FileUtil.makeRandomFileName;
 import static org.mockito.ArgumentMatchers.anyString;
 
 /**
@@ -50,12 +50,12 @@ class GitHubClientTest {
     @Test
     void When_call_uploadContent_Then_return_uploadPath() throws IOException {
         // Given
+        String fileName = "logo.png";
         File sampleFile = new ClassPathResource("/files/logo.png").getFile();
         MultipartFile sampleMultipartFile = new MockMultipartFile("logo.png", "logo.png", "image/*", new FileInputStream(sampleFile));
-        FileDto fileDto = new FileDto(sampleMultipartFile, "image", "poster");
 
         // When
-        String uploadImageUrl = githubClient.uploadContent(fileDto);
+        String uploadImageUrl = githubClient.uploadImageContent(sampleMultipartFile, makeRandomFileName(fileName));
 
         // Then
         Assertions.assertThat(uploadImageUrl).isNotNull();

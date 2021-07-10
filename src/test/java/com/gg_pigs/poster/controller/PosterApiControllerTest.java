@@ -2,10 +2,11 @@ package com.gg_pigs.poster.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gg_pigs.poster.dto.CreateDtoPoster;
-import com.gg_pigs.poster.dto.RetrieveDtoPoster;
+import com.gg_pigs.poster.dto.ReadDtoPoster;
 import com.gg_pigs.poster.dto.UpdateDtoPoster;
 import com.gg_pigs.poster.service.PosterService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ class PosterApiControllerTest {
     @MockBean PosterService posterService;
 
     private CreateDtoPoster createDtoPoster;
-    private RetrieveDtoPoster retrieveDtoPoster;
+    private ReadDtoPoster readDtoPoster;
     private UpdateDtoPoster updateDtoPoster;
 
     @BeforeEach
@@ -61,14 +62,15 @@ class PosterApiControllerTest {
         String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         createDtoPoster = new CreateDtoPoster(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
-        retrieveDtoPoster = new RetrieveDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockSlug, mockPosterType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+        readDtoPoster = new ReadDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockSlug, mockPosterType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
         updateDtoPoster = new UpdateDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
 
-        Mockito.when(posterService.retrievePoster(any(Long.class))).thenReturn(retrieveDtoPoster);
+        Mockito.when(posterService.readPoster(any(Long.class))).thenReturn(readDtoPoster);
     }
 
+    @DisplayName("[테스트] create() : Poster 생성")
     @Test
-    public void poster_한건_생성() throws Exception {
+    public void Test_create() throws Exception {
         String content = objectMapper.writeValueAsString(createDtoPoster);
 
         mockMvc.perform(post("/api/v1/posters")
@@ -79,8 +81,9 @@ class PosterApiControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("[테스트] read() : Poster 조회")
     @Test
-    public void poster_한건_조회() throws Exception {
+    public void Test_read() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isMap())
@@ -90,8 +93,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v1)")
     @Test
-    public void poster_전체_조회() throws Exception {
+    public void Test_readAll_v1() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -101,8 +105,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v2)")
     @Test
-    public void poster_전체_조회_v2() throws Exception {
+    public void Test_readAll_v2() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v2/posters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
@@ -112,8 +117,9 @@ class PosterApiControllerTest {
         System.out.println(mockHttpServletResponse.getContentAsString());
     }
 
+    @DisplayName("[테스트] update() : Poster 수정")
     @Test
-    public void poster_한건_업데이트() throws Exception {
+    public void Test_update() throws Exception {
         String content = objectMapper.writeValueAsString(updateDtoPoster);
 
         mockMvc.perform(put("/api/v1/posters/1")
@@ -124,8 +130,9 @@ class PosterApiControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("[테스트] delete() : Poster 삭제")
     @Test
-    public void poster_한건_삭제() throws Exception {
+    public void Test_delete() throws Exception {
         MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
                 .andExpect(status().isOk())
                 .andDo(print())

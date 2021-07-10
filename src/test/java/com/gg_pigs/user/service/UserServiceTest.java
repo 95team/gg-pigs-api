@@ -22,11 +22,12 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(
-        classes = { UserServiceImpl.class }
+        classes = { UserService.class }
 )
-class UserServiceImplTest {
+class UserServiceTest {
 
-    @Autowired UserServiceImpl userServiceImpl;
+    @Autowired
+    UserService userService;
 
     @MockBean UserRepository userRepository;
     @MockBean UserSaltService userSaltService;
@@ -47,7 +48,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
 
         // When
-        userServiceImpl.createUser(createDtoUser);
+        userService.create(createDtoUser);
 
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).countByEmail(anyString());
@@ -60,13 +61,13 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then
-        assertThat(userServiceImpl.retrieveUser(userId).getClass()).isEqualTo(RetrieveDtoUser.class);
+        assertThat(userService.read(userId).getClass()).isEqualTo(RetrieveDtoUser.class);
     }
 
     @Test
     public void When_call_retrieveAllUser_Then_return_List() {
         // Given // When // Then
-        assertThat(userServiceImpl.retrieveAllUsers().getClass()).isEqualTo(ArrayList.class);
+        assertThat(userService.retrieveAllUsers().getClass()).isEqualTo(ArrayList.class);
     }
 
     @Test
@@ -75,13 +76,13 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then
-        assertThat(userServiceImpl.updateUser(userId, updateDtoUser).getClass()).isEqualTo(Long.class);
+        assertThat(userService.update(userId, updateDtoUser).getClass()).isEqualTo(Long.class);
     }
 
     @Test
     public void When_call_deleteOneUser_Then_call_deleteById_function() {
         // Given // When
-        userServiceImpl.deleteUser(userId);
+        userService.delete(userId);
 
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).deleteById(anyLong());

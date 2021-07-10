@@ -19,7 +19,7 @@ import javax.servlet.http.Cookie;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class LoginServiceJwtImpl implements LoginService {
+public class JwtLoginService implements LoginService {
 
     private final JwtProvider jwtProvider;
     private final CookieProvider cookieProvider;
@@ -31,7 +31,7 @@ public class LoginServiceJwtImpl implements LoginService {
         String digest = requestDtoLogin.getDigest();
         String role = requestDtoLogin.getRole();
 
-        if( !this.checkPw(password, digest) ) {
+        if(!this.checkPw(password, digest)) {
             throw new LoginFailureException("로그인에 실패했습니다.");
         }
 
@@ -46,12 +46,10 @@ public class LoginServiceJwtImpl implements LoginService {
 
     @Override
     public Cookie logout() {
-
         return cookieProvider.destroyLoginCookie();
     }
 
     public boolean checkPw(String password, String hashed) {
-
         return BCrypt.checkpw(password, hashed);
     }
 }

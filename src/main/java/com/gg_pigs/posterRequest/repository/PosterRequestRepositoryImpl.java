@@ -1,6 +1,6 @@
 package com.gg_pigs.posterRequest.repository;
 
-import com.gg_pigs.posterRequest.dto.RetrieveConditionDtoPosterRequest;
+import com.gg_pigs.posterRequest.dto.ReadConditionDtoPosterRequest;
 import com.gg_pigs.posterRequest.entity.PosterRequest;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -22,7 +22,7 @@ public class PosterRequestRepositoryImpl implements PosterRequestRepositoryCusto
     }
 
     @Override
-    public List<PosterRequest> findAllByCondition(RetrieveConditionDtoPosterRequest condition) {
+    public List<PosterRequest> findAllByCondition(ReadConditionDtoPosterRequest condition) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

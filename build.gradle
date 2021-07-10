@@ -37,6 +37,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'                           // Spring Boot JWT, https://github.com/jwtk/jjwt
 	implementation 'com.squareup.retrofit2:retrofit:2.9.0'                      // Spring Boot Retrofit, https://github.com/square/retrofit
 	implementation 'com.squareup.retrofit2:converter-gson:2.9.0'                // Spring Boot Retrofit, https://github.com/square/retrofit/tree/master/retrofit-converters/gson
+	implementation 'org.apache.commons:commons-lang3'                           // Apache Commons Lang, https://github.com/apache/commons-lang
 
 	compileOnly 'org.projectlombok:lombok'
 

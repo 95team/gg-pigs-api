@@ -20,14 +20,14 @@ import javax.servlet.http.Cookie;
         classes = {
                 JwtProvider.class,
                 CookieProvider.class,
-                LoginServiceJwtImpl.class
+                JwtLoginService.class
         }
 )
-class LoginServiceJwtImplTest {
+class JwtLoginServiceTest {
 
     @Autowired JwtProvider jwtProvider;
     @Autowired CookieProvider cookieProvider;
-    @Autowired LoginServiceJwtImpl loginServiceJwtImpl;
+    @Autowired JwtLoginService jwtLoginService;
 
     @Mock User user;
     @Mock UserSalt userSalt;
@@ -64,7 +64,7 @@ class LoginServiceJwtImplTest {
                 .build();
 
         // When
-        Cookie loginCookie = loginServiceJwtImpl.login(correctLoginDto);
+        Cookie loginCookie = jwtLoginService.login(correctLoginDto);
 
         // Then
         Assertions.assertThat(loginCookie.getValue()).isNotNull();
@@ -83,7 +83,7 @@ class LoginServiceJwtImplTest {
 
         // When
         try {
-            Cookie loginCookie = loginServiceJwtImpl.login(wrongLoginDto);
+            Cookie loginCookie = jwtLoginService.login(wrongLoginDto);
         } catch (LoginFailureException loginFailureException) {
             return;
         }
@@ -95,7 +95,7 @@ class LoginServiceJwtImplTest {
     @Test()
     public void When_logout_Then_return_null_cookie() {
         // Given // When
-        Cookie logoutCookie = loginServiceJwtImpl.logout();
+        Cookie logoutCookie = jwtLoginService.logout();
 
         // Then
         Assertions.assertThat(logoutCookie.getValue()).isNull();

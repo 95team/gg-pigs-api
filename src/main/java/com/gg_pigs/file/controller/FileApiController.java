@@ -1,7 +1,6 @@
 package com.gg_pigs.file.controller;
 
 import com.gg_pigs._common.dto.ApiResponse;
-import com.gg_pigs.file.dto.FileDto;
 import com.gg_pigs.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,18 +19,11 @@ public class FileApiController {
     private final FileService fileService;
 
     @PostMapping("/api/v1/files")
-    public ApiResponse uploadOneImage(HttpServletRequest httpServletRequest) throws IOException {
+    public ApiResponse upload(HttpServletRequest httpServletRequest) throws IOException {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
         MultipartFile file = multipartHttpServletRequest.getFile("file");
-        String fileType = httpServletRequest.getParameter("fileType");
-        String serviceType = httpServletRequest.getParameter("serviceType");
 
-        String uploadImageUrl = fileService.uploadImage(
-                FileDto.builder()
-                        .file(file)
-                        .fileType(fileType)
-                        .serviceType(serviceType)
-                        .build());
+        String uploadImageUrl = fileService.upload(file);
 
         return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), uploadImageUrl);
     }
