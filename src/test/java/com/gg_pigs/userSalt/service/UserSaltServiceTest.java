@@ -19,11 +19,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @SpringBootTest(
-        classes = { UserSaltServiceImpl.class }
+        classes = { UserSaltService.class }
 )
-class UserSaltServiceImplTest {
+class UserSaltServiceTest {
 
-    @Autowired UserSaltServiceImpl userSaltServiceImpl;
+    @Autowired
+    UserSaltService userSaltService;
 
     @MockBean UserSaltRepository userSaltRepository;
 
@@ -56,7 +57,7 @@ class UserSaltServiceImplTest {
         Mockito.when(userSalt.getId()).thenReturn(1L);
 
         // When
-        Long userSaltId = userSaltServiceImpl.createUserSalt(user, password);
+        Long userSaltId = userSaltService.create(user, password);
 
         // Then
         Mockito.verify(userSaltRepository, Mockito.times(1)).save(any(UserSalt.class));
@@ -68,7 +69,7 @@ class UserSaltServiceImplTest {
         Mockito.when(userSaltRepository.findUserSaltByUserId(anyLong())).thenReturn(Optional.ofNullable(userSalt));
 
         // When
-        RetrieveDtoUserSalt retrieveDtoUserSalt = userSaltServiceImpl.retrieveUserSalt(1L);
+        RetrieveDtoUserSalt retrieveDtoUserSalt = userSaltService.read(1L);
 
         // Then
         assertThat(retrieveDtoUserSalt).isNotNull();

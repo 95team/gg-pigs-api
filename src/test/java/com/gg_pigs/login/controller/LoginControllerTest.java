@@ -66,7 +66,7 @@ class LoginControllerTest {
 
         // Configuration of UserSaltService
         Mockito.when(retrieveDtoUserSalt.getDigest()).thenReturn(userDigest);
-        Mockito.when(userSaltService.retrieveUserSalt(anyLong())).thenReturn(retrieveDtoUserSalt);
+        Mockito.when(userSaltService.read(anyLong())).thenReturn(retrieveDtoUserSalt);
     }
 
     @Test

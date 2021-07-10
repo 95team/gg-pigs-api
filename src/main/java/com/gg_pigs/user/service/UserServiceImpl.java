@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         Long newUserId;
         try {
             newUser = userRepository.save(User.createUser(createDtoUser));
-            userSaltService.createUserSalt(newUser, createDtoUser.getPassword());
+            userSaltService.create(newUser, createDtoUser.getPassword());
             newUserId = newUser.getId();
         } catch (DataIntegrityViolationException exception) {
             throw new DataIntegrityViolationException("적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)");

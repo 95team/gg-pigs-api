@@ -46,7 +46,7 @@ public class LoginController {
         }
 
         RetrieveDtoUser userDto = userService.retrieveUserByEmail(email);
-        RetrieveDtoUserSalt userSaltDto = userSaltService.retrieveUserSalt(userDto.getUserId());
+        RetrieveDtoUserSalt userSaltDto = userSaltService.read(userDto.getUserId());
 
         RequestDtoLogin loginDto = RequestDtoLogin.builder()
                 .email(email)
