@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.gg_pigs._common.enums.HistoryLogAction;
 import com.gg_pigs._common.utility.github.dto.response.GitHubErrorResponse;
 import com.gg_pigs._common.utility.github.dto.response.GitHubResponse;
-import com.gg_pigs.file.dto.FileDto;
 import com.gg_pigs.historyLog.service.HistoryLogService;
 import com.gg_pigs.user.entity.User;
 import com.gg_pigs.user.repository.UserRepository;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -66,34 +66,18 @@ public class GitHubClient {
         gson = new Gson();
     }
 
-
-    public String uploadContent(FileDto fileDto) throws IOException {
-        adminUser = userRepository.findUserByEmail(adminUserEmail).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
-
-        String uploadContentPath = null;
-
-        if(fileDto.getFileType().equalsIgnoreCase("image")) {
-            uploadContentPath = this.uploadImageContent(fileDto);
-        }
-
-        return uploadContentPath;
-    }
-
-    private String uploadImageContent(FileDto fileDto) throws IOException {
+    public String uploadImageContent(MultipartFile uploadFile, String uploadName) throws IOException {
         String uploadPath = null;
+        String content = Base64.encodeBase64String(uploadFile.getBytes());
+        String commitMessage = "Upload image";
 
-        String filename = fileDto.makeRandomFileName();
-        String content = Base64.encodeBase64String(fileDto.getFile().getBytes());
-        String commitMessage = "Upload image from server";
-
-        Call<GitHubResponse> call = github.createFileContent(token, user, imageRepo, imagePath, filename,
+        Call<GitHubResponse> call = github.createFileContent(token, user, imageRepo, imagePath, uploadName,
                 new HashMap<String, Object>() {{
                     put("content", content);
                     put("message", commitMessage);
                 }});
 
         Response<GitHubResponse> execute = call.execute();
-
         if(execute.isSuccessful()) {
             GitHubResponse response = execute.body();
 
