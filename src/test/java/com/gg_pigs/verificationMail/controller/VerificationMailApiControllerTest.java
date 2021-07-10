@@ -5,6 +5,7 @@ import com.gg_pigs.verificationMail.dto.RequestDtoVerificationMail;
 import com.gg_pigs.verificationMail.dto.ResponseDtoVerificationMail;
 import com.gg_pigs.verificationMail.service.VerificationMailService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,9 @@ class VerificationMailApiControllerTest {
         Mockito.when(verificationMailService.send4EmailVerification(any(RequestDtoVerificationMail.class))).thenReturn(responseDtoVerificationMail);
     }
 
+    @DisplayName("[테스트] sendVerificationEmail()")
     @Test
-    public void verificationMail_한건_전송() throws Exception {
+    public void Test_sendVerificationEmail() throws Exception {
         String content = objectMapper.writeValueAsString(requestDtoVerificationMail);
 
         mockMvc.perform(post("/api/v1/verification-mails")
