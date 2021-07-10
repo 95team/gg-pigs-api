@@ -26,7 +26,6 @@ public class GitHubFileService implements FileService {
     private final Environment environment;
     private final GitHubClient gitHubClient;
 
-
     @Override
     public String upload(MultipartFile file) throws IOException {
         if(isImageFile(file)) {
