@@ -13,6 +13,7 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",
                         "http://localhost:8000",
+                        "http://dev.gg-pigs.com:3000",
                         "https://gg-pigs.com"
                 )
                 .allowedMethods("*")
@@ -22,6 +23,7 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",
                         "http://localhost:8000",
+                        "http://dev.gg-pigs.com:3000",
                         "https://gg-pigs.com"
                 )
                 .allowedMethods("*")
