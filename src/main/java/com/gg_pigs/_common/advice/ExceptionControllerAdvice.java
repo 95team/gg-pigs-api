@@ -3,6 +3,7 @@ package com.gg_pigs._common.advice;
 import com.gg_pigs._common.dto.ApiResponse;
 import com.gg_pigs._common.exception.BadRequestException;
 import com.gg_pigs._common.exception.LoginFailureException;
+import io.sentry.Sentry;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ import java.io.IOException;
 public class ExceptionControllerAdvice {
 
     private void printCommonExceptionHandlerMessage(Exception e) {
+        Sentry.captureException(e);
+
         System.out.println(
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
