@@ -1,7 +1,7 @@
 package com.gg_pigs._common.utility;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 
@@ -11,7 +11,7 @@ import javax.servlet.http.Cookie;
  * 2. https://evan-moon.github.io/2020/05/21/about-cors/
  * */
 
-@Service
+@Component
 public class CookieProvider {
 
     private final String uri = "/";

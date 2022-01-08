@@ -34,7 +34,8 @@ public class LoginController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/api/v1/login")
-    public ApiResponse login(HttpServletResponse response, @RequestBody RequestDtoLogin requestDtoLogin) {
+    public ApiResponse login(HttpServletResponse response,
+                             @RequestBody RequestDtoLogin requestDtoLogin) {
         String email = requestDtoLogin.getEmail();
         String password = requestDtoLogin.getPassword();
 

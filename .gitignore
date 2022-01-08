@@ -1,6 +1,7 @@
 ### Custom ###
 application.yml
 application.properties
+logs
 
 ### Auto ###
 HELP.md
