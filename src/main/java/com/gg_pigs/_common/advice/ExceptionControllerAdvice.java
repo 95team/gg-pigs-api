@@ -30,7 +30,6 @@ public class ExceptionControllerAdvice {
 
     private void printCommonExceptionHandlerMessage(Exception e) {
         Sentry.captureException(e);
-        log.error(e.getMessage());
 
         System.out.println(
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
@@ -107,6 +106,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(IOException.class)
     protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
         printCommonExceptionHandlerMessage(e);
+        log.error(e.getMessage());
 
         ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -157,6 +157,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(InternalException.class)
     protected ResponseEntity<ApiResponse> handleInternalException(InternalException e) {
         printCommonExceptionHandlerMessage(e);
+        log.error(e.getMessage());
 
         ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,6 +170,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ApiResponse> handleException(Exception e) {
         printCommonExceptionHandlerMessage(e);
+        log.error(e.getMessage());
 
         ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
