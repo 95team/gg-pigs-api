@@ -19,7 +19,7 @@
         <!-- Message -->
         <encoder>
             <pattern>
-                [%d{yyyy-MM-dd HH:mm:ss}:%relative] | [%thread] | [%level] %logger{35} - %msg%n
+                [%magenta(%d{yyyy-MM-dd HH:mm:ss}:%relative)] | [%thread] | [%highlight(%level)] %cyan(%logger{35}) - %msg%n
             </pattern>
         </encoder>
 
