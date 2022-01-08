@@ -5,6 +5,7 @@ import com.gg_pigs._common.exception.BadRequestException;
 import com.gg_pigs._common.exception.LoginFailureException;
 import io.sentry.Sentry;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,13 @@ import java.io.IOException;
  * 2. https://velog.io/@aidenshin/Spring-Boot-Exception-Controller
  * */
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
     private void printCommonExceptionHandlerMessage(Exception e) {
         Sentry.captureException(e);
+        log.error(e.getMessage());
 
         System.out.println(
                 this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"

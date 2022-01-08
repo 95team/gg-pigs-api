@@ -2,11 +2,16 @@
 
 <configuration>
     <!-- Property -->
-    <property name="LOG_PATH" value="./logs"></property>
-    <property name="LOG_FILENAME" value="logback"></property>
+    <property name="LOG_PATH" value="./logs"/>
+    <property name="LOG_FILENAME" value="app"/>
 
     <!-- Appender -->
     <appender name="StdOutAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>[%magenta(%d{yyyy-MM-dd HH:mm:ss}:%relative)] | [%thread] | [%highlight(%level)] %cyan(%logger{35}) - %msg%n</Pattern>
         </layout>
@@ -30,9 +35,29 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="EmailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <asynchronousSending>true</asynchronousSending>
+        <smtpHost>smtp.gmail.com</smtpHost>
+        <smtpPort>587</smtpPort>
+        <STARTTLS>true</STARTTLS>
+        <username>pigs95team@gmail.com</username>
+        <password>hereisapassword</password>
+        <to>pigs95team@gmail.com</to>
+        <to>hjjae2@gmail.com</to>
+        <from>pigs95team@gmail.com</from>
+        <subject>[GG-PIGS-API] %logger{20} - %msg</subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <bufferSize>5</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
     <!-- Root -->
     <root level="INFO">
         <appender-ref ref="StdOutAppender"/>
-        <appender-ref ref="FileAppender"/>
+        <appender-ref ref="EmailAppender"/>
     </root>
 </configuration>
