@@ -22,7 +22,7 @@ public class KafkaProducerProperty {
     @Configuration
     public static class KafkaProducerEmsProperty {
         private String bootstrapServer;
-        private String topic;
+        private String topic4PrNotiEvent;
         private Integer lingerMs;
     }
 }

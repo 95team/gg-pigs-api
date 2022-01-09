@@ -14,6 +14,6 @@ public class PosterRequestAlarmService {
     private final KafkaProducerProperty.KafkaProducerEmsProperty kafkaProducerEmsProperty;
 
     public void send(EmailAlarm emailAlarm) {
-        emsKafkaTemplate.send(kafkaProducerEmsProperty.getTopic(), emailAlarm);
+        emsKafkaTemplate.send(kafkaProducerEmsProperty.getTopic4PrNotiEvent(), emailAlarm);
     }
 }
