@@ -27,7 +27,7 @@ public class KafkaEmailConsumer {
             topics = "gg-pigs-api-poster-request-noti-event",
             containerFactory = "emsKafkaListenerContainerFactory"
     )
-    public void listen(@Payload EmailAlarm emsAlarm) throws MessagingException {
+    public void listen2PRNotiEvent(@Payload EmailAlarm emsAlarm) throws MessagingException {
         String from = emsAlarm.getFrom();
         List<String> to = emsAlarm.getTo();
         if(Strings.isNullOrEmpty(from)) {
