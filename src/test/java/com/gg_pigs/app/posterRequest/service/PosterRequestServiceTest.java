@@ -53,6 +53,7 @@ class PosterRequestServiceTest {
     // Service
     @Mock PosterService posterService;
     @Mock HistoryLogService historyLogService;
+    @Mock PosterRequestAlarmService posterRequestAlarmService;
 
     // Repository
     @Mock UserRepository userRepository;
@@ -117,22 +118,6 @@ class PosterRequestServiceTest {
 
         // When
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> posterRequestService.create(createDtoPR));
-
-        // Then
-        assertThat(exception.getMessage()).isEqualTo(expectedMessage);
-    }
-
-    @DisplayName("[테스트] create() : DataIntegrityViolationException 에러 발생")
-    @Test
-    public void Test_create_with_DataIntegrityViolationException() {
-        // Given
-        String expectedMessage = "적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)";
-
-        Mockito.when(ptRepository.findPosterTypeByType(any())).thenReturn(Optional.of(posterType));
-        Mockito.when(prRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
-
-        // When
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> posterRequestService.create(createDtoPR));
 
         // Then
         assertThat(exception.getMessage()).isEqualTo(expectedMessage);

@@ -39,6 +39,7 @@ dependencies {
 	implementation 'com.squareup.retrofit2:converter-gson:2.9.0'                // Spring Boot Retrofit, https://github.com/square/retrofit/tree/master/retrofit-converters/gson
 	implementation 'org.apache.commons:commons-lang3'                           // Apache Commons Lang, https://github.com/apache/commons-lang
 	implementation 'io.sentry:sentry-spring-boot-starter:5.5.2'                 // Sentry, https://sentry.io/onboarding/pigs95team/get-started/
+	implementation 'org.springframework.kafka:spring-kafka:2.7.9'               // Kafka, https://github.com/spring-projects/spring-kafka
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -46,6 +47,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' // Spring Boot Configuration Processor, https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/reference/html/appendix-configuration-metadata.html#configuration-metadata-annotation-processor
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

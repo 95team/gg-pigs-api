@@ -2,6 +2,7 @@ package com.gg_pigs.app.posterRequest.service;
 
 import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
 import com.gg_pigs.app.poster.entity.PosterReviewStatus;
+import com.gg_pigs.app.posterRequest.entity.PosterRequestEmsAlarm;
 import com.gg_pigs.global.exception.BadRequestException;
 import com.gg_pigs.app.historyLog.service.HistoryLogService;
 import com.gg_pigs.app.poster.dto.CreateDtoPoster;
@@ -53,6 +54,7 @@ public class PosterRequestService {
 
     private final PosterService posterService;
     private final HistoryLogService historyLogService;
+    private final PosterRequestAlarmService posterRequestAlarmService;
 
     /** CREATE */
     @Transactional
@@ -60,13 +62,10 @@ public class PosterRequestService {
         User user = userRepository.findUserByEmail(createDtoPosterRequest.getUserEmail()).orElse(null);
         PosterType posterType = posterTypeRepository.findPosterTypeByType(createDtoPosterRequest.getPosterType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        try {
-            return posterRequestRepository.save(PosterRequest.createPosterRequest(createDtoPosterRequest, user, posterType)).getId();
-        } catch (DataIntegrityViolationException exception) {
-            throw new DataIntegrityViolationException("적절하지 않은 요청입니다. (Please check the data. This is usually related to SQL errors.)");
-        } catch (Exception exception) {
-            throw new Exception("적절하지 않은 요청입니다. (Please check the parameters)");
-        }
+        PosterRequest pr = posterRequestRepository.save(PosterRequest.createPosterRequest(createDtoPosterRequest, user, posterType));
+        posterRequestAlarmService.send(PosterRequestEmsAlarm.getInstanceForCreate(pr));
+
+        return pr.getId();
     }
 
     /** READ */

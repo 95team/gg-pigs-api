@@ -65,7 +65,7 @@ public class VerificationMailService {
         Long verificationMailId = verificationMailRepository.save(VerificationMail.createVerificationMail(fromEmail, toEmail, subject, content, verificationCode)).getId();
         VerificationMail sentVerificationMail = verificationMailRepository.findById(verificationMailId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
         try {
-            mailHandler.setMailHandler(fromEmail, toEmail, subject, content);
+            mailHandler.setMail(fromEmail, toEmail, subject, content);
             mailHandler.send();
 
             sentVerificationMail.changeStatusToSuccess();
