@@ -1,5 +1,6 @@
 ### Custom ###
 application.yml
+logback.xml
 logback-test.xml
 application.properties
 logs
