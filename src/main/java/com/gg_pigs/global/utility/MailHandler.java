@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -31,27 +32,38 @@ public class MailHandler {
         mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
     }
 
-    public void setFrom(String from) throws MessagingException {
+    private void setFrom(String from) throws MessagingException {
         mimeMessageHelper.setFrom(from);
     }
 
-    public void setTo(String to) throws MessagingException {
+    private void setTo(String to) throws MessagingException {
         mimeMessageHelper.setTo(to);
     }
 
-    public void setSubject(String subject) throws MessagingException {
+    private void setTo(List<String> to) throws MessagingException {
+        mimeMessageHelper.setTo(to.toArray(new String[0]));
+    }
+
+    private void setSubject(String subject) throws MessagingException {
         mimeMessageHelper.setSubject(subject);
     }
 
-    public void setContent(String text) throws MessagingException {
+    private void setContent(String text) throws MessagingException {
         this.setContent(text, true);
     }
 
-    public void setContent(String text, boolean useHtml) throws MessagingException {
+    private void setContent(String text, boolean useHtml) throws MessagingException {
         mimeMessageHelper.setText(text, useHtml);
     }
 
-    public void setMailHandler(String from, String to, String subject, String content) throws MessagingException {
+    public void setMail(String from, String to, String subject, String content) throws MessagingException {
+        this.setFrom(from);
+        this.setTo(to);
+        this.setSubject(subject);
+        this.setContent(content);
+    }
+
+    public void setMail(String from, List<String> to, String subject, String content) throws MessagingException {
         this.setFrom(from);
         this.setTo(to);
         this.setSubject(subject);
@@ -77,10 +89,6 @@ public class MailHandler {
     }
 
     public void send() {
-        try {
-            javaMailSender.send(mimeMessage);
-        }catch(Exception exception) {
-            throw exception;
-        }
+        javaMailSender.send(mimeMessage);
     }
 }

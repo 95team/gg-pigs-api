@@ -1,4 +1,4 @@
-package com.gg_pigs.global.config;
+package com.gg_pigs.modules.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
