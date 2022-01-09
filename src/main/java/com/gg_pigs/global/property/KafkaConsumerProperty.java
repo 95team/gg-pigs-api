@@ -23,7 +23,6 @@ public class KafkaConsumerProperty {
     @Configuration
     public static class KafkaConsumerEmsProperty {
         private String bootstrapServer;
-        private String topic;
         private String groupId;
         private String autoOffsetReset;
     }
