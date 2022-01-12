@@ -12,6 +12,3 @@
 </p>
 
 ### https://gg-pigs.com
-
-### [개발 이슈 ➡️](https://github.com/pigs-pango-team/gg-pigs-api/wiki/🔥-개발-이슈-🔥)
-
