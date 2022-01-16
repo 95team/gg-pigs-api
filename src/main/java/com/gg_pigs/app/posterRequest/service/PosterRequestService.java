@@ -1,25 +1,25 @@
 package com.gg_pigs.app.posterRequest.service;
 
 import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
-import com.gg_pigs.app.poster.entity.PosterReviewStatus;
-import com.gg_pigs.app.posterRequest.entity.PosterRequestEmsAlarm;
-import com.gg_pigs.global.exception.BadRequestException;
 import com.gg_pigs.app.historyLog.service.HistoryLogService;
 import com.gg_pigs.app.poster.dto.CreateDtoPoster;
+import com.gg_pigs.app.poster.entity.PosterReviewStatus;
 import com.gg_pigs.app.poster.repository.PosterRepository;
 import com.gg_pigs.app.poster.service.PosterService;
-import com.gg_pigs.app.posterType.entity.PosterType;
 import com.gg_pigs.app.posterRequest.dto.CreateDtoPosterRequest;
 import com.gg_pigs.app.posterRequest.dto.ReadConditionDtoPosterRequest;
 import com.gg_pigs.app.posterRequest.dto.ReadDtoPosterRequest;
 import com.gg_pigs.app.posterRequest.dto.UpdateDtoPosterRequest;
 import com.gg_pigs.app.posterRequest.entity.PosterRequest;
+import com.gg_pigs.app.posterRequest.entity.PosterRequestEmsAlarm;
 import com.gg_pigs.app.posterRequest.repository.PosterRequestRepository;
-import com.gg_pigs.app.user.entity.User;
+import com.gg_pigs.app.posterType.entity.PosterType;
 import com.gg_pigs.app.posterType.repository.PosterTypeRepository;
+import com.gg_pigs.app.user.entity.User;
 import com.gg_pigs.app.user.repository.UserRepository;
+import com.gg_pigs.global.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +54,7 @@ public class PosterRequestService {
 
     private final PosterService posterService;
     private final HistoryLogService historyLogService;
-    private final PosterRequestAlarmService posterRequestAlarmService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     /** CREATE */
     @Transactional
@@ -63,7 +63,7 @@ public class PosterRequestService {
         PosterType posterType = posterTypeRepository.findPosterTypeByType(createDtoPosterRequest.getPosterType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
         PosterRequest pr = posterRequestRepository.save(PosterRequest.createPosterRequest(createDtoPosterRequest, user, posterType));
-        posterRequestAlarmService.send(PosterRequestEmsAlarm.getInstanceForCreate(pr));
+        applicationEventPublisher.publishEvent(PosterRequestEmsAlarm.getInstanceForCreate(pr));
 
         return pr.getId();
     }
