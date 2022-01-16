@@ -39,6 +39,9 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3'                           // Apache Commons Lang, https://github.com/apache/commons-lang
 	implementation 'io.sentry:sentry-spring-boot-starter:5.5.2'                 // Sentry, https://sentry.io/onboarding/pigs95team/get-started/
 	implementation 'org.springframework.kafka:spring-kafka:2.7.9'               // Kafka, https://github.com/spring-projects/spring-kafka
+	implementation("org.apache.logging.log4j:log4j-api:2.17.1")                 // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+	implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.1")            // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j
+	implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")       // Logstash-Logback-Encoder, // https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
 
 	compileOnly 'org.projectlombok:lombok'
 
