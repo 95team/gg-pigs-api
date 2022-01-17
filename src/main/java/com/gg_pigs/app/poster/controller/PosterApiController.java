@@ -1,11 +1,10 @@
 package com.gg_pigs.app.poster.controller;
 
-import com.gg_pigs.global.dto.ApiResponse;
-import com.gg_pigs.app.poster.dto.CreateDtoPoster;
-import com.gg_pigs.app.poster.dto.ReadDtoPoster;
-import com.gg_pigs.app.poster.dto.UpdateDtoPoster;
+import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.service.PosterService;
+import com.gg_pigs.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,57 +27,41 @@ public class PosterApiController {
 
     /** CREATE */
     @PostMapping("/api/v1/posters")
-    public ApiResponse create(@RequestBody CreateDtoPoster createDtoPoster) throws Exception {
-        Long posterId = posterService.createPoster(createDtoPoster);
-
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterId);
+    public ApiResponse<?> create(@RequestBody PosterDto.Create.RequestDto requestDto) throws Exception {
+        return new ApiResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterService.create(requestDto));
     }
 
     /** READ */
     @GetMapping("/api/v1/posters/{posterId}")
-    public ApiResponse read(@PathVariable("posterId") Long posterId) {
-        ReadDtoPoster readDtoPoster = posterService.readPoster(posterId);
+    public ApiResponse<?> read(@PathVariable("posterId") Long posterId) {
+        PosterDto.Read.ResponseDto readDtoPoster = posterService.read(posterId);
 
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), readDtoPoster);
+        return new ApiResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), readDtoPoster);
     }
 
     @GetMapping({"/api/v1/posters", "/api/v2/posters"})
-    public ApiResponse readAll(@RequestParam("page") Optional<String> page,
-                               @RequestParam("userEmail") Optional<String> userEmail,
-                               @RequestParam("isFilteredDate") Optional<String> isFilteredDate,
-                               @RequestParam("isActivated") Optional<String> isActivated) {
-        Map<String, String> condition = new HashMap<>();
+    public ApiResponse<?> readAll(@RequestParam(value = "page", required = false) String page,
+                                  @RequestParam(value = "userEmail", required = false) String userEmail,
+                                  @RequestParam(value = "isFilteredDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate isFilteredDate,
+                                  @RequestParam(value = "isActivated", required = false) String isActivated) {
 
-        if(page.isPresent()) condition.put("page", page.get());
-        else condition.put("page", null);
-
-        if(userEmail.isPresent()) condition.put("userEmail", userEmail.get());
-        else condition.put("userEmail", null);
-
-        if(isFilteredDate.isPresent()) condition.put("isFilteredDate", isFilteredDate.get());
-        else condition.put("isFilteredDate", null);
-
-        if(isActivated.isPresent()) condition.put("isActivated", isActivated.get());
-        else condition.put("isActivated", null);
-
-        List allReadDtoPosters = posterService.readPosters(condition);
-
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allReadDtoPosters);
+        PosterDto.Read.SearchConditionDto searchCondition = PosterDto.Read.SearchConditionDto.of(page, userEmail, isActivated, isFilteredDate);
+        List<PosterDto.Read.ResponseDto> allReadDtoPosters = posterService.readAll(searchCondition);
+        return new ApiResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), allReadDtoPosters);
     }
 
     /** UPDATE */
     @PutMapping("/api/v1/posters/{posterId}")
-    public ApiResponse update(@PathVariable("posterId") Long posterId, @RequestBody UpdateDtoPoster updateDtoPoster) throws Exception {
-        Long updatePosterId = posterService.updatePoster(posterId, updateDtoPoster);
-
-        return new ApiResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), updatePosterId);
+    public ApiResponse<?> update(@PathVariable("posterId") Long posterId,
+                                 @RequestBody PosterDto.Update.RequestDto requestDto) throws Exception {
+        return new ApiResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), posterService.update(posterId, requestDto));
     }
 
     /** DELETE */
     @DeleteMapping("/api/v1/posters/{posterId}")
-    public ApiResponse delete(@PathVariable("posterId") Long posterId) {
-        posterService.deletePoster(posterId);
+    public ApiResponse<?> delete(@PathVariable("posterId") Long posterId) {
+        posterService.delete(posterId);
 
-        return new ApiResponse(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
+        return new ApiResponse<>(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), new ArrayList<>());
     }
 }

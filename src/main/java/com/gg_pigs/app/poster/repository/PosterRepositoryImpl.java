@@ -1,6 +1,6 @@
 package com.gg_pigs.app.poster.repository;
 
-import com.gg_pigs.app.poster.dto.RetrieveConditionDtoPoster;
+import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.entity.Poster;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -10,8 +10,8 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.gg_pigs.app.user.entity.QUser.user;
 import static com.gg_pigs.app.poster.entity.QPoster.poster;
+import static com.gg_pigs.app.user.entity.QUser.user;
 import static org.springframework.util.StringUtils.isEmpty;
 
 public class PosterRepositoryImpl implements PosterRepositoryCustom {
@@ -23,39 +23,47 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
     }
 
     @Override
-    public List<Poster> findAllByCondition(RetrieveConditionDtoPoster conditions) {
+    public List<Poster> findAllByCondition(PosterDto.Read.SearchConditionDto condition) {
+        BooleanBuilder whereclause = new BooleanBuilder();
+
+        // 1. Page 조건을 가공합니다.
+        whereclause.and(goeColumnPosition(condition.getStartIndexOfPage()));
+        whereclause.and(loeColumnPosition(condition.getLastIndexOfPage()));
+
+        // 2. UserEmail 조건을 가공합니다.
+        whereclause.and(eqUserEmail(condition.getUserEmail()));
+
+        // 3. IsFilteredDate 조건을 가공합니다.
+        whereclause.and(loeStartedDate(condition.getCurrentDate()));
+        whereclause.and(goeFinishedDate(condition.getCurrentDate()));
+
+        // 4. IsActivated 조건을 가공합니다.
+        whereclause.and(eqIsActivated(condition.getIsActivated()));
+
         return jpaQueryFactory
                 .select(poster)
                 .from(poster)
                 .leftJoin(poster.user, user).fetchJoin()
-                .where(condition(conditions))
+                .where(condition(condition))
                 .fetch();
     }
 
-    private BooleanBuilder condition(RetrieveConditionDtoPoster conditions) {
+    private BooleanBuilder condition(PosterDto.Read.SearchConditionDto condition) {
         BooleanBuilder builder = new BooleanBuilder();
 
         // 1. Page 조건을 가공합니다.
-        if(!conditions.isUnlimited()) {
-            builder.and(goeColumnPosition(conditions.getStartIndexOfPage()));
-            builder.and(loeColumnPosition(conditions.getLastIndexOfPage()));
-        }
+        builder.and(goeColumnPosition(condition.getStartIndexOfPage()));
+        builder.and(loeColumnPosition(condition.getLastIndexOfPage()));
 
         // 2. UserEmail 조건을 가공합니다.
-        if(conditions.isHasUserEmail()) {
-            builder.and(eqUserEmail(conditions.getUserEmail()));
-        }
+        builder.and(eqUserEmail(condition.getUserEmail()));
 
         // 3. IsFilteredDate 조건을 가공합니다.
-        if(conditions.isFilteredDate()) {
-            builder.and(loeStartedDate(conditions.getCurrentDate()));
-            builder.and(goeFinishedDate(conditions.getCurrentDate()));
-        }
+        builder.and(loeStartedDate(condition.getCurrentDate()));
+        builder.and(goeFinishedDate(condition.getCurrentDate()));
 
         // 4. IsActivated 조건을 가공합니다.
-        if(conditions.isFilteredByActivated()) {
-            builder.and(eqIsActivated(conditions.getIsActivated()));
-        }
+        builder.and(eqIsActivated(condition.getIsActivated()));
 
         return builder;
     }
@@ -76,27 +84,11 @@ public class PosterRepositoryImpl implements PosterRepositoryCustom {
         return !(localDate == null) ? poster.finishedDate.goe(localDate) : null;
     }
 
+    private BooleanExpression eqIsActivated(String isActivated) {
+        return !isEmpty(isActivated) ? poster.isActivated.eq(isActivated) : null;
+    }
+
     private BooleanExpression eqUserEmail(String userEmail) {
         return !isEmpty(userEmail) ? user.email.eq(userEmail) : null;
-    }
-
-    private BooleanExpression eqIsActivated(char isActivated) {
-        if(isActivated == 'Y') {
-            return this.isActivatedEqTrue();
-        }
-        else if(isActivated == 'N') {
-            return this.isActivatedEqFalse();
-        }
-        else {
-            return null;
-        }
-    }
-
-    private BooleanExpression isActivatedEqTrue() {
-        return poster.isActivated.eq('Y');
-    }
-
-    private BooleanExpression isActivatedEqFalse() {
-        return poster.isActivated.eq('N');
     }
 }

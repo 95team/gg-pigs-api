@@ -1,9 +1,7 @@
 package com.gg_pigs.app.poster.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gg_pigs.app.poster.dto.CreateDtoPoster;
-import com.gg_pigs.app.poster.dto.ReadDtoPoster;
-import com.gg_pigs.app.poster.dto.UpdateDtoPoster;
+import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.service.PosterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -41,31 +36,17 @@ class PosterApiControllerTest {
 
     @MockBean PosterService posterService;
 
-    private CreateDtoPoster createDtoPoster;
-    private ReadDtoPoster readDtoPoster;
-    private UpdateDtoPoster updateDtoPoster;
+    private PosterDto.Create.RequestDto createDtoPoster;
+    private PosterDto.Read.ResponseDto readDtoPoster;
+    private PosterDto.Update.RequestDto updateDtoPoster;
 
     @BeforeEach
     void setUp() {
-        Long mockId = 1L;
-        String mockTitle = "This is a title.";
-        String mockUserEmail = "test@email.com";
-        String mockDescription = "This is a detail description.";
-        String mockKeywords = "This is a keywords.";
-        String mockSlug = "This-is-a-title";
-        String mockPosterType = "R1";
-        String mockImagePath = "/src/image/exmaple.jpg";
-        String mockSiteUrl = "siteUrl";
-        String mockRowPosition = "1";
-        String mockColumnPosition = "1";
-        String mockStartedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String mockFinishedDate = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        createDtoPoster = PosterDto.Create.RequestDto.builder().build();
+        readDtoPoster = PosterDto.Read.ResponseDto.builder().build();
+        updateDtoPoster = PosterDto.Update.RequestDto.builder().build();
 
-        createDtoPoster = new CreateDtoPoster(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
-        readDtoPoster = new ReadDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockSlug, mockPosterType, "300", "250", mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
-        updateDtoPoster = new UpdateDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
-
-        Mockito.when(posterService.readPoster(any(Long.class))).thenReturn(readDtoPoster);
+        Mockito.when(posterService.read(any(Long.class))).thenReturn(readDtoPoster);
     }
 
     @DisplayName("[테스트] create() : Poster 생성")

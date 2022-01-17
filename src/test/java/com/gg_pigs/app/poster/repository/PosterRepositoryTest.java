@@ -1,7 +1,6 @@
 package com.gg_pigs.app.poster.repository;
 
-import com.gg_pigs.app.poster.dto.CreateDtoPoster;
-import com.gg_pigs.app.poster.dto.RetrieveConditionDtoPoster;
+import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.entity.Poster;
 import com.gg_pigs.app.posterType.entity.PosterType;
 import com.gg_pigs.app.user.dto.CreateDtoUser;
@@ -30,20 +29,13 @@ class PosterRepositoryTest {
     @Autowired PosterRepository posterRepository;
 
     private final String userEmail = "userEmail";
-    private final String detailDescription = "detailDescription";
-    private final String keywords = "keywords";
-    private final String posterR1Type = "R1";
-    private final String imagePath = "imagePath";
-    private final String siteUrl = "siteUrl";
-    private final String rowPosition = "1";
-    private final String columnPosition = "1";
-    private final String startedDate = LocalDate.now().toString();
-    private final String finishedDate = LocalDate.now().plusMonths(1).toString();
+    private final LocalDate startedDate = LocalDate.now();
+    private final LocalDate finishedDate = LocalDate.now().plusMonths(1);
 
     private final int numberOfDummyData = 7;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         /**
          * (Dummy data) Poster 삽입: [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7]
          */
@@ -54,33 +46,26 @@ class PosterRepositoryTest {
         entityManager.persist(user);
 
         Long columnPosition = 1L;
-        String title = "title";
-        for(int i = 1; i < numberOfDummyData; i++, columnPosition++) {
-            entityManager.persist(Poster.createPoster(
-                    new CreateDtoPoster(title, userEmail, detailDescription, keywords, posterR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
-                    user,
-                    posterType)
-            );
+        for(int i = 1; i <= numberOfDummyData; i++, columnPosition++) {
+            PosterDto.Create.RequestDto requestDto = PosterDto.Create.RequestDto.builder()
+                    .startedDate(startedDate)
+                    .finishedDate(finishedDate)
+                    .columnPosition(columnPosition).build();
+            entityManager.persist(requestDto.toEntity(user, posterType));
         }
-        entityManager.persist(Poster.createPoster(
-                new CreateDtoPoster(title, userEmail, detailDescription, keywords, posterR1Type, imagePath, siteUrl, rowPosition, Long.toString(columnPosition), startedDate, finishedDate),
-                user,
-                posterType));
 
         entityManager.flush();
     }
 
     @Test
-    void When_call_save_with_DataIntegrityViolationException_Then_throw_exception() throws Exception {
+    void DataIntegrityViolationException_by_title() {
         // Given
         String wrongLengthOfTitle = "It can be up to 128 characters. It can be up to 128 characters. It can be up to 128 characters. It can be up to 128 characters. It can be up to 128 characters. It can be up to 128 characters.";
+        PosterDto.Create.RequestDto requestDto = PosterDto.Create.RequestDto.builder().title(wrongLengthOfTitle).build();
 
         // When // Then
         try {
-            posterRepository.save(Poster.createPoster(
-                    new CreateDtoPoster(wrongLengthOfTitle, userEmail, detailDescription, keywords, posterR1Type, imagePath, siteUrl, rowPosition, Long.toString(POSTER_LAYOUT_SIZE + 1), startedDate, finishedDate),
-                    null,
-                    null));
+            posterRepository.save(requestDto.toEntity(null, null));
         } catch (DataIntegrityViolationException exception) {
             return;
         }
@@ -123,28 +108,13 @@ class PosterRepositoryTest {
     @Test
     void When_call_findAllByCondition_Then_return_list_by_condition() {
         // Given
-        int sizeOfPosters = 1;
-        RetrieveConditionDtoPoster condition = new RetrieveConditionDtoPoster();
-
-        // 1. Page 정보를 설정합니다.
-        condition.isUnlimitedIsFalse();
-        condition.setPage("2");
-        condition.calculatePage();
-
-        // 2. UserEmail 정보를 설정합니다.
-        condition.hasUserEmailIsTrue();
-        condition.setUserEmail(userEmail);
-
-        // 3. IsFilteredDate 정보를 설정합니다.
-        condition.isFilteredDateIsTrue();
-
-        // 4. IsActivated 정보를 설정합니다.
-        condition.filteredByActivatedIsFalse();
+        int expectedNumberOfPosters = 1;
+        PosterDto.Read.SearchConditionDto condition = PosterDto.Read.SearchConditionDto.of("2", null, null, null);
 
         // When
         List<Poster> posters = posterRepository.findAllByCondition(condition);
 
         // Then
-        assertThat(posters.size()).isEqualTo(sizeOfPosters);
+        assertThat(posters.size()).isEqualTo(expectedNumberOfPosters);
     }
 }

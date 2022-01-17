@@ -1,17 +1,11 @@
 package com.gg_pigs.app.poster.entity;
 
-import com.gg_pigs.app.poster.dto.CreateDtoPoster;
-import com.gg_pigs.app.poster.dto.UpdateDtoPoster;
-import com.gg_pigs.app.posterType.entity.PosterType;
-import com.gg_pigs.app.user.entity.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PosterEntityTest {
 
@@ -112,7 +106,7 @@ class PosterEntityTest {
     @Test
     void changeIsActivatedToActivated() {
         // Given
-        char expectedIsActivated = 'Y';
+        String expectedIsActivated = "Y";
 
         // When
         poster.changeIsActivatedToActivated();
@@ -125,13 +119,43 @@ class PosterEntityTest {
     @Test
     void changeIsActivatedToDeactivated() {
         // Given
-        char expectedIsActivated = 'N';
+        String expectedIsActivated = "N";
 
         // When
         poster.changeIsActivatedToDeactivated();
 
         // Then
         Assertions.assertThat(poster.getIsActivated()).isEqualTo(expectedIsActivated);
+    }
+
+    @DisplayName("테스트: changeReviewStatusToApproval()")
+    @Test
+    void changeReviewStatusToApproval() {
+        // Given // When
+        poster.changeReviewStatusToApproval();
+
+        // Then
+        Assertions.assertThat(poster.getReviewStatus()).isEqualTo(PosterReviewStatus.APPROVAL);
+    }
+
+    @DisplayName("테스트: changeReviewStatusToPending()")
+    @Test
+    void changeReviewStatusToPending() {
+        // Given // When
+        poster.changeReviewStatusToPending();
+
+        // Then
+        Assertions.assertThat(poster.getReviewStatus()).isEqualTo(PosterReviewStatus.PENDING);
+    }
+
+    @DisplayName("테스트: changeReviewStatusToNonApproval()")
+    @Test
+    void changeReviewStatusToNonApproval() {
+        // Given // When
+        poster.changeReviewStatusToNonApproval();
+
+        // Then
+        Assertions.assertThat(poster.getReviewStatus()).isEqualTo(PosterReviewStatus.NON_APPROVAL);
     }
 
     @DisplayName("테스트: changeStartedDate()")
@@ -165,134 +189,78 @@ class PosterEntityTest {
     void Test_changePoster() throws Exception {
         // Given
         String title = "This is a title";
-        String rowPosition = "1";
-        String columnPosition = "1";
-        String startedDate = LocalDate.now().toString();
-        String finishedDate = LocalDate.now().plusMonths(1).toString();
+        Long rowPosition = 1L;
+        Long columnPosition = 1L;
+        LocalDate startedDate = LocalDate.now();
+        LocalDate finishedDate = LocalDate.now().plusMonths(1);
 
-        UpdateDtoPoster updateDtoPoster = Mockito.mock(UpdateDtoPoster.class);
-        Mockito.when(updateDtoPoster.getTitle()).thenReturn(title);
-        Mockito.when(updateDtoPoster.getRowPosition()).thenReturn(rowPosition);
-        Mockito.when(updateDtoPoster.getColumnPosition()).thenReturn(columnPosition);
-        Mockito.when(updateDtoPoster.getStartedDate()).thenReturn(startedDate);
-        Mockito.when(updateDtoPoster.getFinishedDate()).thenReturn(finishedDate);
+        Poster newPoster = Mockito.mock(Poster.class);
+        Mockito.when(newPoster.getTitle()).thenReturn(title);
+        Mockito.when(newPoster.getRowPosition()).thenReturn(rowPosition);
+        Mockito.when(newPoster.getColumnPosition()).thenReturn(columnPosition);
+        Mockito.when(newPoster.getStartedDate()).thenReturn(startedDate);
+        Mockito.when(newPoster.getFinishedDate()).thenReturn(finishedDate);
 
         // When
-        poster.changePoster(updateDtoPoster);
+        poster.changePoster(newPoster);
 
         // Then
         Assertions.assertThat(poster.getTitle()).isEqualTo(title);
-        Assertions.assertThat(poster.getRowPosition()).isEqualTo(Long.parseLong(rowPosition));
-        Assertions.assertThat(poster.getColumnPosition()).isEqualTo(Long.parseLong(columnPosition));
+        Assertions.assertThat(poster.getRowPosition()).isEqualTo(rowPosition);
+        Assertions.assertThat(poster.getColumnPosition()).isEqualTo(columnPosition);
         Assertions.assertThat(poster.getStartedDate()).isEqualTo(startedDate);
         Assertions.assertThat(poster.getFinishedDate()).isEqualTo(finishedDate);
     }
 
-    @DisplayName("테스트: changePoster() : Exception 에러 발생 (rowPosition can't be parsed to Long.class)")
+    @DisplayName("테스트: isNew")
     @Test
-    void Test_changePoster_with_rowPosition_Exception() {
-        // Given
-        String expectedMessage = "적절하지 않은 요청입니다. (Please check the parameters)";
-        String rowPosition = "1s";
+    void Test_isNew() {
+       // given
+        Poster poster = Poster.builder().reviewStatus(PosterReviewStatus.NEW).build();
 
-        UpdateDtoPoster updateDtoPoster = Mockito.mock(UpdateDtoPoster.class);
-        Mockito.when(updateDtoPoster.getRowPosition()).thenReturn(rowPosition);
+       // when
+        boolean is = poster.isNew();
 
-        // When
-        Exception exception = assertThrows(Exception.class, () -> poster.changePoster(updateDtoPoster));
-
-        // Then
-        Assertions.assertThat(exception.getMessage()).isEqualTo(expectedMessage);
+        // then
+        Assertions.assertThat(is).isTrue();
     }
 
-    @DisplayName("테스트: changePoster() : Exception 에러 발생 (columnPosition can't be parsed to Long.class)")
+    @DisplayName("테스트: isApproval")
     @Test
-    void Test_changePoster_with_columnPosition_Exception() {
-        // Given
-        String expectedMessage = "적절하지 않은 요청입니다. (Please check the parameters)";
-        String columnPosition = "1s";
+    void Test_isApproval() {
+        // given
+        Poster poster = Poster.builder().reviewStatus(PosterReviewStatus.APPROVAL).build();
 
-        UpdateDtoPoster updateDtoPoster = Mockito.mock(UpdateDtoPoster.class);
-        Mockito.when(updateDtoPoster.getColumnPosition()).thenReturn(columnPosition);
+        // when
+        boolean is = poster.isApproval();
 
-        // When
-        Exception exception = assertThrows(Exception.class, () -> poster.changePoster(updateDtoPoster));
-
-        // Then
-        Assertions.assertThat(exception.getMessage()).isEqualTo(expectedMessage);
+        // then
+        Assertions.assertThat(is).isTrue();
     }
 
-    @DisplayName("테스트: changePoster() : IllegalArgumentException 에러 발생 (startedDate can't be parsed to LocalDate.class)")
+    @DisplayName("테스트: isNonApproval")
     @Test
-    void Test_changePoster_with_startedDate_IllegalArgumentException() {
-        // Given
-        String expectedMessage = "적절하지 않은 날짜형식 입니다. (Please check the data 'startedDate')";
-        String startedDate = "2021-01-01-01";
+    void Test_isNonApproval() {
+        // given
+        Poster poster = Poster.builder().reviewStatus(PosterReviewStatus.NON_APPROVAL).build();
 
-        UpdateDtoPoster updateDtoPoster = Mockito.mock(UpdateDtoPoster.class);
-        Mockito.when(updateDtoPoster.getStartedDate()).thenReturn(startedDate);
+        // when
+        boolean is = poster.isNonApproval();
 
-        // When
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> poster.changePoster(updateDtoPoster));
-
-        // Then
-        Assertions.assertThat(exception.getMessage()).isEqualTo(expectedMessage);
+        // then
+        Assertions.assertThat(is).isTrue();
     }
 
-    @DisplayName("테스트: changePoster() : IllegalArgumentException 에러 발생 (finishedDate can't be parsed to LocalDate.class)")
+    @DisplayName("테스트: isPending")
     @Test
-    void Test_changePoster_with_finishedDate_IllegalArgumentException() {
-        // Given
-        String expectedMessage = "적절하지 않은 날짜형식 입니다. (Please check the data 'finishedDate')";
-        String finishedDate = "2021-01-01-01";
+    void Test_isPending() {
+        // given
+        Poster poster = Poster.builder().reviewStatus(PosterReviewStatus.PENDING).build();
 
-        UpdateDtoPoster updateDtoPoster = Mockito.mock(UpdateDtoPoster.class);
-        Mockito.when(updateDtoPoster.getFinishedDate()).thenReturn(finishedDate);
+        // when
+        boolean is = poster.isPending();
 
-        // When
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> poster.changePoster(updateDtoPoster));
-
-        // Then
-        Assertions.assertThat(exception.getMessage()).isEqualTo(expectedMessage);
-    }
-
-    @DisplayName("테스트: createPoster()")
-    @Test
-    void Test_createPoster() throws Exception {
-        // Given
-        User user = Mockito.mock(User.class);
-        PosterType posterType = Mockito.mock(PosterType.class);
-        CreateDtoPoster createDtoPoster = Mockito.mock(CreateDtoPoster.class);
-
-        Mockito.when(createDtoPoster.getRowPosition()).thenReturn("1");
-        Mockito.when(createDtoPoster.getColumnPosition()).thenReturn("1");
-        Mockito.when(createDtoPoster.getStartedDate()).thenReturn(LocalDate.now().toString());
-        Mockito.when(createDtoPoster.getFinishedDate()).thenReturn(LocalDate.now().plusMonths(1).toString());
-
-        // When
-        Poster poster = Poster.createPoster(createDtoPoster, user, posterType);
-
-        // Then
-        Assertions.assertThat(poster.getId()).isEqualTo(null);
-    }
-
-    @DisplayName("테스트: createPoster() : Exception 에러 발생 (rowPosition can't be parsed to Long.class)")
-    @Test
-    void Test_createPoster_with_Exception() throws Exception {
-        // Given
-        String expectedMessage = "적절하지 않은 요청입니다. (Please check the parameters)";
-        String rowPosition = "1s";
-
-        User user = Mockito.mock(User.class);
-        PosterType posterType = Mockito.mock(PosterType.class);
-        CreateDtoPoster createDtoPoster = Mockito.mock(CreateDtoPoster.class);
-
-        Mockito.when(createDtoPoster.getRowPosition()).thenReturn(rowPosition);
-
-        // When
-        Exception exception = assertThrows(Exception.class, () -> Poster.createPoster(createDtoPoster, user, posterType));
-
-        // Then
-        Assertions.assertThat(exception.getMessage()).isEqualTo(expectedMessage);
+        // then
+        Assertions.assertThat(is).isTrue();
     }
 }
