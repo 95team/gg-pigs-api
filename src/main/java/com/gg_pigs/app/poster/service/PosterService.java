@@ -1,9 +1,8 @@
 package com.gg_pigs.app.poster.service;
 
-import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
-import com.gg_pigs.app.historyLog.service.HistoryLogService;
 import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.entity.Poster;
+import com.gg_pigs.app.poster.entity.PosterNewEvent;
 import com.gg_pigs.app.poster.repository.PosterRepository;
 import com.gg_pigs.app.posterType.entity.PosterType;
 import com.gg_pigs.app.posterType.repository.PosterTypeRepository;
@@ -25,7 +24,8 @@ public class PosterService {
     private final UserRepository userRepository;
     private final PosterRepository posterRepository;
     private final PosterTypeRepository posterTypeRepository;
-    private final HistoryLogService historyLogService;
+
+    private final PosterEventHandler posterEventHandler;
 
     /** CREATE */
     @Transactional
@@ -33,7 +33,13 @@ public class PosterService {
         User user = userRepository.findUserByEmail(requestDto.getUserEmail()).orElse(null);
         PosterType posterType = posterTypeRepository.findPosterTypeByType(requestDto.getPosterType()).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        Poster poster = posterRepository.save(requestDto.toEntity(user, posterType));
+        Poster poster = requestDto.toEntity(user, posterType);
+        poster.changeReviewStatusToNew();
+        poster.changeIsActivatedToDeactivated();
+
+        poster = posterRepository.save(poster);
+
+        posterEventHandler.handle(PosterNewEvent.of(poster));
 
         return PosterDto.Create.ResponseDto.of(poster);
     }
@@ -69,15 +75,5 @@ public class PosterService {
     /** DELETE */
     public void delete(Long posterId) {
         posterRepository.deleteById(posterId);
-    }
-
-
-    /** ETC */
-    private void HLForUpdateReviewStatus(User worker, Long posterRequestId, String beforeReviewStatus, String afterReviewStatus) {
-        String title = "Update posterRequest reviewStatus field";
-        String content = "PosterRequest: " + posterRequestId + "\n" +
-                "Before Review Status: " + beforeReviewStatus + "\n" +
-                "After Review Status: " + afterReviewStatus;
-        historyLogService.writeHistoryLog(HistoryLogAction.UPDATE, worker, title, content, true);
     }
 }

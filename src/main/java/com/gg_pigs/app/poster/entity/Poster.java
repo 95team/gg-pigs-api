@@ -87,11 +87,13 @@ public class Poster {
 
     public void changeColumnPosition(Long columnPosition) { this.columnPosition = columnPosition; }
 
+    public void changeReviewStatusToNew() { this.reviewStatus = PosterReviewStatus.NEW; }
+
     public void changeReviewStatusToApproval() { this.reviewStatus = PosterReviewStatus.APPROVAL; }
 
-    public void changeReviewStatusToPending() { this.reviewStatus = PosterReviewStatus.PENDING; }
-
     public void changeReviewStatusToNonApproval() { this.reviewStatus = PosterReviewStatus.NON_APPROVAL; }
+
+    public void changeReviewStatusToPending() { this.reviewStatus = PosterReviewStatus.PENDING; }
 
     public void changeIsActivatedToActivated() { this.isActivated = "Y"; }
 
