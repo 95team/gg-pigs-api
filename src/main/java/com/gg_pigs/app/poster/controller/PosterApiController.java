@@ -42,7 +42,7 @@ public class PosterApiController {
     @GetMapping({"/api/v1/posters", "/api/v2/posters"})
     public ApiResponse<?> readAll(@RequestParam(value = "page", required = false) String page,
                                   @RequestParam(value = "userEmail", required = false) String userEmail,
-                                  @RequestParam(value = "isFilteredDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate isFilteredDate,
+                                  @RequestParam(value = "isFilteredDate", required = false) String isFilteredDate,
                                   @RequestParam(value = "isActivated", required = false) String isActivated) {
 
         PosterDto.Read.SearchConditionDto searchCondition = PosterDto.Read.SearchConditionDto.of(page, userEmail, isActivated, isFilteredDate);

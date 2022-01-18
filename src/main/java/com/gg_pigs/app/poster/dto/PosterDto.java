@@ -123,12 +123,16 @@ public class PosterDto {
             Long startIndexOfPage;
             Long lastIndexOfPage;
 
-            public static SearchConditionDto of(String page, String userEmail, String isActivated, LocalDate currentDate) {
+            public static SearchConditionDto of(String page, String userEmail, String isActivated, String isFilteredDate) {
+                LocalDate currentDate = null;
                 Long startIndexOfPage = null;
                 Long lastIndexOfPage = null;
-                if(page != null) {
+                if(page != null && !page.equals("-1")) {
                     startIndexOfPage = ((Long.parseLong(page) - 1) * POSTER_LAYOUT_SIZE) + 1;
                     lastIndexOfPage = (Long.parseLong(page) * POSTER_LAYOUT_SIZE);
+                }
+                if("Y".equalsIgnoreCase(isFilteredDate)) {
+                    currentDate = LocalDate.now();
                 }
 
                 return SearchConditionDto.builder()
