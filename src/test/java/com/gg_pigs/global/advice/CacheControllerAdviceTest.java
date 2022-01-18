@@ -2,8 +2,7 @@ package com.gg_pigs.global.advice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gg_pigs.app.poster.controller.PosterApiController;
-import com.gg_pigs.app.poster.dto.CreateDtoPoster;
-import com.gg_pigs.app.poster.dto.UpdateDtoPoster;
+import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.service.PosterService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +34,8 @@ class CacheControllerAdviceTest {
 
     @MockBean PosterService posterService;
 
-    private CreateDtoPoster createDtoPoster;
-    private UpdateDtoPoster updateDtoPoster;
+    private PosterDto.Create.RequestDto createRequestDto;
+    private PosterDto.Update.RequestDto updateRequestDto;
 
     private Long mockId = 1L;
     private String mockTitle = "This is a title.";
@@ -54,8 +53,8 @@ class CacheControllerAdviceTest {
 
     @BeforeEach
     void setUp() {
-        createDtoPoster = new CreateDtoPoster(mockTitle, mockUserEmail, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, mockStartedDate, mockFinishedDate);
-        updateDtoPoster = new UpdateDtoPoster(mockId, mockUserEmail, mockTitle, mockDescription, mockKeywords, mockPosterType, mockImagePath, mockSiteUrl, mockRowPosition, mockColumnPosition, 'Y', mockStartedDate, mockFinishedDate);
+        createRequestDto = PosterDto.Create.RequestDto.builder().build();
+        updateRequestDto = PosterDto.Update.RequestDto.builder().build();
     }
 
     @Test
@@ -80,7 +79,7 @@ class CacheControllerAdviceTest {
         String targetCacheControl = "max-age=" +  ZERO_CACHE_MAX_AGE;
 
         // When
-        String content = objectMapper.writeValueAsString(createDtoPoster);
+        String content = objectMapper.writeValueAsString(createRequestDto);
 
         MockHttpServletResponse response = mockMvc.perform(post("/api/v1/posters")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +100,7 @@ class CacheControllerAdviceTest {
         String targetCacheControl = "max-age=" +  ZERO_CACHE_MAX_AGE;
 
         // When
-        String content = objectMapper.writeValueAsString(updateDtoPoster);
+        String content = objectMapper.writeValueAsString(updateRequestDto);
 
         MockHttpServletResponse response = mockMvc.perform(put("/api/v1/posters/1")
                 .contentType(MediaType.APPLICATION_JSON)
