@@ -44,6 +44,13 @@ public class PosterApiController {
                                   @RequestParam(value = "userEmail", required = false) String userEmail,
                                   @RequestParam(value = "isFilteredDate", required = false) String isFilteredDate,
                                   @RequestParam(value = "isActivated", required = false) String isActivated) {
+        /** 임시 기간 */
+        if("true".equalsIgnoreCase(isFilteredDate)) {
+            isFilteredDate = "Y";
+        }
+        if("true".equalsIgnoreCase(isActivated)) {
+            isActivated = "Y";
+        }
 
         PosterDto.Read.SearchConditionDto searchCondition = PosterDto.Read.SearchConditionDto.of(page, userEmail, isActivated, isFilteredDate);
         List<PosterDto.Read.ResponseDto> allReadDtoPosters = posterService.readAll(searchCondition);

@@ -161,8 +161,8 @@ public class PosterDto {
             private String posterHeight;
             private String imagePath;
             private String siteUrl;
-            private String rowPosition;
-            private String columnPosition;
+            private Long rowPosition;
+            private Long columnPosition;
             private String reviewStatus;
             private String isActivated;
             private String startedDate;
@@ -184,8 +184,8 @@ public class PosterDto {
                         .posterHeight(poster.getPosterType().getHeight())
                         .imagePath(poster.getImagePath())
                         .siteUrl(poster.getSiteUrl())
-                        .rowPosition(Long.toString(poster.getRowPosition()))
-                        .columnPosition(Long.toString(poster.getColumnPosition()))
+                        .rowPosition(poster.getRowPosition())
+                        .columnPosition(poster.getColumnPosition())
                         .reviewStatus(poster.getReviewStatus().name())
                         .isActivated(poster.getIsActivated())
                         .startedDate(poster.getStartedDate().format(DateTimeFormatter.ISO_LOCAL_DATE))

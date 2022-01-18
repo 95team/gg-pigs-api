@@ -22,7 +22,7 @@ public class PosterEmsAlarm implements EmailAlarm {
     private List<String> bcc;
 
     public static PosterEmsAlarm getInstanceForCreate(Poster poster) {
-        String subject = "[GG-PIGS] (PosterRequestEmsAlarm) 포스터 등록 요청이 접수되었습니다.";
+        String subject = "[GG-PIGS] 포스터 등록 요청이 접수되었습니다.";
         String message = String.format("[GG-PIGS] (PosterRequestEmsAlarm) ID : %d | TITLE : %s", poster.getId(), poster.getTitle());
 
         return PosterEmsAlarm.builder()
