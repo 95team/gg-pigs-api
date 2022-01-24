@@ -1,6 +1,6 @@
 package com.gg_pigs.app.poster.service;
 
-import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
+import com.gg_pigs.app.historyLog.entity.HistoryLog;
 import com.gg_pigs.app.historyLog.service.HistoryLogService;
 import com.gg_pigs.app.poster.entity.Poster;
 import com.gg_pigs.app.poster.entity.PosterEmsAlarm;
@@ -28,6 +28,6 @@ public class PosterEventHandler {
         emsKafkaTemplate.send(kafkaProducerEmsProperty.getTopic4PrNotiEvent(), posterEmsAlarm);
 
         String title = String.format("[신규] Poster 등록 요청 : %s", poster.getTitle());
-        historyLogService.writeHistoryLog(HistoryLogAction.CREATE, null, title, null, true);
+        historyLogService.writeHistoryLog(HistoryLog.HistoryLogType.CREATE, null, title, null, true);
     }
 }

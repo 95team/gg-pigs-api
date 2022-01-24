@@ -1,10 +1,7 @@
 package com.gg_pigs.app.historyLog.service;
 
-import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
 import com.gg_pigs.app.historyLog.entity.HistoryLog;
 import com.gg_pigs.app.historyLog.repository.HistoryLogRepository;
-import com.gg_pigs.app.historyLogType.entity.HistoryLogType;
-import com.gg_pigs.app.historyLogType.repository.HistoryLogTypeRepository;
 import com.gg_pigs.app.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,9 @@ import org.springframework.stereotype.Service;
 public class HistoryLogService {
 
     private final HistoryLogRepository historyLogRepository;
-    private final HistoryLogTypeRepository historyLogTypeRepository;
 
-    public boolean writeHistoryLog(HistoryLogAction type, User worker, String title, String content, boolean isSuccessful) {
+    public boolean writeHistoryLog(HistoryLog.HistoryLogType historyLogType, User worker, String title, String content, boolean isSuccessful) {
         boolean resultOfWritingLog = false;
-
-        HistoryLogType historyLogType = historyLogTypeRepository.findHistoryLogTypeByType(type.name()).orElse(null);
 
         HistoryLog historyLog = HistoryLog
                 .builder()
@@ -36,7 +30,7 @@ public class HistoryLogService {
         } catch (Exception exception) {
             this.failedToWriteHistoryLog();
             this.failedToWriteHistoryLog(exception.getMessage());
-            this.failedToWriteHistoryLog(type, worker.getEmail(), title, content);
+            this.failedToWriteHistoryLog(historyLogType, worker.getEmail(), title, content);
         }
 
         return resultOfWritingLog;
@@ -50,7 +44,7 @@ public class HistoryLogService {
         System.out.println("History Log message: " + message);
     }
 
-    private void failedToWriteHistoryLog(HistoryLogAction type, String email, String title, String content) {
+    private void failedToWriteHistoryLog(HistoryLog.HistoryLogType type, String email, String title, String content) {
         System.out.println("History Log type: " + type.name());
         System.out.println("History Log email: " + email);
         System.out.println("History Log title: " + title);

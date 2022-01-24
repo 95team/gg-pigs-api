@@ -1,12 +1,12 @@
 package com.gg_pigs.modules.github;
 
-import com.google.gson.Gson;
-import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
-import com.gg_pigs.modules.github.dto.response.GitHubErrorResponse;
-import com.gg_pigs.modules.github.dto.response.GitHubResponse;
+import com.gg_pigs.app.historyLog.entity.HistoryLog;
 import com.gg_pigs.app.historyLog.service.HistoryLogService;
 import com.gg_pigs.app.user.entity.User;
 import com.gg_pigs.app.user.repository.UserRepository;
+import com.gg_pigs.modules.github.dto.response.GitHubErrorResponse;
+import com.gg_pigs.modules.github.dto.response.GitHubResponse;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -108,6 +108,6 @@ public class GitHubClient {
         title += "GitHub API - create content";
         content = "Message: " + message;
 
-        historyLogService.writeHistoryLog(HistoryLogAction.API, worker, title, content, isSuccessful);
+        historyLogService.writeHistoryLog(HistoryLog.HistoryLogType.API, worker, title, content, isSuccessful);
     }
 }

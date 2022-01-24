@@ -1,6 +1,5 @@
 package com.gg_pigs.app.historyLog.entity;
 
-import com.gg_pigs.app.historyLogType.entity.HistoryLogType;
 import com.gg_pigs.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,11 @@ import javax.persistence.ManyToOne;
 @Getter
 @Entity
 public class HistoryLog {
+
+    public enum HistoryLogType {
+        CREATE, READ, UPDATE, DELETE, API
+    }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_log_id")
     private Long id;
@@ -31,8 +37,8 @@ public class HistoryLog {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "history_log_type_id")
+    @Enumerated(EnumType.STRING)
+    @Column(length = 32)
     private HistoryLogType historyLogType;
 
     @Column(length = 128)
