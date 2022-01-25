@@ -38,7 +38,7 @@ public class HistoryLog {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 32)
+    @Column(name = "type", length = 32)
     private HistoryLogType historyLogType;
 
     @Column(length = 128)
