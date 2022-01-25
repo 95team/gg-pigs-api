@@ -1,9 +1,7 @@
 package com.gg_pigs.app.historyLog.service;
 
-import com.gg_pigs.app.historyLog.entity.HistoryLogAction;
 import com.gg_pigs.app.historyLog.entity.HistoryLog;
 import com.gg_pigs.app.historyLog.repository.HistoryLogRepository;
-import com.gg_pigs.app.historyLogType.repository.HistoryLogTypeRepository;
 import com.gg_pigs.app.user.entity.User;
 import com.gg_pigs.app.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -28,7 +26,6 @@ class HistoryLogServiceTest {
 
     @MockBean UserRepository userRepository;
     @MockBean HistoryLogRepository historyLogRepository;
-    @MockBean HistoryLogTypeRepository historyLogTypeRepository;
 
     @Mock User HistoryLogUser;
 
@@ -40,7 +37,7 @@ class HistoryLogServiceTest {
         String content = "This is a content.";
 
         // When
-        boolean resultOfWritingLog = historyLogService.writeHistoryLog(HistoryLogAction.CREATE, HistoryLogUser, title, content, true);
+        boolean resultOfWritingLog = historyLogService.writeHistoryLog(HistoryLog.HistoryLogType.CREATE, HistoryLogUser, title, content, true);
 
         // Then
         Assertions.assertThat(resultOfWritingLog).isTrue();
