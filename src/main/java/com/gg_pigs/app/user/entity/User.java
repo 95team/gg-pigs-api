@@ -1,9 +1,8 @@
 package com.gg_pigs.app.user.entity;
 
-import com.gg_pigs.global.utility.EmailUtil;
 import com.gg_pigs.app.user.dto.CreateDtoUser;
 import com.gg_pigs.app.user.dto.UpdateDtoUser;
-import lombok.AccessLevel;
+import com.gg_pigs.global.utility.EmailUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +12,8 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Builder
 @Getter
@@ -39,8 +40,9 @@ public class User {
     @Column(length = 16)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 32)
-    private String role;
+    private UserRole role;
 
     @Column(length = 32)
     private String oauthType;
@@ -71,7 +73,7 @@ public class User {
         this.phone = phone;
     }
 
-    public void changeRole(String role) {
+    public void changeRole(UserRole role) {
         this.role = role;
     }
 
@@ -101,7 +103,7 @@ public class User {
         String defaultName = StringUtils.isEmpty(createDtoUser.getName()) ? null : createDtoUser.getName();
         String defaultPhone = StringUtils.isEmpty(createDtoUser.getPhone()) ? null : createDtoUser.getPhone();
         String defaultEmail = createDtoUser.getEmail();
-        String defaultRole = UserRole.ROLE_USER.name();
+        UserRole defaultRole = UserRole.ROLE_USER;
         String defaultOauthType = null;
         Character defaultIsActivated = 'N';
         Character defaultIsAuthenticated = 'N';

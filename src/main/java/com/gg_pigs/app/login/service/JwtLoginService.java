@@ -1,12 +1,10 @@
 package com.gg_pigs.app.login.service;
 
-import com.gg_pigs.global.exception.LoginFailureException;
+import com.gg_pigs.global.exception.GPLoginFailureException;
 import com.gg_pigs.global.utility.CookieProvider;
 import com.gg_pigs.global.utility.JwtProvider;
-import com.gg_pigs.app.login.dto.RequestDtoLogin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
@@ -18,21 +16,20 @@ import javax.servlet.http.Cookie;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Service
 public class JwtLoginService implements LoginService {
 
     private final JwtProvider jwtProvider;
     private final CookieProvider cookieProvider;
 
     @Override
-    public Cookie login(RequestDtoLogin requestDtoLogin) {
-        String email = requestDtoLogin.getEmail();
-        String password = requestDtoLogin.getPassword();
-        String digest = requestDtoLogin.getDigest();
-        String role = requestDtoLogin.getRole();
+    public Cookie login(Login login) {
+        String email = login.getEmail();
+        String password = login.getPassword();
+        String digest = login.getDigest();
+        String role = login.getRole();
 
         if(!this.checkPw(password, digest)) {
-            throw new LoginFailureException("로그인에 실패했습니다.");
+            throw new GPLoginFailureException("로그인에 실패했습니다.");
         }
 
         String subject = "login";

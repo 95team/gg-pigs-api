@@ -1,8 +1,8 @@
 package com.gg_pigs.global.advice;
 
 import com.gg_pigs.global.dto.ApiResponse;
-import com.gg_pigs.global.exception.BadRequestException;
-import com.gg_pigs.global.exception.LoginFailureException;
+import com.gg_pigs.global.exception.GPBadRequestException;
+import com.gg_pigs.global.exception.GPLoginFailureException;
 import io.sentry.Sentry;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,15 @@ import java.io.IOException;
 public class ExceptionControllerAdvice {
 
     private void printCommonExceptionHandlerMessage(Exception e) {
-        Sentry.captureException(e);
+        log.info(this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
+                 + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")");
+    }
 
-        System.out.println(
-                this.getClass() + "." + Thread.currentThread().getStackTrace()[1].getMethodName() + "\n\t"
-                + e.getClass() + ": " + e.getMessage() + "(" + e.getStackTrace()[0].toString() + ")"
-        );
+    private void printCommonExceptionHandlerMessageWithSentry(Exception e) {
+        printCommonExceptionHandlerMessage(e);
+
+        Sentry.captureException(e);
+        log.error(e.getMessage());
     }
 
     /**
@@ -50,11 +53,23 @@ public class ExceptionControllerAdvice {
     }
 
     /**
+     * handle(NullPointerException.class)
+     * 목적 : API 요청에서 필수로 요구되는 쿠키가 없을 경우
+     * */
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<ApiResponse> handle(NullPointerException e) {
+        printCommonExceptionHandlerMessage(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * handleLoginFailureException(LoginFailureException.class)
      * 목적 : 로그인에 실패했을 경우
      * */
-    @ExceptionHandler(LoginFailureException.class)
-    protected ResponseEntity<ApiResponse> handleLoginFailureException(LoginFailureException e) {
+    @ExceptionHandler(GPLoginFailureException.class)
+    protected ResponseEntity<ApiResponse> handleLoginFailureException(GPLoginFailureException e) {
         printCommonExceptionHandlerMessage(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -65,8 +80,8 @@ public class ExceptionControllerAdvice {
      * handleBadRequestException(BadRequestException.class)
      * 목적 : 잘못된 API 요청인 경우 (포괄적으로 사용할 수 있는 Exception)
      * */
-    @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<ApiResponse> handleBadRequestException(BadRequestException e) {
+    @ExceptionHandler(GPBadRequestException.class)
+    protected ResponseEntity<ApiResponse> handleBadRequestException(GPBadRequestException e) {
         printCommonExceptionHandlerMessage(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -95,21 +110,6 @@ public class ExceptionControllerAdvice {
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-
-    /**
-     * handleIOException(IOException.class)
-     * 목적 : I/O 와 관련된 에러가 발생했을 경우 (파일 업로드 실패했을 경우, ...)
-     * 예시 : image.transferTo(file);
-     * */
-    @ExceptionHandler(IOException.class)
-    protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
-        printCommonExceptionHandlerMessage(e);
-        log.error(e.getMessage());
-
-        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -144,10 +144,23 @@ public class ExceptionControllerAdvice {
      * */
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<ApiResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        printCommonExceptionHandlerMessage(e);
+        printCommonExceptionHandlerMessageWithSentry(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * handleIOException(IOException.class)
+     * 목적 : I/O 와 관련된 에러가 발생했을 경우 (파일 업로드 실패했을 경우, ...)
+     * 예시 : image.transferTo(file);
+     * */
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<ApiResponse> handleIOException(IOException e) {
+        printCommonExceptionHandlerMessageWithSentry(e);
+
+        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -156,8 +169,7 @@ public class ExceptionControllerAdvice {
      * */
     @ExceptionHandler(InternalException.class)
     protected ResponseEntity<ApiResponse> handleInternalException(InternalException e) {
-        printCommonExceptionHandlerMessage(e);
-        log.error(e.getMessage());
+        printCommonExceptionHandlerMessageWithSentry(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,8 +181,7 @@ public class ExceptionControllerAdvice {
      * */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ApiResponse> handleException(Exception e) {
-        printCommonExceptionHandlerMessage(e);
-        log.error(e.getMessage());
+        printCommonExceptionHandlerMessageWithSentry(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

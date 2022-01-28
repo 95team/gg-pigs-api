@@ -21,24 +21,16 @@ public class RedisClientImpl implements RedisClient {
 
     @Override
     public boolean storeStringValue(String key, String value) {
-        try {
-            ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-            valueOperations.set(key, value);
-        } catch (Exception exception) {
-            return false;
-        }
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set(key, value);
 
         return true;
     }
 
     @Override
     public boolean storeStringValueForSeconds(String key, String value, int timeout) {
-        try {
-            ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-            valueOperations.set(key, value, timeout, TimeUnit.SECONDS);
-        } catch (Exception exception) {
-            return false;
-        }
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set(key, value, timeout, TimeUnit.SECONDS);
 
         return true;
     }

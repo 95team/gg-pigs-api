@@ -1,11 +1,21 @@
 package com.gg_pigs.global.config;
 
+import com.gg_pigs.app.user.entity.UserRole;
+import com.gg_pigs.global.security.GPAccessDeniedHandler;
+import com.gg_pigs.global.security.GPAuthenticationEntryPoint;
+import com.gg_pigs.global.security.GPSessionUserDetailsService;
+import com.gg_pigs.modules.security.GPAuthenticationFilter;
+import com.gg_pigs.modules.security.GPAuthenticationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * [References]
@@ -18,9 +28,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 7. [Spring Security] csrf token handling, https://hakurei.tistory.com/3
  * */
 
+@RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+
+    private final GPSessionUserDetailsService gpSessionDetailsService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -28,49 +41,41 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         // 2. WebSecurity는 FilterChainProxy를 생성하는 필터입니다. 다양한 Filter 설정을 적용할 수 있습니다.
         //    - Spring Security에서 해당 요청은 인증 대상에서 제외시킵니다.
 
-        web.ignoring().antMatchers("/static/**");
+        web.ignoring()
+                .antMatchers("/api/v1/login")
+                .antMatchers("/static/**")
+                .antMatchers("/health/**")
+                .antMatchers(HttpMethod.OPTIONS);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // 1. Possibly more configuration
-        //    - Enable form based log in
-        // 2. HttpSecurity를 통해 HTTP 요청에 대한 보안을 설정할 수 있습니다.
+        /*
+         * 기타(session, filter, deniedHandler, ...) 설정입니다.
+         * */
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(new GPAuthenticationFilter(gpSessionDetailsService), UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling().accessDeniedHandler(new GPAccessDeniedHandler());
+        http.exceptionHandling().authenticationEntryPoint(new GPAuthenticationEntryPoint());
 
-        // 1. http.csrf().disabled();
-        // 2. http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        // 3. http.csrf().ignoringAntMatchers("path");
-
+        /*
+         * csrf 설정입니다.
+         * */
         http.csrf().ignoringAntMatchers("/api/v1/**");
         http.csrf().ignoringAntMatchers("/api/v2/**");
 
-        http.authorizeRequests()
-                .antMatchers("/admin/**").authenticated()
-                .antMatchers("/**").permitAll();
-
-        http.formLogin()
-                .defaultSuccessUrl("/")
-                .permitAll();
-
-        http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true);
-
-        http.exceptionHandling()
-                .accessDeniedPage("/login");
+        /*
+         * authorizeRequests 설정입니다.
+         * */
+        http.authorizeRequests().antMatchers(HttpMethod.POST).authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.GET).authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.PUT).hasAnyRole(UserRole.ROLE_ADMIN.suffixName(), UserRole.ROLE_USER.suffixName());
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE).hasRole(UserRole.ROLE_ADMIN.suffixName());
+        http.authorizeRequests().anyRequest().permitAll();
     }
 
-    /*
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 1. Enable in memory based authentication with a user named "user" and "admin"
-        // 2. AuthenticationManager를 생성합니다. AuthenticationManager는 사용자 인증을 담당합니다.
-
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER").and()
-                .withUser("admin").password("password").roles("USER", "ADMIN");
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) {
+        authenticationManagerBuilder.authenticationProvider(new GPAuthenticationProvider());
     }
-     */
 }
