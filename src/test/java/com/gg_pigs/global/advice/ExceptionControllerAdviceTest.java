@@ -3,7 +3,6 @@ package com.gg_pigs.global.advice;
 import com.gg_pigs.global.dto.ApiResponse;
 import com.gg_pigs.global.exception.GPBadRequestException;
 import com.gg_pigs.global.exception.GPLoginFailureException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -202,26 +201,6 @@ class ExceptionControllerAdviceTest {
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         Assertions.assertThat(responseEntity.getBody().getCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         Assertions.assertThat(responseEntity.getBody().getMessage()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        Assertions.assertThat(responseEntity.getBody().getData()).isEqualTo(expectedData);
-    }
-
-    @DisplayName("[테스트] handleInternalException()")
-    @Test
-    void handleInternalException() {
-        // Given
-        String expectedData = message;
-
-        InternalException mockException = Mockito.mock(InternalException.class);
-        Mockito.when(mockException.getMessage()).thenReturn(message);
-        Mockito.when(mockException.getStackTrace()).thenReturn(stackTraces);
-
-        // When
-        ResponseEntity<ApiResponse> responseEntity = controllerAdvice.handleInternalException(mockException);
-
-        // Then
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getBody().getCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        Assertions.assertThat(responseEntity.getBody().getMessage()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         Assertions.assertThat(responseEntity.getBody().getData()).isEqualTo(expectedData);
     }
 
