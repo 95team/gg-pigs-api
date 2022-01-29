@@ -1,10 +1,10 @@
 package com.gg_pigs.global.utility;
 
+import com.gg_pigs.global.exception.GPBadRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +51,7 @@ public class JwtProvider {
         } catch (Exception e) {
             e.printStackTrace();
 
-            throw new InternalException("인증 토큰을 생성할 수 없습니다. (Can't generate the token)");
+            throw new GPBadRequestException("인증 토큰을 생성할 수 없습니다. (Can't generate the token)");
         }
 
         return token;
