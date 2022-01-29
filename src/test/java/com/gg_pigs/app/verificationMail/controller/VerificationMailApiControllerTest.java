@@ -1,6 +1,7 @@
 package com.gg_pigs.app.verificationMail.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gg_pigs._common.SecuritySetUp4ControllerTest;
 import com.gg_pigs.app.verificationMail.dto.RequestDtoVerificationMail;
 import com.gg_pigs.app.verificationMail.dto.ResponseDtoVerificationMail;
 import com.gg_pigs.app.verificationMail.service.VerificationMailService;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = VerificationMailApiController.class)
-class VerificationMailApiControllerTest {
+class VerificationMailApiControllerTest extends SecuritySetUp4ControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;

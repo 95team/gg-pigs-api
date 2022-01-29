@@ -1,6 +1,7 @@
 package com.gg_pigs.app.user.repository;
 
 import com.gg_pigs.app.user.entity.User;
+import com.gg_pigs.app.user.entity.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,7 +21,7 @@ class UserRepositoryTest {
     String defaultName = null;
     String defaultEmail = "pigs95team@gmail.com";
     String defaultPhone = null;
-    String defaultRole = "ROLE_USER";
+    UserRole defaultRole = UserRole.ROLE_USER;
     String defaultOauthType = null;
     Character defaultIsActivated = 'N';
     Character defaultIsAuthenticated = 'N';

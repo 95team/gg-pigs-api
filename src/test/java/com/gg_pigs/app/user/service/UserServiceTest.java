@@ -4,6 +4,7 @@ import com.gg_pigs.app.user.dto.CreateDtoUser;
 import com.gg_pigs.app.user.dto.RetrieveDtoUser;
 import com.gg_pigs.app.user.dto.UpdateDtoUser;
 import com.gg_pigs.app.user.entity.User;
+import com.gg_pigs.app.user.entity.UserRole;
 import com.gg_pigs.app.user.repository.UserRepository;
 import com.gg_pigs.app.userSalt.service.UserSaltService;
 import org.junit.jupiter.api.Test;
@@ -22,19 +23,24 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(
-        classes = { UserService.class }
+        classes = {UserService.class}
 )
 class UserServiceTest {
 
     @Autowired
     UserService userService;
 
-    @MockBean UserRepository userRepository;
-    @MockBean UserSaltService userSaltService;
+    @MockBean
+    UserRepository userRepository;
+    @MockBean
+    UserSaltService userSaltService;
 
-    @Mock User user;
-    @Mock CreateDtoUser createDtoUser;
-    @Mock UpdateDtoUser updateDtoUser;
+    @Mock
+    User user;
+    @Mock
+    CreateDtoUser createDtoUser;
+    @Mock
+    UpdateDtoUser updateDtoUser;
 
     private Long userId = 1L;
     private String userEmail = "pigs95team@gmail.com";
@@ -58,6 +64,7 @@ class UserServiceTest {
     @Test
     public void When_call_retrieveOneUser_Then_then_return_RetrieveDtoUser() {
         // Given
+        Mockito.when(user.getRole()).thenReturn(UserRole.ROLE_USER);
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then
