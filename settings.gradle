@@ -1,3 +1,10 @@
 rootProject.name = 'gg-pigs-api'
+
 include 'app'
+
+include 'modules:security'
+findProject(':modules:security')?.name = 'security'
+
+include 'modules:ems'
+findProject(':modules:ems')?.name = 'ems'
 
