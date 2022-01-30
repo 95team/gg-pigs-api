@@ -1,1 +1,3 @@
 rootProject.name = 'gg-pigs-api'
+include 'app'
+

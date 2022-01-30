@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 import java.io.IOException;
 
