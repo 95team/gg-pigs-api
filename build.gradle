@@ -35,26 +35,35 @@ project(':app') {
 	bootJar {
 		archiveFileName = 'app.jar'
 	}
-//	dependencies {
-//		implementation project(':modules:security')
-//		implementation project(':modules:ems')
-//	}
+	dependencies {
+		implementation project(':modules:security')
+		implementation project(':modules:ems')
+	}
 }
-//
-//project(':modules:security') {
-//	bootJar {
-//		enabled = false
-//	}
-//	jar {
-//		enabled = true
-//	}
-//}
-//
-//project(':modules:ems') {
-//	bootJar {
-//		enabled = false
-//	}
-//	jar {
-//		enabled = true
-//	}
-//}
+
+project(':modules') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
+
+project(':modules:security') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
+
+project(':modules:ems') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
