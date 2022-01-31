@@ -1,115 +1,66 @@
-plugins {
-	id 'org.springframework.boot' version '2.3.3.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
-	id 'jacoco'
-}
-
-group = 'com'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+buildscript {
+	ext {
+		SpringBootVersion = '2.3.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${SpringBootVersion}")
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
 	}
 }
 
-repositories {
-	mavenCentral()
-}
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'          // Spring Boot SMTP, https://www.baeldung.com/spring-email, https://victorydntmd.tistory.com/342
-	implementation 'org.springframework.data:spring-data-redis'					// Spring Boot Redis, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
-	implementation 'io.lettuce:lettuce-core'									// Spring Boot Redis - Lettuce, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
-	implementation 'redis.clients:jedis'										// Spring Boot Redis - Jedis, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
-	implementation 'org.jsoup:jsoup:1.13.1'                                     // Spring Boot Jsoup(Html parser), https://jsoup.org/download
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'   // Spring Boot DataSource Decorator, https://github.com/gavlyukovskiy/spring-boot-data-source-decorator#spring-boot-datasource-decorator
-	implementation 'com.querydsl:querydsl-jpa'                                  // Spring Boot Querydsl, https://www.baeldung.com/querydsl-with-jpa-tutorial
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'                        // Spring Boot JWT, https://github.com/jwtk/jjwt
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'                           // Spring Boot JWT, https://github.com/jwtk/jjwt
-	implementation 'com.squareup.retrofit2:retrofit:2.9.0'                      // Spring Boot Retrofit, https://github.com/square/retrofit
-	implementation 'com.squareup.retrofit2:converter-gson:2.9.0'                // Spring Boot Retrofit, https://github.com/square/retrofit/tree/master/retrofit-converters/gson
-	implementation 'org.apache.commons:commons-lang3'                           // Apache Commons Lang, https://github.com/apache/commons-lang
-	implementation 'io.sentry:sentry-spring-boot-starter:5.5.2'                 // Sentry, https://sentry.io/onboarding/pigs95team/get-started/
-	implementation 'org.springframework.kafka:spring-kafka:2.7.9'               // Kafka, https://github.com/spring-projects/spring-kafka
-	implementation("org.apache.logging.log4j:log4j-api:2.17.1")                 // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-	implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.1")            // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j
-	implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")       // Logstash-Logback-Encoder, // https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
+	group 'com.gg_pigs'
+	version '1.0'
+	sourceCompatibility = 1.8
 
-	compileOnly 'org.projectlombok:lombok'
-
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java'
-
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' // Spring Boot Configuration Processor, https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/reference/html/appendix-configuration-metadata.html#configuration-metadata-annotation-processor
-	annotationProcessor(
-			"javax.persistence:javax.persistence-api",
-			"javax.annotation:javax.annotation-api",
-			"com.querydsl:querydsl-apt::jpa")
-
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	repositories {
+		mavenCentral()
 	}
-	testImplementation 'org.springframework.security:spring-security-test'
-}
 
-test {
-	useJUnitPlatform()
-}
-
-// Configuration for query-dsl
-sourceSets {
-	main {
-		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
 		}
 	}
 }
 
-// Configuration for jacoco
-test {
-	useJUnitPlatform()
-
-	finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-	reports {
-		html.enabled true
-		xml.enabled false
-		csv.enabled false
-
-		html.destination layout.buildDirectory.dir('reports-jacoco').get().asFile
+project(':app') {
+	dependencies {
+		implementation project(':modules:security')
+		implementation project(':modules:ems')
 	}
-
-	finalizedBy jacocoTestCoverageVerification
 }
 
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.50
-			}
-		}
+project(':modules') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
 
-		rule {
-			enabled = true
-			element = 'BUNDLE'
+project(':modules:security') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
 
-			limit {
-				counter = 'INSTRUCTION'
-				value = 'COVEREDRATIO'
-				minimum = 0.50
-			}
-		}
+project(':modules:ems') {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
 	}
 }
