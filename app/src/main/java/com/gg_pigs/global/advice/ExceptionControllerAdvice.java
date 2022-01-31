@@ -4,7 +4,6 @@ import com.gg_pigs.global.dto.ApiResponse;
 import com.gg_pigs.global.exception.GPBadRequestException;
 import com.gg_pigs.global.exception.GPLoginFailureException;
 import io.sentry.Sentry;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -148,19 +147,6 @@ public class ExceptionControllerAdvice {
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * handleInternalException(InternalException.class)
-     * 목적 : 서버 에러가 발생한 경
-     * */
-    @ExceptionHandler(InternalException.class)
-    protected ResponseEntity<ApiResponse> handleInternalException(InternalException e) {
-        printCommonExceptionHandlerMessage(e);
-        log.error(e.getMessage());
-
-        ApiResponse response = ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**

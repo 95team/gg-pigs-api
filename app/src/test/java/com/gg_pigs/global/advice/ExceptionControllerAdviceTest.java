@@ -205,26 +205,6 @@ class ExceptionControllerAdviceTest {
         Assertions.assertThat(responseEntity.getBody().getData()).isEqualTo(expectedData);
     }
 
-    @DisplayName("[테스트] handleInternalException()")
-    @Test
-    void handleInternalException() {
-        // Given
-        String expectedData = message;
-
-        InternalException mockException = Mockito.mock(InternalException.class);
-        Mockito.when(mockException.getMessage()).thenReturn(message);
-        Mockito.when(mockException.getStackTrace()).thenReturn(stackTraces);
-
-        // When
-        ResponseEntity<ApiResponse> responseEntity = controllerAdvice.handleInternalException(mockException);
-
-        // Then
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getBody().getCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        Assertions.assertThat(responseEntity.getBody().getMessage()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        Assertions.assertThat(responseEntity.getBody().getData()).isEqualTo(expectedData);
-    }
-
     @DisplayName("[테스트] handleException()")
     @Test
     void handleException() {
