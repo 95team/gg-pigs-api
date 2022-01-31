@@ -11,9 +11,9 @@ SpringSecurity 클래스들을 GG-PIGS 에 맞게 재정의한 모듈
 
 **주요 메소드**
 
-- `GPUserDetails loadUserByHttpServletRequest(HttpServletRequest request)` : Get UserDetails by HttpServletRequest
-- `GPAuthenticationToken loadAuthenticationByUser(GPUserDetails gpUserDetails)` : Get Authentication by UserDetails
-- `default GPAuthenticationToken loadEmptyAuthentication()` : Empty Authentication (authenticated : true)
+- `loadUserByHttpServletRequest(HttpServletRequest request)` : Get UserDetails by HttpServletRequest
+- `loadAuthenticationByUser(GPUserDetails gpUserDetails)` : Get Authentication by UserDetails
+- `loadEmptyAuthentication()` : Empty Authentication (authenticated : true)
 
 ```java
 public interface GPUserDetailsService extends UserDetailsService {
@@ -74,8 +74,8 @@ public interface GPUserDetailsService extends UserDetailsService {
 - (객체 반환)static 메서드 정의
   - `GPAuthenticationToken authenticatedEmptyToken()`
   - `GPAuthenticationToken unauthenticatedEmptyToken()`
-- UsernamePasswordAuthenticationToken 사용 X
-  - `credentials` 속성 불필요
+- `credentials` 속성 불필요 
+  - UsernamePasswordAuthenticationToken 사용 X
 
 <br><br>
 
