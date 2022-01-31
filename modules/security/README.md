@@ -77,4 +77,19 @@ public interface GPUserDetailsService extends UserDetailsService {
 - UsernamePasswordAuthenticationToken 사용 X
   - `credentials` 속성 불필요
 
-<br>
+<br><br>
+
+## Diagram
+
+### 인증 + 서비스(로그인) 전체 구조
+
+![GPSecurity-전체 구조](https://user-images.githubusercontent.com/35790290/151809849-67072e03-2087-4389-ae0a-09c289a2f5c1.png)
+
+<br><br>
+
+### GPSecurityFilter Diagram
+
+![GPSecurity-_GPSecurityFilter](https://user-images.githubusercontent.com/35790290/151809910-ddadc754-0c7c-45bf-8e2b-1c19586341b5.png)
+
+> [GPSecurity.drawio.zip](https://github.com/pigs-pango-team/gg-pigs-api/files/7971413/GPSecurity.drawio.zip)
+
