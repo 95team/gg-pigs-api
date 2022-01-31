@@ -1,13 +1,12 @@
 package com.gg_pigs.app.login.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gg_pigs.global.utility.JwtProvider;
-import com.gg_pigs.app.login.dto.RequestDtoLogin;
+import com.gg_pigs._common.SecuritySetUp4ControllerTest;
+import com.gg_pigs.app.login.dto.LoginDto;
+import com.gg_pigs.app.login.service.LoginExtendService;
 import com.gg_pigs.app.login.service.LoginService;
 import com.gg_pigs.app.user.dto.RetrieveDtoUser;
-import com.gg_pigs.app.user.service.UserService;
 import com.gg_pigs.app.userSalt.dto.RetrieveDtoUserSalt;
-import com.gg_pigs.app.userSalt.service.UserSaltService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,25 +22,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.servlet.http.Cookie;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = LoginController.class)
-class LoginControllerTest {
+class LoginControllerTest extends SecuritySetUp4ControllerTest {
 
-    @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @MockBean UserService userService;
-    @MockBean UserSaltService userSaltService;
-    @MockBean LoginService loginService;
-    @MockBean JwtProvider jwtProvider;
+    @MockBean
+    LoginExtendService loginService;
 
-    @Mock RetrieveDtoUser retrieveDtoUser;
-    @Mock RetrieveDtoUserSalt retrieveDtoUserSalt;
+    @Mock
+    RetrieveDtoUser retrieveDtoUser;
+    @Mock
+    RetrieveDtoUserSalt retrieveDtoUserSalt;
 
     private final Long userId = 1L;
     private final String userEmail = "pigs95team@gmail.com";
@@ -56,32 +55,30 @@ class LoginControllerTest {
     @BeforeEach
     public void setUp() {
         // Configuration of LoginService
-        Mockito.when(loginService.login(any(RequestDtoLogin.class))).thenReturn(loginCookie);
+        Mockito.when(loginService.login(any(LoginService.Login.class))).thenReturn(loginCookie);
         Mockito.when(loginService.logout()).thenReturn(logoutCookie);
 
         // Configuration of UserService
         Mockito.when(retrieveDtoUser.getUserId()).thenReturn(userId);
         Mockito.when(retrieveDtoUser.getRole()).thenReturn(userRole);
-        Mockito.when(userService.readByEmail(anyString())).thenReturn(retrieveDtoUser);
 
         // Configuration of UserSaltService
         Mockito.when(retrieveDtoUserSalt.getDigest()).thenReturn(userDigest);
-        Mockito.when(userSaltService.read(anyLong())).thenReturn(retrieveDtoUserSalt);
     }
 
     @Test
     public void When_로그인_Then_cookie_has_value() throws Exception {
         // Given
-        RequestDtoLogin requestDtoLogin = RequestDtoLogin.builder().email(userEmail).password(userPassword).build();
-        String content = objectMapper.writeValueAsString(requestDtoLogin);
+        LoginDto.RequestDto requestDto = LoginDto.RequestDto.builder().email(userEmail).password(userPassword).build();
+        String content = objectMapper.writeValueAsString(requestDto);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/api/v1/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn().getResponse();
+                                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                                   .content(content))
+                                                  .andExpect(status().isOk())
+                                                  .andDo(print())
+                                                  .andReturn().getResponse();
 
         // Then
         Assertions.assertThat(response.getCookie(cookieName).getValue()).isEqualTo(cookieValue);
@@ -91,11 +88,11 @@ class LoginControllerTest {
     public void When_로그아웃_Then_cookie_is_null() throws Exception {
         // Given // When
         MockHttpServletResponse response = mockMvc.perform(post("/api/v1/logout")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn().getResponse();
+                                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                                   .accept(MediaType.APPLICATION_JSON))
+                                                  .andExpect(status().isOk())
+                                                  .andDo(print())
+                                                  .andReturn().getResponse();
 
         // Then
         Assertions.assertThat(response.getCookie(cookieName).getValue()).isNull();

@@ -1,6 +1,6 @@
 package com.gg_pigs.app.file.service;
 
-import com.gg_pigs.global.exception.BadRequestException;
+import com.gg_pigs.global.exception.GPBadRequestException;
 import com.gg_pigs.modules.github.GitHubClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -30,12 +30,12 @@ public class GitHubFileService implements FileService {
         if(isImageFile(file)) {
             return this.uploadImage2Server(file);
         }
-        throw new BadRequestException("적절하지 않은 요청입니다. (Check the file type)");
+        throw new GPBadRequestException("적절하지 않은 요청입니다. (Check the file type)");
     }
 
     private String uploadImage2Server(MultipartFile file) throws IOException {
         if(getFileSize(file) > ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_LONG) {
-            throw new BadRequestException("데이터를 업로드할 수 없습니다. (Check the file size. File size is allowed up to " + ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_STRING + ".)");
+            throw new GPBadRequestException("데이터를 업로드할 수 없습니다. (Check the file size. File size is allowed up to " + ALLOWABLE_MAXIMUM_IMAGE_FILE_SIZE_STRING + ".)");
         }
 
         String uploadImagePath;

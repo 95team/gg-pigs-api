@@ -1,6 +1,7 @@
 package com.gg_pigs.app.poster.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gg_pigs._common.SecuritySetUp4ControllerTest;
 import com.gg_pigs.app.poster.dto.PosterDto;
 import com.gg_pigs.app.poster.service.PosterService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,12 +30,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * */
 
 @WebMvcTest(value = PosterApiController.class)
-class PosterApiControllerTest {
+class PosterApiControllerTest extends SecuritySetUp4ControllerTest {
 
-    @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @MockBean PosterService posterService;
+    @MockBean
+    PosterService posterService;
 
     private PosterDto.Create.RequestDto createDtoPoster;
     private PosterDto.Read.ResponseDto readDtoPoster;
@@ -52,73 +56,77 @@ class PosterApiControllerTest {
     @DisplayName("[테스트] create() : Poster 생성")
     @Test
     public void Test_create() throws Exception {
+        // given
         String content = objectMapper.writeValueAsString(createDtoPoster);
 
+        // when // then
         mockMvc.perform(post("/api/v1/posters")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isOk())
-                .andDo(print());
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(content))
+               .andExpect(status().isOk())
+               .andDo(print());
     }
 
     @DisplayName("[테스트] read() : Poster 조회")
     @Test
     public void Test_read() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isMap())
-                .andDo(print())
-                .andReturn().getResponse();
-
-        System.out.println(mockHttpServletResponse.getContentAsString());
+        // given // when // then
+        mockMvc.perform(get("/api/v1/posters/1"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.data").isMap())
+               .andDo(print())
+               .andReturn().getResponse();
     }
 
     @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v1)")
     @Test
     public void Test_readAll_v1() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v1/posters"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andDo(print())
-                .andReturn().getResponse();
-
-        System.out.println(mockHttpServletResponse.getContentAsString());
+        // given // when // then
+        mockMvc.perform(get("/api/v1/posters"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.data").isArray())
+               .andDo(print())
+               .andReturn().getResponse();
     }
 
     @DisplayName("[테스트] readAll() : Poster 리스트 조회 (v2)")
     @Test
     public void Test_readAll_v2() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(get("/api/v2/posters"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andDo(print())
-                .andReturn().getResponse();
-
-        System.out.println(mockHttpServletResponse.getContentAsString());
+        // given // when // then
+        mockMvc.perform(get("/api/v2/posters"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.data").isArray())
+               .andDo(print())
+               .andReturn().getResponse();
     }
 
-    @DisplayName("[테스트] update() : Poster 수정")
+    @DisplayName("[테스트] update() : Poster 수정 (+ USER/ADMIN 권한이 필요합니다.)")
     @Test
     public void Test_update() throws Exception {
+        // given
+        setUpUserRole();
         String content = objectMapper.writeValueAsString(updateDtoPoster);
 
+        // when // then
         mockMvc.perform(put("/api/v1/posters/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isOk())
-                .andDo(print());
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(content))
+               .andExpect(status().isOk())
+               .andDo(print());
     }
 
-    @DisplayName("[테스트] delete() : Poster 삭제")
+    @DisplayName("[테스트] delete() : Poster 삭제 (+ ADMIN 권한이 필요합니다.)")
     @Test
     public void Test_delete() throws Exception {
-        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn().getResponse();
+        // given
+        setUpAdminRole();
 
-        System.out.println(mockHttpServletResponse.getContentAsString());
+        // when // then
+        MockHttpServletResponse mockHttpServletResponse = mockMvc.perform(delete("/api/v1/posters/1"))
+                                                                 .andExpect(status().isOk())
+                                                                 .andDo(print())
+                                                                 .andReturn().getResponse();
     }
 }

@@ -1,9 +1,9 @@
 package com.gg_pigs.app.login.service;
 
-import com.gg_pigs.global.exception.LoginFailureException;
+import com.gg_pigs.app.user.entity.UserRole;
+import com.gg_pigs.global.exception.GPLoginFailureException;
 import com.gg_pigs.global.utility.CookieProvider;
 import com.gg_pigs.global.utility.JwtProvider;
-import com.gg_pigs.app.login.dto.RequestDtoLogin;
 import com.gg_pigs.app.user.entity.User;
 import com.gg_pigs.app.userSalt.entity.UserSalt;
 import org.assertj.core.api.Assertions;
@@ -33,7 +33,7 @@ class JwtLoginServiceTest {
     @Mock UserSalt userSalt;
 
     private final long userId = 1L;
-    private final String userRole = "ROLE_USER";
+    private final UserRole userRole = UserRole.ROLE_USER;
 
     private final String loginEmail = "pigs95team@gmail.com";
     private final String loginPassword = "thisisapassword";
@@ -56,12 +56,12 @@ class JwtLoginServiceTest {
     public void When_success_login_Then_return_cookie() {
         // Given
         String correctLoginPassword = loginPassword;
-        RequestDtoLogin correctLoginDto = RequestDtoLogin.builder()
-                .email(loginEmail)
-                .password(correctLoginPassword)
-                .digest(digest)
-                .role(userRole)
-                .build();
+        LoginService.Login correctLoginDto = LoginService.Login.builder()
+                                                               .email(loginEmail)
+                                                               .password(correctLoginPassword)
+                                                               .digest(digest)
+                                                               .role(userRole.name())
+                                                               .build();
 
         // When
         Cookie loginCookie = jwtLoginService.login(correctLoginDto);
@@ -74,17 +74,17 @@ class JwtLoginServiceTest {
     public void When_failed_login_Then_throw_exception() {
         // Given
         String wrongLoginPassword = loginPassword + "a";
-        RequestDtoLogin wrongLoginDto = RequestDtoLogin.builder()
-                .email(loginEmail)
-                .password(wrongLoginPassword)
-                .digest(digest)
-                .role(userRole)
-                .build();
+        LoginService.Login wrongLoginDto = LoginService.Login.builder()
+                                                             .email(loginEmail)
+                                                             .password(wrongLoginPassword)
+                                                             .digest(digest)
+                                                             .role(userRole.name())
+                                                             .build();
 
         // When
         try {
             Cookie loginCookie = jwtLoginService.login(wrongLoginDto);
-        } catch (LoginFailureException loginFailureException) {
+        } catch (GPLoginFailureException GPLoginFailureException) {
             return;
         }
 

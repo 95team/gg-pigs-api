@@ -51,7 +51,7 @@ class UserTest {
     @Test
     void Test_changeRole() {
         // Given
-        String role = UserRole.ROLE_USER.name();
+        UserRole role = UserRole.ROLE_USER;
 
         // When
         user.changeRole(role);
@@ -121,7 +121,7 @@ class UserTest {
     @Test
     void Test_createUser() {
         // Given
-        String defaultRole = UserRole.ROLE_USER.name();
+        UserRole defaultRole = UserRole.ROLE_USER;
         Character defaultIsActivated = 'N';
         Character defaultIsAuthenticated = 'N';
 

@@ -4,6 +4,7 @@ import com.gg_pigs.app.user.dto.CreateDtoUser;
 import com.gg_pigs.app.user.dto.RetrieveDtoUser;
 import com.gg_pigs.app.user.dto.UpdateDtoUser;
 import com.gg_pigs.app.user.entity.User;
+import com.gg_pigs.app.user.entity.UserRole;
 import com.gg_pigs.app.user.repository.UserRepository;
 import com.gg_pigs.app.userSalt.service.UserSaltService;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,7 @@ class UserServiceTest {
     @Test
     public void When_call_retrieveOneUser_Then_then_return_RetrieveDtoUser() {
         // Given
+        Mockito.when(user.getRole()).thenReturn(UserRole.ROLE_USER);
         Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         // When // Then

@@ -1,8 +1,8 @@
 package com.gg_pigs.global.advice;
 
 import com.gg_pigs.global.dto.ApiResponse;
-import com.gg_pigs.global.exception.BadRequestException;
-import com.gg_pigs.global.exception.LoginFailureException;
+import com.gg_pigs.global.exception.GPBadRequestException;
+import com.gg_pigs.global.exception.GPLoginFailureException;
 import io.sentry.Sentry;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,8 +53,8 @@ public class ExceptionControllerAdvice {
      * handleLoginFailureException(LoginFailureException.class)
      * 목적 : 로그인에 실패했을 경우
      * */
-    @ExceptionHandler(LoginFailureException.class)
-    protected ResponseEntity<ApiResponse> handleLoginFailureException(LoginFailureException e) {
+    @ExceptionHandler(GPLoginFailureException.class)
+    protected ResponseEntity<ApiResponse> handleLoginFailureException(GPLoginFailureException e) {
         printCommonExceptionHandlerMessage(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -65,8 +65,8 @@ public class ExceptionControllerAdvice {
      * handleBadRequestException(BadRequestException.class)
      * 목적 : 잘못된 API 요청인 경우 (포괄적으로 사용할 수 있는 Exception)
      * */
-    @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<ApiResponse> handleBadRequestException(BadRequestException e) {
+    @ExceptionHandler(GPBadRequestException.class)
+    protected ResponseEntity<ApiResponse> handleBadRequestException(GPBadRequestException e) {
         printCommonExceptionHandlerMessage(e);
 
         ApiResponse response = ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());

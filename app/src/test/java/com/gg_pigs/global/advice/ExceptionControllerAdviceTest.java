@@ -1,8 +1,8 @@
 package com.gg_pigs.global.advice;
 
 import com.gg_pigs.global.dto.ApiResponse;
-import com.gg_pigs.global.exception.BadRequestException;
-import com.gg_pigs.global.exception.LoginFailureException;
+import com.gg_pigs.global.exception.GPBadRequestException;
+import com.gg_pigs.global.exception.GPLoginFailureException;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +51,7 @@ class ExceptionControllerAdviceTest {
         // Given
         String expectedData = message;
 
-        LoginFailureException mockException = Mockito.mock(LoginFailureException.class);
+        GPLoginFailureException mockException = Mockito.mock(GPLoginFailureException.class);
         Mockito.when(mockException.getMessage()).thenReturn(message);
         Mockito.when(mockException.getStackTrace()).thenReturn(stackTraces);
 
@@ -71,7 +71,7 @@ class ExceptionControllerAdviceTest {
         // Given
         String expectedData = message;
 
-        BadRequestException mockException = Mockito.mock(BadRequestException.class);
+        GPBadRequestException mockException = Mockito.mock(GPBadRequestException.class);
         Mockito.when(mockException.getMessage()).thenReturn(message);
         Mockito.when(mockException.getStackTrace()).thenReturn(stackTraces);
 

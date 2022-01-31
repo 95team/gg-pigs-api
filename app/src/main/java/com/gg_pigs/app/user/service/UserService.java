@@ -53,19 +53,19 @@ public class UserService {
     public RetrieveDtoUser read(Long _userId) {
         User user = userRepository.findById(_userId).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        return RetrieveDtoUser.createRetrieveDtoUser(user);
+        return RetrieveDtoUser.of(user);
     }
 
     public RetrieveDtoUser readByEmail(String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 데이터를 조회할 수 없습니다."));
 
-        return RetrieveDtoUser.createRetrieveDtoUser(user);
+        return RetrieveDtoUser.of(user);
     }
 
     public List<RetrieveDtoUser> retrieveAllUsers() {
         List<User> users = userRepository.findAll();
 
-        return users.stream().map(user -> RetrieveDtoUser.createRetrieveDtoUser(user)).collect(Collectors.toList());
+        return users.stream().map(RetrieveDtoUser::of).collect(Collectors.toList());
     }
 
     /** UPDATE */
