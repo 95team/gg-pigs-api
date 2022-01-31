@@ -1,3 +1,5 @@
+package com.gg_pigs.security;
+
 public class GPSecurityException extends RuntimeException {
     public GPSecurityException() {
         super();

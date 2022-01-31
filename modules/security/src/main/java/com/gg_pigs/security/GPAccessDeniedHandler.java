@@ -1,7 +1,9 @@
+package com.gg_pigs.security;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,14 +12,16 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public interface GPAuthenticationEntryPoint extends AuthenticationEntryPoint {
+public interface GPAccessDeniedHandler extends AccessDeniedHandler {
     @Override
-    default void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    default void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        accessDeniedException.printStackTrace();
+
         String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
 
         Map<String, Object> errorResponse = new LinkedHashMap<String, Object>() {{
-            put("status", HttpStatus.UNAUTHORIZED.value());
-            put("message", "인증 정보가 존재하지 않습니다. (Your authentication is not valid)");
+            put("status", HttpStatus.FORBIDDEN.value());
+            put("message", "허용되지 않은 요청입니다. (Your authentication level is not allowed)");
             put("data", null);
         }};
 

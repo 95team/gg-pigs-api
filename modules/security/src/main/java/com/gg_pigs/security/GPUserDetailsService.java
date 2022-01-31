@@ -1,3 +1,5 @@
+package com.gg_pigs.security;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;

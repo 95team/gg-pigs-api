@@ -1,3 +1,5 @@
+package com.gg_pigs.security;
+
 class GPUnauthenticatedException extends GPSecurityException {
     public GPUnauthenticatedException() {
         super();

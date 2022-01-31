@@ -32,9 +32,6 @@ subprojects {
 }
 
 project(':app') {
-	bootJar {
-		archiveFileName = 'app.jar'
-	}
 	dependencies {
 		implementation project(':modules:security')
 		implementation project(':modules:ems')
