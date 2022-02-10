@@ -26,7 +26,7 @@
 
 **modules/**
 
-- [ ] **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
+- [x] **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
 - [ ] **ems (작업 필요)**
 - [ ] **redis (작업 필요)**
 - [ ] **github (작업 필요)**
