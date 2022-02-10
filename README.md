@@ -13,8 +13,22 @@
 
 ### https://gg-pigs.com
 
+### Architecture
+
+![광고돼지 아키텍처 drawio (1)](https://user-images.githubusercontent.com/35790290/153448150-c7a7c99d-734b-4897-8574-bc33a9759893.png)
+
+
 <br>
+
+**apps/**
+
+- [ ] **app-api (작업 필요)**
 
 **modules/**
 
-- **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
+- [ ] **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
+- [ ] **ems (작업 필요)**
+- [ ] **redis (작업 필요)**
+- [ ] **github (작업 필요)**
+
+<br>
