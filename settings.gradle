@@ -8,3 +8,6 @@ findProject(':modules:security')?.name = 'security'
 include 'modules:ems'
 findProject(':modules:ems')?.name = 'ems'
 
+include 'modules:logger'
+findProject(':modules:logger')?.name = 'logger'
+

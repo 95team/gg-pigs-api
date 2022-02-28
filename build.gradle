@@ -42,6 +42,7 @@ project(':app') {
 	}
 	dependencies {
 		implementation project(':modules:security')
+		implementation project(':modules:logger')
 		implementation project(':modules:ems')
 	}
 }
