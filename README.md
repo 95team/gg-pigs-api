@@ -22,13 +22,23 @@
 
 **apps/**
 
-- [ ] **app-api (작업 필요)**
+- [ ] **app-api**
+  - [ ] 기능
+  - [ ] 모듈화 작업
 
 **modules/**
 
 - [x] **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
-- [ ] **ems (작업 필요)**
-- [ ] **redis (작업 필요)**
-- [ ] **github (작업 필요)**
+  - [ ] 기능
+  - [ ] 모듈화 작업 필요
+- [ ] **ems**
+  - [ ] 기능
+  - [ ] 모듈화 작업 필요
+- [ ] **redis**
+  - [ ] 기능
+  - [ ] 모듈화 작업 필요
+- [ ] **github**
+  - [ ] 기능
+  - [ ] 모듈화 작업 필요
 
 <br>
