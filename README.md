@@ -17,16 +17,22 @@
 
 ![광고돼지 아키텍처 drawio (1)](https://user-images.githubusercontent.com/35790290/153448150-c7a7c99d-734b-4897-8574-bc33a9759893.png)
 
-
 <br>
 
-**apps/**
+### `apps/`
+
+- Application 모듈
 
 - [X] **app-api**
   - [X] 기능
   - [ ] 모듈화 작업
 
-**modules/**
+<br>
+
+### `modules/`
+
+- 서비스 독립적, 이후 외부로 추출할 수 있는 모듈(패키지)
+- apps/ 패키지 의존성 X
 
 - [x] **[security](https://github.com/pigs-pango-team/gg-pigs-api/tree/develop/modules/security)**
   - [X] 기능
