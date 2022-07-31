@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 
 public class KafkaConfigurer {
 
+    @ConditionalOnProperty(name = "application.kafka.producer.enable", havingValue = "true")
     @RequiredArgsConstructor
     @Configuration
     @EnableKafka
@@ -65,6 +67,7 @@ public class KafkaConfigurer {
         }
     }
 
+    @ConditionalOnProperty(name = "application.kafka.consumer.enable", havingValue = "true")
     @RequiredArgsConstructor
     @Configuration
     @EnableKafka

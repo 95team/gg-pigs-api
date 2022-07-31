@@ -1,0 +1,22 @@
+# Configuration for kafka
+application:
+  kafka:
+    consumer:
+      enable: true
+      default:
+        bootstrap-server: "localhost:9092"
+        group-id: "gg-pigs-api-consumer-group-default"
+        auto-offset-reset: "earliest"
+      ems:
+        bootstrap-server: "localhost:9092"
+        group-id: "gg-pigs-api-consumer-group-ems"
+        auto-offset-reset: "earliest"
+    producer:
+      enable: true
+      default:
+        bootstrap-server: "localhost:9092"
+        linger-ms: 10
+      ems:
+        bootstrap-server: "localhost:9092"
+        topic-4-pr-noti-event: "gg-pigs-api-poster-request-noti-event"
+        linger-ms: 10

@@ -1,0 +1,5 @@
+# Configuration for redis
+application:
+  redis:
+    host: "localhost"
+    port: "6379"
