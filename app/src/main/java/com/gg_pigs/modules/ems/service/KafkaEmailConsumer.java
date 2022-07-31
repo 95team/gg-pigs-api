@@ -6,6 +6,7 @@ import com.gg_pigs.global.utility.MailHandler;
 import com.gg_pigs.modules.ems.domain.EmailAlarm;
 import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,6 +16,7 @@ import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Objects;
 
+@ConditionalOnProperty(name = "application.kafka.consumer.enable", havingValue = "true")
 @RequiredArgsConstructor
 @Component
 public class KafkaEmailConsumer {
