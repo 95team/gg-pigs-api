@@ -18,7 +18,9 @@ public class CookieProvider {
     private final int expiry = 3600;
     private final boolean isHttpOnly = true;
     private final boolean isSecure = false;
-    private final String domain = "gg-pigs.com";
+
+    @Value("${application.cookie.login-cookie-domain}")
+    private String domain;
 
     @Value("${application.cookie.login-cookie-name}")
     private String loginCookieName;

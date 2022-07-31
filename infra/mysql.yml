@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: mysql
+    platform: linux/x86_64
+    image: mysql:5.7
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=gg_pigs_db
+    ports:
+      - 3306:3306

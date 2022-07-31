@@ -27,10 +27,10 @@ public class UserSalt {
     @Column(name = "user_salt_id")
     private Long id;
 
-    @Column(length = 32)
+    @Column
     private String salt;
 
-    @Column(length = 32)
+    @Column
     private String digest;
 
     @OneToOne(fetch = FetchType.LAZY)
