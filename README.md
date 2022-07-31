@@ -13,6 +13,24 @@
 
 ### https://gg-pigs.com
 
+<br>
+
+### How To Run
+
+**1. infra 환경을 실행합니다. (mysql, redis, kafka, ...)**
+
+```shell
+make all
+```
+
+**2. application.yml 에 비밀 값을 설정합니다.**
+
+> 별도로 공유합니다.
+
+**3. application 을 실행합니다.**
+
+<br>
+
 ### Architecture
 
 ![광고돼지 아키텍처 drawio (1)](https://user-images.githubusercontent.com/35790290/153448150-c7a7c99d-734b-4897-8574-bc33a9759893.png)
