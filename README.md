@@ -11,11 +11,11 @@
 </a>
 </p>
 
-### https://gg-pigs.com
+## https://gg-pigs.com
 
 <br>
 
-### How To Run
+## How To Run
 
 **1. infra 환경을 실행합니다. (mysql, redis, kafka, ...)**
 
@@ -27,11 +27,11 @@ make all
 
 > 별도로 공유합니다.
 
-**3. application 을 실행합니다.**
+**3. 애플리케이션을 실행합니다.**
 
 <br>
 
-### Architecture
+## Architecture
 
 ![광고돼지 아키텍처 drawio (1)](https://user-images.githubusercontent.com/35790290/153448150-c7a7c99d-734b-4897-8574-bc33a9759893.png)
 
