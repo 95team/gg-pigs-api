@@ -20,8 +20,11 @@
 **1. infra 환경을 실행합니다. (mysql, redis, kafka, ...)**
 
 ```shell
-make all
+make all # infra 환경을 실행합니다.
 ```
+
+> `make all` : infra 환경을 실행합니다. <br>
+> `make clear` : infra 환경을 종료합니다.
 
 **2. application.yml 에 비밀 값을 설정합니다.**
 
