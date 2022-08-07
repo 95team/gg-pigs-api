@@ -78,7 +78,7 @@ public class VerificationMail {
          * [References]
          * 1. https://yeon-blog.tistory.com/4
          * */
-        Document document = Jsoup.parse(new File("src/main/resources/templates/mails/verificationMailTemplate.html"), "UTF-8");
+        Document document = Jsoup.parse(new File("app/src/main/resources/templates/mails/verificationMailTemplate.html"), "UTF-8");
         document.getElementById("verificationCode").text(verificationCode);
         String content = document.html();
 
