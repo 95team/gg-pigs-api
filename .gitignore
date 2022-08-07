@@ -3,6 +3,7 @@ logback.xml
 logback-test.xml
 application.properties
 logs
+dump.rdb
 
 ### Auto ###
 HELP.md

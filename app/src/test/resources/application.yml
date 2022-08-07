@@ -1,36 +1,27 @@
 # Configuration for project
 spring:
   profiles:
+    active: test
     include:
       - redis
       - kafka
       - github
+  # Configuration for DB
   datasource:
-    url: jdbc:mysql://localhost:3306/gg_pigs_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 2
-    initialization-mode: always
-    data: classpath*:db/data.sql
-
-  jpa:
-    properties:
-      hibernate:
-        hbm2ddl.auto: create
-        format_sql: true
-        default_batch_fetch_size: 100
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
+    url: jdbc:h2:mem:gg_pigs_db_dev;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MYSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  test:
+    database:
+      replace: none
 
   # Configuration for SMTP
   mail:
     host: smtp.gmail.com
     port: 587
     username: pigs95team@gmail.com
-    password: "비밀 값입니다."
+    password: "비밀 값 입니다."
     properties:
       mail:
         smtp:
@@ -38,13 +29,12 @@ spring:
           starttls:
             enable: true
 
-# Configuration for application
+# Configuration for Application
 application:
   admin:
     email: "pigs95team@gmail.com"
     emails:
       - "pigs95team@gmail.com"
-      - "kihyun5741@gmail.com"
   mail:
     from: "pigs95team@gmail.com"
   cookie:

@@ -5,6 +5,7 @@ import com.gg_pigs.app.user.entity.User;
 import com.gg_pigs.app.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -47,6 +48,7 @@ class GitHubClientTest {
         Mockito.when(userRepository.findUserByEmail(anyString())).thenReturn(java.util.Optional.of(user));
     }
 
+    @Disabled
     @Test
     void When_call_uploadContent_Then_return_uploadPath() throws IOException {
         // Given
