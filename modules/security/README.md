@@ -91,5 +91,5 @@ public interface GPUserDetailsService extends UserDetailsService {
 
 ![GPSecurity-_GPSecurityFilter](https://user-images.githubusercontent.com/35790290/151809910-ddadc754-0c7c-45bf-8e2b-1c19586341b5.png)
 
-> [GPSecurity.drawio.zip](https://github.com/pigs-pango-team/gg-pigs-api/files/7971413/GPSecurity.drawio.zip)
+> [GPSecurity.drawio.zip](https://github.com/95team/gg-pigs-api/files/7971413/GPSecurity.drawio.zip)
 
