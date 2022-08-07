@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -78,7 +79,7 @@ public class VerificationMail {
          * [References]
          * 1. https://yeon-blog.tistory.com/4
          * */
-        Document document = Jsoup.parse(new File("app/src/main/resources/templates/mails/verificationMailTemplate.html"), "UTF-8");
+        Document document = Jsoup.parse(new ClassPathResource("templates/mails/verificationMailTemplate.html").getFile(), "UTF-8");
         document.getElementById("verificationCode").text(verificationCode);
         String content = document.html();
 
