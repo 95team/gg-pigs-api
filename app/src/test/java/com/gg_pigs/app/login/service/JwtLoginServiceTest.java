@@ -55,10 +55,9 @@ class JwtLoginServiceTest {
     @Test
     public void When_success_login_Then_return_cookie() {
         // Given
-        String correctLoginPassword = loginPassword;
         LoginService.Login correctLoginDto = LoginService.Login.builder()
                                                                .email(loginEmail)
-                                                               .password(correctLoginPassword)
+                                                               .password(loginPassword)
                                                                .digest(digest)
                                                                .role(userRole.name())
                                                                .build();
