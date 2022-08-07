@@ -6,5 +6,5 @@ application:
     user: "95team"
     image:
       repo: "gg-pigs-image"
-      repo-path: "images"
+      repo-path: "images/test"
       raw-path: "https://raw.githubusercontent.com/95team/gg-pigs-image/main/"
