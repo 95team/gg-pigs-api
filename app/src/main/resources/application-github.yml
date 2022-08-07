@@ -3,8 +3,8 @@ application:
   github:
     pat: "비밀 값입니다."
     token: "Bearer 비밀 값입니다."
-    user: "pigs-pango-team"
+    user: "95team"
     image:
       repo: "gg-pigs-image"
       repo-path: "images"
-      raw-path: "https://raw.githubusercontent.com/pigs-pango-team/gg-pigs-image/main/"
+      raw-path: "https://raw.githubusercontent.com/95team/gg-pigs-image/main/"
