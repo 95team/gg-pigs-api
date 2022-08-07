@@ -4,6 +4,10 @@ logback-test.xml
 application.properties
 logs
 dump.rdb
+backup/
+buildreboot.sh
+reboot.sh
+stop.sh
 
 ### Auto ###
 HELP.md
