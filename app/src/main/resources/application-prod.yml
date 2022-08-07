@@ -6,24 +6,19 @@ spring:
       - kafka
       - github
   datasource:
-    url: jdbc:mysql://localhost:3306/gg_pigs_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: root
+    url: jdbc:mysql://gg-pigs.com:3306/gg_pigs_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: "비밀 값 입니다."
+    password: "비밀 값 입니다."
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 2
-    initialization-mode: always
-    data: classpath*:db/data.sql
 
   jpa:
     properties:
-      hibernate:
-        hbm2ddl.auto: create
-        format_sql: true
-        default_batch_fetch_size: 100
+      format_sql: true
+      default_batch_fetch_size: 100
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
 
   # Configuration for SMTP
   mail:
@@ -49,7 +44,7 @@ application:
     from: "pigs95team@gmail.com"
   cookie:
     login-cookie-name: "gg-login"
-    login-cookie-domain: "localhost"
+    login-cookie-domain: "gg-pigs.com"
   jwt:
-    security-key: "security-key(local)"
+    security-key: "비밀 값 입니다."
     expiration-age: 3600000
