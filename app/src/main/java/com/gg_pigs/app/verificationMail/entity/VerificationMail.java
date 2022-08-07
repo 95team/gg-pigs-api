@@ -15,11 +15,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -79,7 +83,8 @@ public class VerificationMail {
          * [References]
          * 1. https://yeon-blog.tistory.com/4
          * */
-        Document document = Jsoup.parse(new ClassPathResource("templates/mails/verificationMailTemplate.html").getFile(), "UTF-8");
+
+        Document document = Jsoup.parse(new ClassPathResource("templates/mails/verificationMailTemplate.html").getInputStream(), "UTF-8", "");
         document.getElementById("verificationCode").text(verificationCode);
         String content = document.html();
 
