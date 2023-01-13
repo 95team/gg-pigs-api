@@ -18,6 +18,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-mail'          // Spring Boot SMTP, https://www.baeldung.com/spring-email, https://victorydntmd.tistory.com/342
     implementation 'org.springframework.data:spring-data-redis'					// Spring Boot Redis, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
     implementation 'io.lettuce:lettuce-core'									// Spring Boot Redis - Lettuce, https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference
@@ -35,6 +36,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.17.1")                 // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.1")            // Log4j, // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j
     implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")       // Logstash-Logback-Encoder, // https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
+    implementation("io.micrometer:micrometer-registry-prometheus:1.10.2")
 
     compileOnly 'org.projectlombok:lombok'
 

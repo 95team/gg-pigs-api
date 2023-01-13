@@ -45,7 +45,7 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         web.ignoring()
            .antMatchers("/api/v1/login")
            .antMatchers("/static/**")
-           .antMatchers("/health/**")
+           .antMatchers("/actuator/health")
            .antMatchers(HttpMethod.OPTIONS);
     }
 
