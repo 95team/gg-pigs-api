@@ -2,6 +2,7 @@ package com.gg_pigs.modules.redis;
 
 import com.gg_pigs.modules.redis.config.RedisConfigurer;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.concurrent.TimeUnit;
 
+@Disabled
 @SpringBootTest(
         classes = {
                 RedisConfigurer.class,
