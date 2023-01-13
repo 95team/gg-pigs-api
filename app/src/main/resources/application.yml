@@ -6,31 +6,24 @@ spring:
       - kafka
       - github
   datasource:
-    url: jdbc:mysql://localhost:3306/gg_pigs_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: root
+    url: ${GG_PIGS_DATASOURCE_URL:jdbc:mysql://localhost:3306/gg_pigs_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${GG_PIGS_DATASOURCE_USERNAME:root}
+    password: ${GG_PIGS_DATASOURCE_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 2
-    initialization-mode: always
-    data: classpath*:db/data.sql
-
   jpa:
     properties:
-      hibernate:
-        hbm2ddl.auto: create
-        format_sql: true
-        default_batch_fetch_size: 100
+      format_sql: true
+      default_batch_fetch_size: 100
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
-
   # Configuration for SMTP
   mail:
     host: smtp.gmail.com
     port: 587
     username: pigs95team@gmail.com
-    password: "비밀 값입니다."
+    password: ${GG_PIGS_SMTP_PASSWORD:THIS-IS-SECRET-VALUE}
     properties:
       mail:
         smtp:
@@ -51,5 +44,17 @@ application:
     login-cookie-name: "gg-login"
     login-cookie-domain: "localhost"
   jwt:
-    security-key: "security-key(local)&security-key(local)&security-key(local)&security-key(local)"
+    security-key: ${GG_PIGS_JWT_SECRET_KEY:security-key(local)&security-key(local)&security-key(local)&security-key(local)}
     expiration-age: 3600000
+---
+spring:
+  profiles:
+    active: local
+  datasource:
+    initialization-mode: always
+    data: classpath*:db/data.sql
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl.auto: create
+    generate-ddl: true

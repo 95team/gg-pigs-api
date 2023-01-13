@@ -1,8 +1,8 @@
 # Configuration for kafka
 application:
   github:
-    pat: "비밀 값입니다."
-    token: "Bearer 비밀 값입니다."
+    pat: ${GG_PIGS_GTIHUB_PAT:THIS-IS-SECRET-VALUE}
+    token: ${GG_PIGS_GTIHUB_TOKEN:THIS-IS-SECRET-VALUE}
     user: "95team"
     image:
       repo: "gg-pigs-image"
