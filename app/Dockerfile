@@ -1,7 +1,7 @@
 FROM azul/zulu-openjdk:11-latest
 
-COPY ./build/libs/gg-pigs-api-*.jar /app/
+COPY ./build/libs/gg-pigs-api-*.jar /app/app.jar
 
 WORKDIR /app
 
-CMD ["java", "-jar", "gg-pigs-api.jar", "--spring.profiles.active=prod"]
+CMD ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
