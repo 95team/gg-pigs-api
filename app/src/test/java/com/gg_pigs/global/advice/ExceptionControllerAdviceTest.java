@@ -3,7 +3,6 @@ package com.gg_pigs.global.advice;
 import com.gg_pigs.global.dto.ApiResponse;
 import com.gg_pigs.global.exception.GPBadRequestException;
 import com.gg_pigs.global.exception.GPLoginFailureException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
