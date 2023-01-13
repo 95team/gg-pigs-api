@@ -1,5 +1,5 @@
 # Configuration for redis
 application:
   redis:
-    host: "localhost"
+    host: ${GG_PIGS_REDIS_HOST:localhost}
     port: "6379"
