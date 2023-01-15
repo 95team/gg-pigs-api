@@ -54,24 +54,3 @@ management:
     web:
       exposure:
         include: health, prometheus
----
-spring:
-  profiles:
-    active: local
-  datasource:
-    initialization-mode: always
-    data: classpath*:db/data.sql
-  jpa:
-    properties:
-      hibernate:
-        hbm2ddl.auto: create
-    generate-ddl: true
-
----
-spring:
-  profiles:
-    active: prod
-
-logging:
-  file:
-    name: ${GG_PIGS_LOG_FILE_NAME:logs/app.log}

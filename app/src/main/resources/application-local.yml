@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    initialization-mode: always
+    data: classpath*:db/data.sql
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl.auto: create
+    generate-ddl: true

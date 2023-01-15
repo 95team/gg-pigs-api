@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: prod
+logging:
+  file:
+    name: ${GG_PIGS_LOG_FILE_NAME:logs/app.log}
+  pattern:
+    console:
