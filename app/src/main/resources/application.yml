@@ -30,6 +30,8 @@ spring:
           auth: true
           starttls:
             enable: true
+server:
+  port: ${SERVER_PORT:8484}
 
 # Configuration for application
 application:
@@ -64,3 +66,12 @@ spring:
       hibernate:
         hbm2ddl.auto: create
     generate-ddl: true
+
+---
+spring:
+  profiles:
+    active: prod
+
+logging:
+  file:
+    name: ${GG_PIGS_LOG_FILE_NAME:logs/app.log}
